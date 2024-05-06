@@ -4,24 +4,28 @@
             <form class="form" id="a-form" method="" action="http://localhost:3000/login">
               <h1 class="form_title title">注册</h1>
               <div class="form__label">昵称：</div>
-              <input class="form__input" type="text" placeholder="请输入昵称">
+              <input class="form__input" type="text" placeholder="请输入昵称" name="nickname">
               <div class="form__label">手机号：</div>
               <div class="input-group">
-                <input class="form__input input-with-button" type="text" placeholder="请输入手机号码">
-                <button class="verify-button">点击获取验证码</button>
+                <input class="form__input input-with-button" type="text" placeholder="请输入手机号码" name="phone">
+                <button type="button" class="verify-button" @click="getVerificationCode">点击获取验证码</button>
               </div>
               <div class="form__label">验证码：</div>
-              <input class="form__input" type="text" placeholder="请输入验证码">
+              <input class="form__input" type="text" placeholder="请输入验证码" name="verification_code">
               <div class="form__label">密码：</div>
-              <input class="form__input" type="password" placeholder="请输入密码">
-              <button class="form__button button submit">提交</button>
+              <input class="form__input" type="password" placeholder="请输入密码" name="password">
+              <button type="submit" class="form__button button submit">提交</button>
             </form>
         </div>
     </div>
 </template>
  
-<script setup lang="ts">
- 
+<script setup lang="ts">	 
+	 // 获取验证码的方法
+	 const getVerificationCode = (event) => {
+	   // 阻止表单默认的提交行为
+	   event.preventDefault();
+	 };
 </script>
  
 <style scoped >

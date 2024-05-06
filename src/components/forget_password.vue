@@ -8,7 +8,7 @@
               <div class="form__label">手机号：</div>
               <div class="input-group">
                 <input class="form__input input-with-button" type="text" placeholder="请输入手机号码">
-                <button class="verify-button">点击获取验证码</button>
+                <button type="button" class="verify-button" @click="getVerificationCode">点击获取验证码</button>
               </div>
               <div class="form__label">验证码：</div>
               <input class="form__input" type="text" placeholder="请输入验证码">
@@ -21,7 +21,11 @@
 </template>
  
 <script setup lang="ts">
- 
+	// 获取验证码的方法
+	const getVerificationCode = (event) => {
+	  // 阻止表单默认的提交行为
+	  event.preventDefault();
+	};
 </script>
  
 <style scoped >
