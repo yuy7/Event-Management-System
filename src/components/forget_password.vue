@@ -3,8 +3,6 @@
         <div class="main">
             <form class="form" id="a-form" method="" action="./login">
               <h1 class="form_title title">忘记密码</h1>
-              <div class="form__label">昵称：</div>
-              <input class="form__input" type="text" placeholder="请输入昵称">
               <div class="form__label">手机号：</div>
               <div class="input-group">
                 <input class="form__input input-with-button" type="text" placeholder="请输入手机号码">

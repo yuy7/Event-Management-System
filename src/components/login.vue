@@ -3,8 +3,8 @@
         <div class="main">
             <form class="form" id="a-form" method="" action="">
               <h1 class="form_title title">登录</h1>
-              <div class="form__label">昵称：</div>
-              <input class="form__input" type="text" placeholder="请输入昵称">
+              <div class="form__label">手机号：</div>
+              <input class="form__input" type="text" placeholder="请输入手机号">
               <div class="form__label">密码：</div>
               <input class="form__input" type="password" placeholder="请输入密码">
               <button class="form__button button submit">提交</button>
