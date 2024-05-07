@@ -9,8 +9,8 @@
               <input class="form__input" type="password" placeholder="请输入密码">
               <button class="form__button button submit">提交</button>
               <div class="form__links">
-                <a href="http://localhost:3000/register" class="form__link">注册</a>
-                <a href="http://localhost:3000/forget_password" class="form__link">忘记密码</a>
+                <a href="./register" class="form__link">注册</a>
+                <a href="./forget_password" class="form__link">忘记密码</a>
               </div>
             </form>
         </div>

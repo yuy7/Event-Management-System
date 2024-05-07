@@ -1,7 +1,7 @@
 <template>
     <div class="body">
         <div class="main">
-            <form class="form" id="a-form" method="" action="http://localhost:3000/login">
+            <form class="form" id="a-form" method="" action="./login">
               <h1 class="form_title title">忘记密码</h1>
               <div class="form__label">昵称：</div>
               <input class="form__input" type="text" placeholder="请输入昵称">
