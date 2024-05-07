@@ -5,15 +5,18 @@ import forget_password from './components/forget_password.vue'
 const routes = [
   { 
     path: '/login', 
-    component: login
+    name:'login',
+    component:login, 
   },
   {
     path: '/register', 
-    component: register
+    name:'register',
+    component:register,
   },
   {
     path: '/forget_password', 
-    component: forget_password
+    name:'forget_password',
+    component:forget_password,
   },
 ]
 

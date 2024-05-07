@@ -1,25 +1,65 @@
 <template>
-    <div class="body">
-        <div class="main">
-            <form class="form" id="a-form" method="" action="">
-              <h1 class="form_title title">登录</h1>
-              <div class="form__label">手机号：</div>
-              <input class="form__input" type="text" placeholder="请输入手机号">
-              <div class="form__label">密码：</div>
-              <input class="form__input" type="password" placeholder="请输入密码">
-              <button class="form__button button submit">提交</button>
-              <div class="form__links">
-                <a href="./register" class="form__link">注册</a>
-                <a href="./forget_password" class="form__link">忘记密码</a>
-              </div>
-            </form>
-        </div>
-    </div>
+  <div class="body">
+      <div class="main">
+          <!-- Add ref attribute to reference the form in Vue instance -->
+          <form class="form" ref="loginForm" @submit.prevent="submitForm">
+            <h1 class="form_title title">登录</h1>
+            <div class="form__label">手机号：</div>
+            <!-- Use v-model to bind input to the Vue instance's data -->
+            <input class="form__input" type="text" v-model="user.phoneNumber" placeholder="请输入手机号">
+            <div class="form__label">密码：</div>
+            <!-- Use v-model to bind input to the Vue instance's data -->
+            <input class="form__input" type="password" v-model="user.password" placeholder="请输入密码">
+            <!-- Use Vue click handler instead of form's submit to handle the submission -->
+            <button class="form__button button submit" type="submit">提交</button>
+            <!-- 用于测试，暂时还没有跳转的界面 -->
+            <input class="form__input" type="text" v-model="submissionResult" placeholder="是否成功">
+            <div class="form__links">
+              <a href="./register" class="form__link">注册</a>
+              <a href="./forget_password" class="form__link">忘记密码</a>
+            </div>
+          </form>
+      </div>
+  </div>
 </template>
- 
-<script setup lang="ts">
- 
+
+<script lang="ts" setup>
+import { reactive, ref } from 'vue'
+import axios from 'axios'
+
+const FPath = 'http://localhost:5000/login'
+
+// Reactive state for user input data
+const user = reactive({
+phoneNumber: '',
+password: ''
+});
+
+// Reference for submission result
+const submissionResult = ref('');
+
+// Reference to the form element
+const loginForm = ref(null);
+
+// Method to submit the form data
+const submitForm = () => {
+axios.post(FPath, {
+  phoneNumber: user.phoneNumber,
+  password: user.password
+})
+.then(response => {
+  // Process the returned data
+  console.log(response.data);
+  // Update the submission result
+  submissionResult.value = response.data.status;
+})
+.catch(error => {
+  console.error('Error:', error);
+  submissionResult.value = '提交失败，请重试。';
+});
+};
 </script>
+
  
 <style scoped >
 *, *::after, *::before {

@@ -1,3 +1,11 @@
+DROP DATABASE IF EXISTS `emsdb`;
+CREATE DATABASE `emsdb`;
+USE `emsdb`;
+
+SET FOREIGN_KEY_CHECKS=0;
+set character_set_database=utf8;
+set character_set_server=utf8;
+
 CREATE TABLE User (
     UserID INT PRIMARY KEY AUTO_INCREMENT,
     Username VARCHAR(50) NOT NULL,
@@ -25,3 +33,8 @@ CREATE TABLE RolePermission (
     FOREIGN KEY (RoleID) REFERENCES Role(RoleID),
     FOREIGN KEY (PermissionID) REFERENCES Permission(PermissionID)
 );
+
+INSERT INTO User
+(UserID, Username, Password, Email, PhoneNumber, Role, VerificationCode, RegistrationTime, LastLoginTime, AccountStatus)
+VALUES
+(251101163, 'yuyan2003', '123456', '2511011639@qq.com', '18067262965', '0', '123456', '2024-05-07 16:14:37', '2024-05-07 15:00:52', '123456');
