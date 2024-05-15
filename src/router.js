@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import login from './components/login.vue'
 import register from './components/register.vue'
 import forget_password from './components/forget_password.vue'
+import calendar from './components/calendar.vue'
 const routes = [
   { 
     path: '/login', 
@@ -17,6 +18,11 @@ const routes = [
     path: '/forget_password', 
     name:'forget_password',
     component:forget_password,
+  },
+  {
+    path: '/calendar', 
+    name:'calendar',
+    component:calendar,
   },
 ]
 
