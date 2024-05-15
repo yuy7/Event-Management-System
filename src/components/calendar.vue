@@ -1,4 +1,5 @@
 <template>
+<navbar></navbar>
   <div class='cal'>
     <div class='cal-left'>
       <div class='cal-left-title'>
@@ -45,10 +46,13 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from './event-utils'
+import Navbar from './navbar.vue';
+import axios from 'axios';
 
 export default defineComponent({
   components: {
     FullCalendar,
+	Navbar,
   },
   data() {
     return {
@@ -72,42 +76,42 @@ export default defineComponent({
 			week: '周',
 			day: '天'
 		},
-        initialView: 'dayGridMonth', // 指定默认显示视图
-		initialEvents:INITIAL_EVENTS, // 默认事件
-		locale: 'zh-ch', // 切换语言，当前为中文
-		firstDay: '1', // 设置一周中显示的第一天是周几，周日是0，周一是1，以此类推
-		weekNumberCalculation: 'ISO', // 与firstDay配套使用
-		eventCOlor: '#3d8eec', // 全部日历日程背景色
-		timeGridEventMinHeight: '20', // 设置事件的最小高度
 		aspectRatio: '1.5', // 设置日历单元格宽高比
-		displayEventTime: false, // 是否显示事件时间
 		allDaySlot: false, // 周、日视图时，all-day不显示
+		displayEventTime: false, // 是否显示事件时间
+		dayMaxEvents: true,
+		eventColor: '#2c3e50', // 全部日历日程背景色
 		eventLimit: true, // 设置月日程，与all-day slot 的最大显示数量，超过的通过弹窗展示
 		eventTimeFormat: {
-		hour: 'numeric',
-		minute: '2-digit',
-		hour12: false
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: false
 		},
+		events: this.fetchEvents, // 日程数组
+		editable: false, // 是否可以进行（拖动、缩放）修改
+		eventStartEditable: false, // Event日程开始时间可以改变，默认为true，若为false,则表示开始结束时间范围不能拉伸，只能拖拽
+		eventDurationEditable: false, // Event日程的开始结束时间距离是否可以改变，默认为true,若为false，则表示开始结束时间范围不能拉伸，只能拖拽
+		firstDay: '1', // 设置一周中显示的第一天是周几，周日是0，周一是1，以此类推
+		initialView: 'dayGridMonth', // 指定默认显示视图
+		//initialEvents:INITIAL_EVENTS, // 默认事件
+		locale: 'zh-ch', // 切换语言，当前为中文
+		navLinks: true, // 天链接
 		slotLabelFormat: {
-		hour: '2-digit',
-		minute: '2-digit',
-		meridiem: false,
-		hour12: false // 设置时间为24小时制
+			hour: '2-digit',
+			minute: '2-digit',
+			meridiem: false,
+			hour12: false // 设置时间为24小时制
 		},
-		events: [], // 日程数组
-        editable: false, // 是否可以进行（拖动、缩放）修改
-		eventStartEditable: true, // Event日程开始时间可以改变，默认为true，若为false,则表示开始结束时间范围不能拉伸，只能拖拽
-		eventDurationEditable: true, // Event日程的开始结束时间距离是否可以改变，默认为true,若为false，则表示开始结束时间范围不能拉伸，只能拖拽
 		selectable: true, // 是否可以选中日历格
 		selectMirror: true,
 		selectMinDistance: 0, // 选中日历格的最小距离
-        dayMaxEvents: true,
-        weekends: true,
-		navLinks: true, // 天链接
 		selectHelper: false,
 		selectEventOverlap: false, // 相同时间段的多个日程视觉上是否允许重叠，默认为true，允许
+		select: this.handleDateSelect,
+		timeGridEventMinHeight: '20', // 设置事件的最小高度
+		weekNumberCalculation: 'ISO', // 与firstDay配套使用
+        weekends: true,
 		dayMaxEvents: true,
-        select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents
         /* you can update a remote database when these fire:
@@ -120,6 +124,35 @@ export default defineComponent({
     }
   },
   methods: {
+	fetchEvents(fetchInfo, successCallback, failureCallback) {
+	    axios.get('http://localhost:5000/events')
+	        .then(response => {
+	            let events = []
+	            response.data.forEach(event => {
+	                let start = this.parseDateTime(event.eventStartDate);
+	                let end = this.parseDateTime(event.eventEndDate);
+	
+	                events.push({
+	                    id: event.eventID,
+	                    title: event.eventName,
+	                    start: start,
+	                    end: end,
+						display: 'block', 
+	                })
+	            })
+	            successCallback(events)
+	        })
+	        .catch((error) => {
+	            failureCallback(error)
+	            console.log(error);
+	        });
+	},
+	parseDateTime(dateTime) {
+	    // 将'2024.05.02 21:45:56'转换为'2024-05-02T21:45:56'
+	    let date = dateTime.split(' ')[0].split('.').join('-');
+	    let time = dateTime.split(' ')[1];
+	    return date + 'T' + time;
+	},
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends
     },
@@ -181,7 +214,7 @@ b {
 }
 
 .cal-left {
-  width: 300px;
+  width: 22%;
   line-height: 1.5;
   background: #eaf9ff;
   border-right: 1px solid #d3e2e8;
@@ -198,10 +231,13 @@ b {
   flex-grow: 1;
   padding: 3em;
 }
-
-.fc {
-  max-width: 1100px;
-  margin: 0 auto;
+.fc-event-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
 }
+
 
 </style>
