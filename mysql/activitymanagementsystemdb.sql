@@ -33,6 +33,13 @@ CREATE TABLE RolePermission (
     FOREIGN KEY (RoleID) REFERENCES Role(RoleID),
     FOREIGN KEY (PermissionID) REFERENCES Permission(PermissionID)
 );
+CREATE TABLE `emsdb`.`event` (
+  `EventID` INT NOT NULL AUTO_INCREMENT,
+  `EventName` VARCHAR(45) NOT NULL,
+  `EventDate` TIMESTAMP NOT NULL,
+  `EventLocation` VARCHAR(45) NOT NULL,
+  `EventTypeID` INT NOT NULL,
+  PRIMARY KEY (`EventID`));
 
 INSERT INTO User
 (UserID, Username, Password, Email, PhoneNumber, Role, VerificationCode, RegistrationTime, LastLoginTime, AccountStatus)

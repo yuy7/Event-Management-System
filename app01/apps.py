@@ -1,4 +1,6 @@
 import os
+
+import sqlalchemy as sqlalchemy
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -8,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from Model.Login import user_login
 from __init__ import init_db
 
+from datetime import datetime
 app = Flask(__name__)
 app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
@@ -34,6 +37,25 @@ class User(db.Model):
 # def login_router():
 #     return user_login(request)
 
+class Event(db.Model):
+    __tablename__ = 'Event'
+    eventID = db.Column('eventID', db.Integer, primary_key=True)
+    eventName = db.Column('eventName', db.String(45))
+    eventStartDate = db.Column('eventStartDate', db.TIMESTAMP)
+    eventEndDate = db.Column('eventEndDate', db.TIMESTAMP)
+    eventLocation = db.Column('eventLocation', db.String(45))
+
+@app.route("/events", methods=["GET"])
+def get_events():
+    events = Event.query.all()
+    return jsonify([{
+        'eventID': event.eventID,
+        'eventName': event.eventName,
+        'eventEndDate': event.eventEndDate.isoformat().replace('T', ' ').replace("-","."),  
+        'eventStartDate': event.eventStartDate.isoformat().replace('T', ' ').replace("-","."),
+        'eventLocation': event.eventLocation
+    } for event in events])
+
 @app.route("/login", methods=["POST"])
 def user_login():
     """
@@ -58,6 +80,23 @@ def user_login():
         return jsonify({
             "status": "False"
         })
+
+@app.route("/eventCreate", methods=["POST"])
+def EventCreate():
+    data = request.get_json()
+    eventName = data.get("name")
+    eventStartDate = data.get("startDate")
+    eventEndDate = data.get("endDate")
+    eventLocation = data.get("location")
+   
+    # 创建新活动并保存到数据库
+    newEvent = Event(eventName=eventName, eventStartDate=eventStartDate,eventEndDate=eventEndDate,eventLocation=eventLocation)
+    db.session.add(newEvent)
+    db.session.commit()
+    return jsonify({
+        "status": "Success",
+        "message": "创建成功"
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
