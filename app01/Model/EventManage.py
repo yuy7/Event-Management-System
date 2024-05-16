@@ -1,9 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import jsonify
 from Dao.Event import Event
-from apps import db,app
 
-
-@app.route("/events", methods=["GET"])
 def get_events():
     events = Event.query.all()
     return jsonify([{

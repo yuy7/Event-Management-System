@@ -1,5 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
+from __init__ import db
 
 class Event(db.Model):
     __tablename__ = 'Event'

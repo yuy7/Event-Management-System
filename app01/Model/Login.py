@@ -1,7 +1,7 @@
-from flask import jsonify
+from flask import jsonify, request
 from Dao.User import User
 
-def user_login(request):
+def user_login():
     """
     用户登录
     :return:
