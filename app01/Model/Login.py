@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from Dao.User import User
 
 def user_login():
@@ -15,6 +15,7 @@ def user_login():
 
     # 若用户存在且密码正确，返回成功的响应
     if user and user.Password == password:
+        session["userID"] = user.UserID
         return jsonify({
             "status": "Success"
         })

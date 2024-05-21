@@ -13,3 +13,4 @@ class User(db.Model):
     LastLoginTime = db.Column('LastLoginTime', db.TIMESTAMP)
     AccountStatus = db.Column('AccountStatus', db.String(20))
     
+    
