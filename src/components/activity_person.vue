@@ -30,7 +30,7 @@
 			</div>
 			<div class="identity">
 				<p>身份：{{ Role }}</p>
-				
+				<label>{{Rolestate}}</label>
 				<button @click="showRoleModal = true">申请</button>
 			</div>
 		</div>
@@ -89,6 +89,7 @@
 				showPhoneNumberModal: false,
 				showEmailModal: false,
 				showRoleModal: false,
+				Rolestate:"申请中",
 			};
 		},
 		created() {
@@ -103,6 +104,7 @@
 						this.phoneNumber = response.data.Phone;
 						this.email = response.data.Email;
 						this.Role = response.data.Role;
+						// this.Rolestate=response.data.Rolestate;
 					})
 					.catch(error => {
 						console.error('Error fetching users:', error);
@@ -274,7 +276,6 @@
 		font-size: 18px;
 		padding: 15px;
 	}
-
 	.identity {
 		display: flex;
 		/* 使用 flex 布局 */
@@ -283,8 +284,11 @@
 	}
 
 	label {
-		margin-right: 10px;
-		/* 调整标签与下拉框的间距 */
+		padding: 2px 8px; /* Adjust padding as needed */
+		border-radius: 5px;
+		background-color: #3333; /* Set your desired background color */
+		color: #000; /* Set text color */
+		margin-right:10px;
 	}
 
 	select {
