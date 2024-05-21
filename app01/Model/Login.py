@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from flask_jwt_extended import create_access_token
 from Dao.User import User
 
@@ -16,6 +16,7 @@ def user_login():
 
     # 若用户存在且密码正确，返回成功的响应
     if user and user.Password == password:
+        session["userID"] = user.UserID
         return jsonify({
             "status": "Success",
             "UserId": user.UserID
