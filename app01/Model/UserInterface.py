@@ -6,8 +6,8 @@ from __init__ import db
 
 # 得到当前用户信息，GET方法
 def get_user():
-    userID = session.get("userID")
-    # userID = 251101164
+    # userID = session.get("userID")
+    userID = 251101164
     user = User.query.filter_by(UserID=userID).first()
     return jsonify({
         'UserID': user.UserID,
@@ -20,8 +20,8 @@ def get_user():
 
 # 绑定邮箱，POST方法
 def bindEmail():
-    userID = session.get("userID")
-    # userID = 251101164
+    # userID = session.get("userID")
+    userID = 251101164
     email = request.json.get("email")
     rows = User.query.filter_by(UserID=userID).update({"Email":email})
     try:
@@ -42,8 +42,8 @@ def bindEmail():
 
 # 绑定手机号，POST方法
 def bindPhone():
-    userID = session.get("userID")
-    # userID = 251101164
+    # userID = session.get("userID")
+    userID = 251101164
     phone = request.json.get("phone")
     rows = User.query.filter_by(UserID=userID).update({"PhoneNumber":phone})
     try:
@@ -64,8 +64,8 @@ def bindPhone():
 
 # 申请身份，POST方法
 def roleApply():
-    userID = session.get("userID")
-    # userID = 251101164
+    # userID = session.get("userID")
+    userID = 251101164
     role = request.json.get("role")
     roleID = Role.query.filter_by(roleName=role).first().roleID
     roleApply = RoleApply(userID=userID, roleID=roleID)

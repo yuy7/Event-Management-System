@@ -6,6 +6,7 @@ import schedule from './components/calendar.vue'
 import navbar from './components/navbar.vue'
 import activity_create from './components/activity_create.vue'
 import activity_manage from './components/activity_manage.vue'
+import activity_person from './components/activity_person.vue'
 const routes = [
   {
     path: '/login',
@@ -37,7 +38,11 @@ const routes = [
       name: 'activity_manage',
       component: activity_manage,
   },
-
+  {
+      path: '/person',
+      name: 'activity_person',
+      component: activity_person,
+  },
 ]
 
 const router = createRouter({
