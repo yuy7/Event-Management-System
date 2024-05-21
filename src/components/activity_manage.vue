@@ -30,7 +30,14 @@ export default {
   },
   methods: {
     fetchEvents() {
-      axios.get('http://localhost:5000/events')
+      // 从当前URL中解析出userid的值
+    const params = new URLSearchParams(window.location.search);
+    const userid = params.get('userid');
+    axios.get('http://localhost:5000/events', {
+      params: {
+        userid: userid
+      }
+    })
         .then(response => {
           this.events = response.data;
           this.filteredEvents = response.data;

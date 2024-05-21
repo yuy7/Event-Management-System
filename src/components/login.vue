@@ -12,8 +12,6 @@
             <input class="form__input" type="password" v-model="user.password" placeholder="请输入密码">
             <!-- Use Vue click handler instead of form's submit to handle the submission -->
             <button class="form__button button submit" type="submit">提交</button>
-            <!-- 用于测试，暂时还没有跳转的界面 -->
-            <input class="form__input" type="text" v-model="submissionResult" placeholder="是否成功">
             <div class="form__links">
               <a href="./register" class="form__link">注册</a>
               <a href="./forget_password" class="form__link">忘记密码</a>
@@ -35,28 +33,31 @@ phoneNumber: '',
 password: ''
 });
 
-// Reference for submission result
-const submissionResult = ref('');
-
 // Reference to the form element
 const loginForm = ref(null);
 
 // Method to submit the form data
 const submitForm = () => {
-axios.post(FPath, {
-  phoneNumber: user.phoneNumber,
-  password: user.password
-})
-.then(response => {
-  // Process the returned data
-  console.log(response.data);
-  // Update the submission result
-  submissionResult.value = response.data.status;
-})
-.catch(error => {
-  console.error('Error:', error);
-  submissionResult.value = '提交失败，请重试。';
-});
+  axios.post(FPath, {
+    phoneNumber: user.phoneNumber,
+    password: user.password
+  })
+  .then(response => {
+    // Process the returned data
+    console.log(response.data);
+    if (response.data.status === 'Success') {
+      const userId = response.data.UserId;
+      // 通过模板字符串或字符串拼接，将userId附加到URL上
+      window.location.href = `/manage?userid=${userId}`;
+    } else {
+      // If the response status is not success, show an alert with an error message
+      alert('输入密码错误');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('提交失败，请重试。');
+  });
 };
 </script>
 
