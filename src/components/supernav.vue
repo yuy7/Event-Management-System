@@ -3,29 +3,22 @@
       <nav class="navbar">
         <div class="nav-links">
           <ul class="nav-list">
-            <li><router-link to="/schedule">活动日程</router-link></li>
-            <li><router-link to="/create">活动创建</router-link></li>
-            <li><router-link to="/manage">活动管理</router-link></li>
-            <li><router-link to="/history">历史活动</router-link></li>
-            <li><router-link to="/notifications">消息通知</router-link></li>
+            <li><router-link to="/resources">资源安排</router-link></li>
+			<li><router-link to="/goal">安排结果</router-link></li>
+            <li><router-link to="/activity">活动审批</router-link></li>
+			<li><router-link to="/member">人员审批</router-link></li>
           </ul>
         </div>
         <div class="user-profile">
-			<router-link to="/person">
-				<img src="../../src/assets/touxiang.png" alt="User Avatar" >
-			</router-link>
+          <img src="../../src/assets/touxiang.png" alt="User Avatar">
         </div>
       </nav>
     </div>
 </template>
 
 <script>
-// 确保已经在你的项目中安装并配置了Vue Router
 export default {
-  name: "Navbar",
-  
-  
-  
+  name: "Navbar"
 };
 </script>
 
@@ -52,7 +45,7 @@ export default {
   justify-content: space-between;
   padding: 0;
   margin: 0;
-  margin-left: 10%; /* 从左边五分之一处开始 */
+  margin-left: 30%; /* 从左边五分之一处开始 */
 }
 
 .nav-list li {

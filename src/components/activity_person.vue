@@ -49,11 +49,11 @@
 		<modal v-if="showRoleModal" @close="showRoleModal = false" title="申请身份信息">
 			<select id="identity" v-model="newRole">
 				<option value="教师">教师</option>
-				<option value="counsellor">辅导员</option>
-				<option value="monitor">班长</option>
-				<option value="clubLeader">社团负责人</option>
-				<option value="manager">部门负责人</option>
-				<option value="student">学生</option>
+				<option value="辅导员">辅导员</option>
+				<option value="班长">班长</option>
+				<option value="社团负责人">社团负责人</option>
+				<option value="部门负责人">部门负责人</option>
+				<option value="学生">学生</option>
 			</select>
 			<button @click="updateRole">保存</button>
 		</modal>
@@ -97,7 +97,13 @@
 		},
 		methods: {
 			fetchUsers() {
-				axios.get('http://localhost:5000/userinterface')
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				axios.get('http://localhost:5000/userinterface', {
+					  params: {
+						userid: userid
+					  }
+					})
 					.then(response => {
 						this.username = response.data.Username;
 						// this.userIP = response.data.UserIP;
@@ -281,6 +287,7 @@
 		/* 使用 flex 布局 */
 		align-items: center;
 		/* 垂直居中 */
+		flex-direction: raw;
 	}
 
 	label {
@@ -297,7 +304,6 @@
 		border: 1px solid #ccc;
 		border-radius: 5px;
 		margin-right: 15px;
-		/* 调整标签与下拉框的间距 */
 	}
 
 	.identity button {
