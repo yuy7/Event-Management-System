@@ -30,12 +30,25 @@
 		<div class="discussion-area">
 		    <h3>讨论区</h3>
 		    <div v-for="comment in comments" :key="comment.id" class="comment">
-		        <h4>{{ comment.askUser }}</h4>
-				<p>{{ comment.problem }}</p>
+				<div class="ask">
+					<div class="words">
+						<h4>{{ comment.askUser }}</h4>
+						<p>{{ comment.problem }}</p>
+					</div>
+					<div class="time">
+						<p>{{comment.askTime}}</p>
+					</div>
+				</div>
+				
 				<hr class="separator">
 		        <div v-for="ans in comment.ans" :key="ans.ansUser" class="answer">
-					<h4>{{ ans.ansUser }}</h4>
-					<p>{{ ans.answer }}</p>
+					<div class="words">
+						<h4>{{ ans.ansUser }}</h4>
+						<p>{{ ans.answer }}</p>
+					</div>
+					<div class="time">
+						<p>{{ans.ansTime}}</p>
+					</div>
 		        </div>
 		    </div>
 		</div>
@@ -59,10 +72,10 @@
 				eventLocation: "活动地点",
 				eventUser:["小红","小明"],
 				comments: [
-					{ id: 1, askUser: '小红', problem: '我很期待这个活动！',
+					{ id: 1, askUser: '小红', problem: '我很期待这个活动!',askTime:"2024-05-23 20:00:00",
 						ans:[
-							{ansid:1,ansUser:"小明",answer:"我也很期待！"},
-							{ansid:2,ansUser:"小绿",answer:"我也是！"}
+							{ansid:1,ansUser:"小明",answer:"我也很期待！",ansTime:"2024-05-23 21:00:00"},
+							{ansid:2,ansUser:"小绿",answer:"我也是！",ansTime:"2024-05-23 22:00:00"}
 							] },
 				],
 			};
@@ -149,13 +162,21 @@
 	.discussion-area .comment {
 	    margin: 10px;
 	    border: 1px solid #ddd;
-	    
-	    border-radius: 10px;
 	}
-	
+	.ask{
+		display: flex;
+		flex-direction: row;
+	}
+	.time {
+		display: flex;
+		fontSize:10px;
+		align-self: flex-end;
+		margin-left: auto;
+		/* 将右侧按钮推到右边 */
+		padding-right: 10px;
+	}
 	.discussion-area .answer {
 	    margin-left: 20px;
-	    position: relative;
 	}
 	
 	.discussion-area .answer:before {
@@ -182,9 +203,9 @@
 		height: 1px;
 		background-color: #ccc;
 		/* 分隔线颜色 */
-		margin-top: -5px;
+		margin-top: -13px;
 		/* 调整分隔线与上方内容的间距 */
-		margin-bottom: -5px;
+		margin-bottom: -13px;
 		/* 调整分隔线与下方内容的间距 */
 		margin-left: auto;
 		/* 将分隔线推到右边 */
