@@ -40,7 +40,7 @@
 					</div>
 				</div>
 				
-				<hr class="separator">
+				<hr class="detailseparator">
 		        <div v-for="ans in comment.ans" :key="ans.ansUser" class="answer">
 					<div class="words">
 						<h4>{{ ans.ansUser }}</h4>
@@ -197,7 +197,7 @@
 		margin-left: 20px;
 		fontSize:15px;
 	}
-	.separator {
+	.detailseparator {
 		width: calc(100% - 10px);
 		/* 100px 是左侧内容的宽度 */
 		height: 1px;
