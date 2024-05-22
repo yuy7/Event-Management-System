@@ -18,9 +18,23 @@
         </table>
     </div>
 	<div class="manage">
-		<button>自动安排</button>
+		<button @click="openDateModal">自动安排</button>
 	</div>
-	
+	<div class="modal" v-if="showModal">
+		<div class="modal-content">
+			<span class="close" @click="closeModal">&times;</span>
+			<h2>选择起始和结束日期</h2>
+			<div>
+				<label for="startDate">起始日期:</label>
+				<input type="date" id="startDate" v-model="selectedStartDate">
+			</div>
+			<div>
+				<label for="endDate">结束日期:</label>
+				<input type="date" id="endDate" v-model="selectedEndDate">
+			</div>
+			<button @click="confirmDateSelection">确认</button>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -36,6 +50,9 @@
                 applicantname: "111",
                 activityname: "考试",
                 place: "机电楼",
+				showModal: false,
+				selectedStartDate: null,
+				selectedEndDate: null
             };
         },
 		created() {
@@ -58,6 +75,27 @@
 			// 			console.error('Error fetching acyivity:', error);
 			// 		});
 			},
+			openDateModal() {
+				this.showModal = true;
+			},
+			closeModal() {
+				this.showModal = false;
+			},
+			confirmDateSelection() {
+				this.$router.push({ path: '/goal', query: { startDate: this.selectedStartDate, endDate: this.selectedEndDate } });
+				this.closeModal();
+				// axios.post('http://localhost:5000/activitymanage', {
+				// 		startDate: this.selectedStartDate,
+				//		endDate: this.selectedEndDate
+				// 	})
+				// 	.then(response => {
+				// 		this.$router.push({ path: '/goal', query: { startDate: this.selectedStartDate, endDate: this.selectedEndDate } });
+				// 		this.closeModal();
+				// 	})
+				// 	.catch(error => {
+				// 		console.error('Error posting activitydate:', error);
+				// 	});
+			}
 		},
     }
 </script>
@@ -89,6 +127,37 @@
 	    border-radius: 7px;
 	    margin-top: 50px;
 	}
-
-
+	.modal-content {
+	    background-color: #fefefe;
+	    margin: 20px auto;
+	    padding: 20px;
+	    border: 1px solid #888;
+	    width: 20%;
+	    height: 130px;
+	    left: 25%;
+	    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	}
+	.close {
+		color: #aaa;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+	}
+	h2{
+		margin: 0 0 10px 0;
+		font-size: 18px;
+	}
+	.modal-content > div {
+	    margin-bottom: 10px; 
+	}
+	.modal button{
+		padding: 6px 20px;
+		font-size: 14px;
+		background-color: #262626;
+		color: #fff;
+		border: none;
+		border-radius: 7px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
 </style>
