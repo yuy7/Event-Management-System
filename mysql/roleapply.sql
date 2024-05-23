@@ -26,19 +26,10 @@ CREATE TABLE `roleapply` (
   `roleApplyID` int NOT NULL AUTO_INCREMENT,
   `userID` int NOT NULL,
   `roleID` int NOT NULL,
+  `roleState` int NOT NULL,
   PRIMARY KEY (`roleApplyID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `roleapply`
---
-
-LOCK TABLES `roleapply` WRITE;
-/*!40000 ALTER TABLE `roleapply` DISABLE KEYS */;
-INSERT INTO `roleapply` VALUES (1,251101164,3);
-/*!40000 ALTER TABLE `roleapply` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -49,4 +40,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-20 16:17:34
+-- Dump completed on 2024-05-23 22:56:56
