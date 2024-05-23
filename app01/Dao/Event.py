@@ -7,5 +7,4 @@ class Event(db.Model):
     eventStartDate = db.Column('eventStartDate', db.TIMESTAMP)
     eventEndDate = db.Column('eventEndDate', db.TIMESTAMP)
     eventLocation = db.Column('eventLocation', db.String(45))
-    
-    
+    requireApproval = db.Column('requireApproval', db.Boolean, default=False)
