@@ -99,6 +99,7 @@
 			fetchUsers() {
 				const params = new URLSearchParams(window.location.search);
 				const userid = params.get('userid');
+				console.log('userid:', userid);
 				axios.get('http://localhost:5000/userinterface', {
 					  params: {
 						userid: userid
@@ -272,12 +273,12 @@
 		/* 调整下拉框与上方内容的间距 */
 	}
 
-	h4 {
+	.info h4 {
 		margin: 5px 0;
 		font-size: 13px;
 	}
 
-	p {
+	.identity p {
 		margin: 5px 0;
 		font-size: 18px;
 		padding: 15px;

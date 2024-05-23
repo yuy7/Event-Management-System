@@ -1,8 +1,8 @@
 <template>
   <div class="activity-manage-container">
-    <navbar></navbar> <!-- 使用 Navbar 组件 -->
+    <navbar></navbar>
     <div class="events-container">
-      <div class="event-card" v-for="event in filteredEvents" :key="event.eventID">
+      <div class="event-card" v-for="event in filteredEvents" :key="event.eventID" @click="goToDetail(event.eventID)">
         <h3>{{ event.eventName }}</h3>
         <p>{{ event.eventStartDate}}-{{ event.eventEndDate }}</p >
         <p>{{ event.eventLocation }}</p >
@@ -14,7 +14,6 @@
 <script>
 import Navbar from './navbar.vue';
 import axios from 'axios';
-
 export default {
   components: {
     Navbar
@@ -22,7 +21,7 @@ export default {
   data() {
     return {
       events: [],
-      filteredEvents: []
+      filteredEvents: [],
     };
   },
   created() {
@@ -40,12 +39,19 @@ export default {
     })
         .then(response => {
           this.events = response.data;
-          this.filteredEvents = response.data;
+          this.filteredEvents = response.data;	  
         })
         .catch(error => {
           console.error('Error fetching events:', error);
         });
     },
+	goToDetail(eventId) {
+		const params = new URLSearchParams(window.location.search);
+		const userid = params.get('userid');
+	    window.location.href = `/detail?userid=${userid}&eventid=${eventId}`;
+		// console.log('userid:', userid);
+		// console.log('eventid:', eventId);
+	  },
   },
   filters: {
     formatDate(value) {

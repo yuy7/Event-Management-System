@@ -1,41 +1,64 @@
 <template>
   <div class="container">
-    <navbar></navbar> <!-- 使用 Navbar 组件 -->
+    <navbar></navbar>
+    <!-- 使用 Navbar 组件 -->
     <div class="activity-create">
       <form @submit.prevent="submitForm">
         <div class="form-group">
           <label for="activity-name">活动名称:</label>
-          <input type="text" id="activity-name" v-model="activity.name" required>
+          <input type="text" id="activity-name" v-model="activity.name" required />
         </div>
 
         <div class="form-group">
           <label for="activity-startDate">活动开始时间:</label>
-          <input type="datetime-local" id="activity-startDate" v-model="activity.startDate" required>
+          <input
+            type="datetime-local"
+            id="activity-startDate"
+            v-model="activity.startDate"
+            required
+          />
         </div>
 
         <div class="form-group">
           <label for="activity-endDate">活动结束时间:</label>
-          <input type="datetime-local" id="activity-endDate" v-model="activity.endDate" required>
+          <input
+            type="datetime-local"
+            id="activity-endDate"
+            v-model="activity.endDate"
+            required
+          />
         </div>
 
         <div class="form-group">
           <label for="activity-location">活动地点:</label>
-          <input type="text" id="activity-location" v-model="activity.location" required>
+          <input
+            type="text"
+            id="activity-location"
+            v-model="activity.location"
+            required
+          />
         </div>
 
         <div class="form-group">
           <label for="organizer">负责人:</label>
-          <input type="text" id="organizer" v-model="activity.organizer" required>
+          <input type="text" id="organizer" v-model="activity.organizer" required />
         </div>
 
         <div class="form-group">
           <label for="contact">联系方式:</label>
-          <input type="text" id="contact" v-model="activity.contact" required>
+          <input type="text" id="contact" v-model="activity.contact" required />
         </div>
-
-        <div class="form-buttons">
-          <button type="submit">提交</button>
-          <button type="reset">重置</button>
+        <div class="form-group">
+          <label for="require-approval">是否需要审批:</label>
+          <input
+            type="checkbox"
+            id="require-approval"
+            v-model="activity.requireApproval"
+          />
+          <div class="form-buttons">
+            <button type="submit">提交</button>
+            <button type="reset">重置</button>
+          </div>
         </div>
       </form>
     </div>
@@ -43,41 +66,43 @@
 </template>
 
 <script>
-import axios from 'axios'; // 引入axios
-import Navbar from './navbar.vue';
+import axios from "axios"; // 引入axios
+import Navbar from "./navbar.vue";
 
 export default {
   components: {
-    Navbar
+    Navbar,
   },
   data() {
     return {
       activity: {
-        name: '',
-        startDate: '',
-        endDate: '',
-        location: '',
-        organizer: '',
-        contact: ''
-      }
+        name: "",
+        startDate: "",
+        endDate: "",
+        location: "",
+        organizer: "",
+        contact: "",
+        requireApproval: false, // 新增审批标志
+      },
     };
   },
+
   methods: {
     submitForm() {
-      axios.post('http://localhost:5000/eventCreate', this.activity)
-        .then(response => {
-          console.log('Success:', response);
+      axios
+        .post("http://localhost:5000/eventCreate", this.activity)
+        .then((response) => {
+          console.log("Success:", response);
           // 处理响应数据
         })
-        .catch(error => {
-          console.error('Error:', error);
+        .catch((error) => {
+          console.error("Error:", error);
           // 处理错误情况
         });
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped>
 .container {
@@ -93,7 +118,7 @@ export default {
   max-width: 600px; /* 最大宽度 */
   padding: 20px;
   background: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 20px; /* 调整顶部边距 */
 }
 
@@ -142,5 +167,8 @@ button[type="reset"]:hover {
   display: flex;
   justify-content: center;
   padding-top: 20px;
+}
+.activity-create input[type="checkbox"] {
+  margin-top: 3px;
 }
 </style>

@@ -9,6 +9,7 @@ import activity_manage from './components/activity_manage.vue'
 import activity_person from './components/activity_person.vue'
 import activity_resources from './components/activity_resources.vue'
 import activity_goal from './components/activity_goal.vue'
+import activity_detail from './components/activity_detail.vue'
 const routes = [
   {
     path: '/login',
@@ -54,6 +55,11 @@ const routes = [
       path: '/goal',
       name: 'activity_goal',
       component: activity_goal,
+  },
+  {
+	  path: '/detail',
+	  name: 'activity_detail',
+	  component: activity_detail,
   },
 ]
 
