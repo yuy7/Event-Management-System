@@ -7,7 +7,7 @@ from Model.EventManage import get_events
 from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply
 from Model.Invite import invite
 from Model.ApplyEvent import apply_event
-from flask_jwt_extended import JWTManager, jwt_required
+from Model.LocationArrange import locationArrange
 import os
 
 app = Flask(__name__)
@@ -30,5 +30,6 @@ app.route("/userinterface/bindPhone", methods=["POST"])(bindPhone)
 app.route("/userinterface/roleApply", methods=["POST"])(roleApply)
 app.route("/invite", methods=["POST"])(invite)
 app.route("/applyEvent", methods=["POST"])(apply_event)
+app.route("/locationArrange", methods=["POST"])(locationArrange)
 if __name__ == "__main__":
     app.run(debug=True)
