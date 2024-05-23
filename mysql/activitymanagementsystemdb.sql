@@ -45,3 +45,6 @@ INSERT INTO User
 (UserID, Username, Password, Email, PhoneNumber, Role, VerificationCode, RegistrationTime, LastLoginTime, AccountStatus)
 VALUES
 (251101163, 'yuyan2003', '123456', '2511011639@qq.com', '18067262965', '0', '123456', '2024-05-07 16:14:37', '2024-05-07 15:00:52', '123456');
+INSERT INTO `role` 
+VALUES 
+(1,'无'),(2,'教师'),(3,'辅导员'),(4,'班长'),(5,'社团负责人'),(6,'部门负责人'),(7,'学生');
