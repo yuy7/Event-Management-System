@@ -197,7 +197,7 @@ export default defineComponent({
   padding: 0 0 0 1.5em;
 }
 
-li {
+.cal-left li {
   margin: 1.5em 0;
   padding: 0;
 }
