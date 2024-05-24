@@ -16,6 +16,16 @@ def get_user():
         'Phone': user.PhoneNumber,
         'Role': user.Role,
     })
+# 得到当前用户信息，GET方法
+def get_users():
+    users = User.query.all()
+    return jsonify([{
+        'userID': user.UserID,
+        'userName': user.Username,
+        'email': user.Email,
+        'phone': user.PhoneNumber,
+        'role': user.Role,
+    } for user in users])
 
 
 # 绑定邮箱，POST方法

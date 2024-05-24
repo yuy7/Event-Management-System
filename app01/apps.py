@@ -4,7 +4,7 @@ from __init__ import db
 from Model.Login import user_login
 from Model.EventCreate import EventCreate
 from Model.EventManage import get_events
-from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply
+from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply,get_users
 from Model.Invite import invite
 from Model.ApplyEvent import apply_event
 from Model.LocationArrange import locationArrange
@@ -29,6 +29,7 @@ app.route("/userinterface", methods=["GET"])(get_user)
 app.route("/userinterface/bindEmail", methods=["POST"])(bindEmail)
 app.route("/userinterface/bindPhone", methods=["POST"])(bindPhone)
 app.route("/userinterface/roleApply", methods=["POST"])(roleApply)
+app.route("/userinterface/get_users", methods=["GET"])(get_users)
 app.route("/invite", methods=["POST"])(invite)
 app.route("/applyEvent", methods=["POST"])(apply_event)
 app.route("/locationArrange", methods=["POST"])(locationArrange)

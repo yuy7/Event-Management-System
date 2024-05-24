@@ -10,6 +10,7 @@ import activity_person from './components/activity_person.vue'
 import activity_resources from './components/activity_resources.vue'
 import activity_goal from './components/activity_goal.vue'
 import activity_detail from './components/activity_detail.vue'
+import activity_invite from './components/activity_invite.vue'
 const routes = [
   {
     path: '/login',
@@ -60,6 +61,11 @@ const routes = [
 	  path: '/detail',
 	  name: 'activity_detail',
 	  component: activity_detail,
+  },
+  {
+  	  path: '/invite',
+  	  name: 'activity_invite',
+  	  component: activity_invite,
   },
 ]
 
