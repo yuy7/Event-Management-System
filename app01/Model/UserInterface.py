@@ -68,10 +68,15 @@ def roleApply():
     # userID = 251101164
     role = request.json.get("role")
     roleID = Role.query.filter_by(roleName=role).first().roleID
-    roleApply = RoleApply(userID=userID, roleID=roleID)
+    roleApply = RoleApply.query.filter_by(userID=userID).first()
     try:
-        db.session.add(roleApply)
-        db.session.commit()
+        if roleApply is not None:
+            roleApply.roleID = roleID
+            db.session.commit()
+        else:
+            roleApply = RoleApply(userID=userID, roleID=roleID)
+            db.session.add(roleApply)
+            db.session.commit()
         return jsonify({
             "status": "Success"
         }), 201
@@ -81,4 +86,7 @@ def roleApply():
             "status": "Error",
             "message": str(e)
         }), 500
+    
+
+
     

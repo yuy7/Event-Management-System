@@ -143,7 +143,7 @@
 		font-size: 28px;
 		font-weight: bold;
 	}
-	h2{
+	.modal h2{
 		margin: 0 0 10px 0;
 		font-size: 18px;
 	}
@@ -159,5 +159,8 @@
 		border-radius: 7px;
 		cursor: pointer;
 		transition: background-color 0.3s ease;
+	}
+	.modal label{
+		margin-right:20px;
 	}
 </style>

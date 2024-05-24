@@ -31,6 +31,9 @@
 		    <h3>讨论区</h3>
 		    <div v-for="comment in comments" :key="comment.id" class="comment">
 				<div class="ask">
+					<div class="profile-picture">
+						<img src="../../src/assets/touxiang.png" alt="Profile Picture">
+					</div>
 					<div class="words">
 						<h4>{{ comment.askUser }}</h4>
 						<p>{{ comment.problem }}</p>
@@ -38,10 +41,13 @@
 					<div class="time">
 						<p>{{comment.askTime}}</p>
 					</div>
+					<button @click="showCommentInput">回复</button>
 				</div>
-				
-				<hr class="separator">
+				<hr class="detailseparator">
 		        <div v-for="ans in comment.ans" :key="ans.ansUser" class="answer">
+					<div class="profile-picture">
+						<img src="../../src/assets/touxiang.png" alt="Profile Picture">
+					</div>
 					<div class="words">
 						<h4>{{ ans.ansUser }}</h4>
 						<p>{{ ans.answer }}</p>
@@ -52,7 +58,11 @@
 		        </div>
 		    </div>
 		</div>
-		
+		<div v-if="isCommentInputVisible" class="commentInput">
+		    <input type="text" v-model="newComment"></input>
+		    <button @click="submitComment">提交评论</button>
+		</div>
+
 		<button @click="invite">邀请新成员加入活动</button>
 	</div>
 </template>
@@ -78,6 +88,8 @@
 							{ansid:2,ansUser:"小绿",answer:"我也是！",ansTime:"2024-05-23 22:00:00"}
 							] },
 				],
+				newComment: '',
+				isCommentInputVisible:false,
 			};
 		},
 		created() {
@@ -91,7 +103,7 @@
 				const userid = params.get('userid');
 				console.log('userid:', userid);
 				console.log('eventid:', eventid);
-				// axios.get('http://localhost:5000/get_event', {
+				// axios.get('http://localhost:5000/get_single_event', {
 				// 		params: {
 				// 			eventid: eventid
 				// 		}
@@ -102,12 +114,49 @@
 				// 		this.eventEndDate = response.data.eventEndDate;
 				// 		this.eventLocation = response.data.eventLocation;
 				//		this.eventUser = response.data.eventUser;
+				//		this.comments = response.data.comments;
 				// 	})
 				// 	.catch(error => {
 				// 		console.error('Error fetching events:', error);
 				// 	});
 			},
-			
+			invite() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				const eventid = params.get('eventid');
+				window.location.href = `/invite?userid=${userid}&eventid=${eventid}`;
+				// console.log('userid:', userid);
+				// console.log('eventid:', eventid);
+			},
+			showCommentInput() {
+				// 显示输入框
+				this.isCommentInputVisible = true;
+			},
+			submitComment() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				// 打印评论信息
+				console.log('userid:', userid);
+				console.log('评论时间:', new Date());
+				console.log('评论内容:', this.newComment);
+				// axios.post('http://localhost:5000/updateComment', {
+				// 		userid: userid,
+				// 		answer:this.newComment,
+				// 		ansTime:new Date(),
+				// 	})
+				// 	.then(response => {
+						
+				// 	})
+				// 	.catch(error => {
+				// 		console.error('Error updating newcomment:', error);
+				// 	});
+				// }
+				
+				// 清空评论输入框
+				this.newComment = '';
+				// 隐藏评论输入框
+				this.isCommentInputVisible = false;
+			},
 		},
 	}
 </script>
@@ -151,10 +200,10 @@
 		background-color: #595959;
 	}
 	.discussion-area {
-	        width: 90%;
-	        margin-top: 20px;
-	        border: 1px solid #ddd;
-	        border-radius: 10px;
+		width: 90%;
+		margin-top: 20px;
+		border: 1px solid #ddd;
+		border-radius: 10px;
 	}
 	.discussion-area h3 {
 		text-align: center;
@@ -166,6 +215,13 @@
 	.ask{
 		display: flex;
 		flex-direction: row;
+		padding:10px;
+	}
+	.answer{
+		display: flex;
+		flex-direction: row;
+		margin-right:10px;
+		margin-top:-15px;
 	}
 	.time {
 		display: flex;
@@ -197,19 +253,43 @@
 		margin-left: 20px;
 		fontSize:15px;
 	}
-	.separator {
-		width: calc(100% - 10px);
+	.detailseparator {
+		width: calc(100% - 15px);
 		/* 100px 是左侧内容的宽度 */
 		height: 1px;
 		background-color: #ccc;
 		/* 分隔线颜色 */
-		margin-top: -13px;
-		/* 调整分隔线与上方内容的间距 */
-		margin-bottom: -13px;
-		/* 调整分隔线与下方内容的间距 */
+		margin-top: -20px;
 		margin-left: auto;
 		/* 将分隔线推到右边 */
 		margin-right: auto;
 		/* 将分隔线推到右边 */
+	}
+	.profile-picture img {
+	    border-radius: 50%;
+	    width: 40px;
+	    height: 40px;
+	    object-fit: cover; 
+		margin-top:20px;
+		margin-bottom:20px;
+		margin-left:20px;
+	}
+	.ask button{
+		height:30px;
+		margin-top:40px;
+		font-size: 13px;
+		background-color: #262626;
+		color: #fff;
+		border-radius: 7px;
+		transition: background-color 0.3s ease;
+	}
+	.commentInput button{
+		margin-left:10px;
+	}
+	.commentInput input{
+		height:23px;
+		width:1100px;
+		border-radius: 5px;
+		border: 1px solid #333333;
 	}
 </style>

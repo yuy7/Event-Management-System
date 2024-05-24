@@ -187,22 +187,22 @@ export default defineComponent({
 
 <style lang='css'>
 
-h2 {
+.cal h2 {
   margin: 0px;
   font-size: 16px;
 }
 
-ul {
+.cal ul {
   margin: 0;
   padding: 0 0 0 1.5em;
 }
 
-li {
+.cal-left li {
   margin: 1.5em 0;
   padding: 0;
 }
 
-b {
+.cal b {
   margin-right: 3px;
 }
 

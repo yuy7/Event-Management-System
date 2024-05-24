@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <navbar></navbar>
-    <!-- 使用 Navbar 组件 -->
     <div class="activity-create">
       <form @submit.prevent="submitForm">
         <div class="form-group">
@@ -140,7 +139,7 @@ export default {
   border-radius: 4px;
 }
 
-button {
+.form-buttons button {
   padding: 10px 20px;
   margin-right: 10px;
   border: none;
@@ -150,16 +149,16 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.form-buttons button:hover {
   background-color: #555;
 }
 
-button[type="reset"] {
+.form-buttons button[type="reset"] {
   background-color: #ccc;
   color: black;
 }
 
-button[type="reset"]:hover {
+.form-buttons button[type="reset"]:hover {
   background-color: #ddd;
 }
 

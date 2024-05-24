@@ -291,15 +291,15 @@
 		flex-direction: raw;
 	}
 
-	label {
-		padding: 2px 8px; /* Adjust padding as needed */
+	.identity label {
+		padding: 3px 8px; 
 		border-radius: 5px;
-		background-color: #3333; /* Set your desired background color */
-		color: #000; /* Set text color */
+		background-color: #3333; 
+		color: #000; 
 		margin-right:10px;
 	}
 
-	select {
+	.mo select {
 		padding: 6px 40px;
 		font-size: 14px;
 		border: 1px solid #ccc;

@@ -8,6 +8,7 @@ from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply
 from Model.Invite import invite
 from Model.ApplyEvent import apply_event
 from Model.LocationArrange import locationArrange
+from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
 import os
 
 app = Flask(__name__)
@@ -31,5 +32,7 @@ app.route("/userinterface/roleApply", methods=["POST"])(roleApply)
 app.route("/invite", methods=["POST"])(invite)
 app.route("/applyEvent", methods=["POST"])(apply_event)
 app.route("/locationArrange", methods=["POST"])(locationArrange)
+app.route("/acceptRoleApply", methods=["POST"])(acceptRoleApply)
+app.route("/roleApplyCheck", methods=["GET"])(getRoleApply)
 if __name__ == "__main__":
     app.run(debug=True)
