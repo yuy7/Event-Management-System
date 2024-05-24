@@ -21,60 +21,42 @@ def eventArrange(event_list):
     # roleNameList = [get_user_role(event.reservationUserId) for event in event_list]
     # 遍历所有event，如果当前preferredLocation在当天的time时间段为空，则将event、preferredLocation、time加入arrange_list
     # 这个字典将用来存储已安排的事件信息，键为日期和时间的组合，值为Event对象
+
+    # 安排事件
     scheduled_events = {}
+    unscheduled_events = []  # 用来追踪未能安排的事件
+
     for event in event_list:
         key = "{}_{}".format(event.time, event.preferredLocation)
-        
-        # 检查此时间和地点是否已有安排的事件
         if key in scheduled_events:
             existing_event = scheduled_events[key]
-            
-            # 检查当前事件的优先级是否高于已安排的事件
-            # eventTypeID越小，优先级越高
-            # role越小，优先级越高
-            # 如果都一样，按照id，即早预约的占有
-            if(event.eventTypeID < existing_event.eventTypeID or
-               (event.eventTypeID < existing_event.eventTypeID and 
-                get_user_role(event.reservationUserId) < get_user_role(existing_event.eventTypeID))):
-                # 替换低优先级的事件，以当前事件占位
-                scheduled_events[key] = event
-            if event.priority > existing_event.priority:
-                # 替换低优先级的事件，以当前事件占位
-                scheduled_events[key] = event                
-            # 若优先级不足以替换，当前事件不安排
+            # eventTypeID 越小, role 数值越小, 优先级越高。
+            existing_event_role = get_user_role(existing_event.reservationUserId)
+            new_event_role = get_user_role(event.reservationUserId)
+            if (event.eventTypeID < existing_event.eventTypeID or
+            (event.eventTypeID == existing_event.eventTypeID and new_event_role < existing_event_role) or
+            (event.eventTypeID == existing_event.eventTypeID and new_event_role == existing_event_role and event.eventID < existing_event.eventID)):
+                # 替换优先级低的事件
+                scheduled_events[key] = event  
+            else:
+                # 记录未能安排的事件
+                unscheduled_events.append(event)
         else:
             # 如果当前时间段此地点为空，则安排当前事件
             scheduled_events[key] = event
-    
-    
-    return arrange_list
-    
-    pass
 
-def arrange_event(event_list):
-    arrange_list = []
+    # 准备结果列表，包含活动对象和他们的地点
+    result_list = []
 
-    for event in event_list:
-        key = "{}_{}_{}".format(event.date, event.time, event.preferredLocation)
-        
-        # 检查此时间和地点是否已有安排的事件
-        if key in scheduled_events:
-            existing_event = scheduled_events[key]
-            
-            # 检查当前事件的优先级是否高于已安排的事件
-            if event.priority > existing_event.priority:
-                # 替换低优先级的事件，以当前事件占位
-                scheduled_events[key] = event
-                arrange_list.append((event.eventID, event.preferredLocation, event.time))
-                
-                # 此处可以添加逻辑处理被替换掉的事件，例如重新安排
-            # 若优先级不足以替换，当前事件不安排
-        else:
-            # 如果当前时间段此地点为空，则安排当前事件
-            scheduled_events[key] = event
-            arrange_list.append((event.eventID, event.preferredLocation, event.time))
+    # 将安排的事件添加到结果列表中
+    for event in scheduled_events.values():
+        result_list.append((event, event.preferredLocation))
+
+    # 将未能安排的事件也添加到结果列表，但他们的地点为 None
+    for event in unscheduled_events:
+        result_list.append((event, None))
     
-    return arrange_list
+    return result_list
 
 
 def locationArrange():
