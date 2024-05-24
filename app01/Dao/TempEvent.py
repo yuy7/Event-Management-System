@@ -9,16 +9,10 @@ class Event(db.Model):
     eventTypeID = db.Column(db.Integer, nullable=False)
     numberOfPeople = db.Column(db.Integer, nullable=False)
     preferredLocation = db.Column(db.String(100), nullable=False)
+    arrangedLocation = db.Column(db.String(100))
+    requireApproval = db.Column('requireApproval', db.Boolean, default=False)
     time = db.Column(db.String(100), nullable=False)
 
-    def __init__(self, eventName, date, reservationUserId, eventTypeID, numberOfPeople, preferredLocation, time):
-        self.eventName = eventName
-        self.date = date
-        self.reservationUserId = reservationUserId
-        self.eventTypeID = eventTypeID
-        self.numberOfPeople = numberOfPeople
-        self.preferredLocation = preferredLocation
-        self.time = time
 
     def __repr__(self):
         return f"<Event {self.eventName}>"
