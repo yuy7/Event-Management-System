@@ -142,10 +142,11 @@ def getArrangedEvents():
 def getUnarrangedEvents():
     unarranged_events = Event.query.filter(Event.arrangedLocation == None).all()
     return jsonify([{
+        'eventID': event.eventID,
         'eventName': event.eventName,
         'time': event.date+' '+time_mapping[event.time],  
-        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first(),
-        'reservationUserRole': Role.query.filter_by(RoleID=event.reservationUserId).first(),
+        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first().Username,
+        'reservationUserRole': Role.query.filter_by(roleID=event.reservationUserId).first().roleName,
         'prefferedLocation': event.prefferedLocation,
         'eventType': event_type_mapping[event.eventType],
         'numberOfPeople': event.numberOfPeople
