@@ -9,5 +9,6 @@ def get_events():
         'eventName': event.eventName,
         'eventEndDate': event.eventEndDate.isoformat().replace('T', ' ').replace("-","."),  
         'eventStartDate': event.eventStartDate.isoformat().replace('T', ' ').replace("-","."),
-        'eventLocation': event.eventLocation
+        'eventLocation': event.eventLocation,
+        'creatorid': event.creator_id
     } for event in events])
