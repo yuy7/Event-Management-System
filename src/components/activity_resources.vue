@@ -3,17 +3,22 @@
     <div class="activitylist">
         <table class="activity-table">
             <tr>
+				<th>活动名称</th>
                 <th>申请人</th>
+				<th>申请人身份</th>
                 <th>时间</th>
-                <th>活动名称</th>
-                <th>地点</th>
+                <th>期望地点</th>
+				<th>活动类型</th>
+				<th>参与人数</th>
             </tr>
-			<tr v-for="activity in activityEvents" :key="activity.activityID">
-            <!-- <tr v-for="index in 10" :key="index"> -->
-                <td>{{ applicantname }}</td>
-                <td>{{ time }}</td>
-                <td>{{ activityname }}</td>
-                <td>{{ place }}</td>
+			<tr v-for="activity in activityEvents" :key="activity.eventID">
+				<td>{{ activity.eventName }}</td>
+                <td>{{ activity.reservationUserName }}</td>
+				<td>{{ activity.reservationUserRole }}</td>
+                <td>{{ activity.time }}</td>
+                <td>{{ activity.prefferedLocation }}</td>
+				<td>{{ activity.eventType }}</td>
+				<td>{{ activity.numberOfPeople }}</td>
             </tr>
         </table>
     </div>
@@ -46,10 +51,7 @@
         },
         data() {
             return {
-                time: "2003",
-                applicantname: "111",
-                activityname: "考试",
-                place: "机电楼",
+				activityEvents:[],
 				showModal: false,
 				selectedStartDate: null,
 				selectedEndDate: null
@@ -60,16 +62,9 @@
 		},
 		methods: {
 			fetchActivity() {
-				this.time = "2024";
-				this.applicantname = "申请人";
-				this.activityname = "开会";
-				this.place = "会议室";
-				axios.get('http://localhost:5000/avtivityget')
+				axios.get('http://localhost:5000/getUnarrangedEvents')
 					.then(response => {
-						this.time = response.data.time;
-						this.applicantname = response.data.applicantname;
-						this.activityname = response.data.activityname;
-						this.place = response.data.place;
+						this.activityEvents = response.data;
 					})
 					.catch(error => {
 						console.error('Error fetching acyivity:', error);
