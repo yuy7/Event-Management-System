@@ -9,9 +9,9 @@
       <div class="event-row" v-for="(eventRow, index) in chunkedEvents" :key="index">
         <div class="event-card" v-for="singleEvent in eventRow" :key="singleEvent.eventID" @click="goToDetail(singleEvent.eventID)">
           <h3>{{ singleEvent.eventName }}</h3>
-          <p>活动开始时间：{{ singleEvent.eventStartDate }}</p>
-		  <p>活动结束时间：{{ singleEvent.eventEndDate }}</p>
-          <p>活动地点：{{ singleEvent.eventEndDate }}</p>
+          <p>活动日期：{{ singleEvent.date }}</p>
+          <p>活动时间：{{ singleEvent.time }}</p>
+          <p>活动地点：{{ singleEvent.preferredLocation }}</p>
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@ export default {
       events: [],
       filteredEvents: [],
       searchQuery: '',
-	  isSearch:false,
+      isSearch: false,
     };
   },
   created() {
@@ -39,59 +39,50 @@ export default {
   },
   methods: {
     fetchEvents() {
-        const params = new URLSearchParams(window.location.search);
-        const userid = params.get('userid');
-        console.log('userid:', userid); // 打印当前用户的ID
-        axios.get('http://localhost:5000/events', {
-          params: {
-            userid: userid
-          }
-        })
-          .then(response => {
-            this.events = response.data;
-            console.log('Events:', this.events); // 打印获取到的所有事件
-            this.filteredEvents = this.events.filter(event => event.creatorid.toString() === userid.toString());
-            // this.filteredEvents = this.events;
-			console.log('Filtered Events:', this.filteredEvents); // 打印筛选后的事件列表
-          })
-          .catch(error => {
-            console.error('Error fetching events:', error);
-          });
-      },
+      const params = new URLSearchParams(window.location.search);
+      const userid = params.get('userid');
+      console.log('userid:', userid); // 打印当前用户的ID
+      axios.get('http://localhost:5000/events', {
+        params: {
+          userid: userid
+        }
+      })
+      .then(response => {
+        this.events = response.data;
+        console.log('Events:', this.events); // 打印获取到的所有事件
+        this.filteredEvents = this.events.filter(event => event.reservationUserId.toString() === userid.toString());
+        console.log('Filtered Events:', this.filteredEvents); // 打印筛选后的事件列表
+      })
+      .catch(error => {
+        console.error('Error fetching events:', error);
+      });
+    },
     goToDetail(eventId) {
-	  const params = new URLSearchParams(window.location.search);
-	  const userid = params.get('userid');
-	  if(this.isSearch===true)
-	  {
-		  // console.log(this.isSearch);
-		  // console.log(userid,eventId);
-		  axios.post("http://localhost:5000/applyEvent",{userID:userid,eventID:eventId})
-		    .then((response) => {
-		      console.log("Success:", response);
-		    })
-		    .catch((error) => {
-		      console.error("Error:", error);
-		    });
-	  }else{
-		  window.location.href = `/detail?userid=${userid}&eventid=${eventId}`;
-	  }
+      const params = new URLSearchParams(window.location.search);
+      const userid = params.get('userid');
+      if (this.isSearch === true) {
+        axios.post("http://localhost:5000/applyEvent", { userID: userid, eventID: eventId })
+          .then((response) => {
+            console.log("Success:", response);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        window.location.href = `/detail?userid=${userid}&eventid=${eventId}`;
+      }
     },
     search() {
-      // 清空之前的筛选结果
+
       this.filteredEvents = [];
-	  this.isSearch = true;
-      // 对 events 数组进行遍历，检查每个事件的 eventName 是否包含搜索关键词
+      this.isSearch = true;
       this.events.forEach(event => {
         if (event.eventName.includes(this.searchQuery)) {
-          // 如果包含搜索关键词，则将该事件添加到 filteredEvents 数组中
           this.filteredEvents.push(event);
         }
       });
-    
-      // 打印筛选后的事件列表
       console.log('Filtered Events:', this.filteredEvents);
     }
-
   },
   computed: {
     chunkedEvents() {
@@ -138,7 +129,7 @@ export default {
   border: 1px solid #333333;
 }
 
-.search-container button {
+search-container button {
   margin-left: 10px;
   width: 70px;
   height: 30px;
@@ -172,32 +163,11 @@ export default {
 }
 
 .event-card h3 {
-	margin-top:-5px;
-	color: #333;
+  margin-top: -5px;
+  color: #333;
 }
 
 .event-card p {
   margin: 5px 0;
 }
-
-.search-container{
-	margin-top:30px;
-}
-.search-container button{
-	margin-left:10px;
-	width:70px;
-	height:30px;
-	font-size: 13px;
-	background-color: #262626;
-	color: #fff;
-	border-radius: 7px;
-	transition: background-color 0.3s ease;
-}
-.search-container input{
-	height:23px;
-	width:1100px;
-	border-radius: 5px;
-	border: 1px solid #333333;
-}
 </style>
-
