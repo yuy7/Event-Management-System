@@ -4,11 +4,12 @@ from dateutil import parser
 from Dao.TempEvent import Event
 from Dao.Role import Role
 from Dao.Location import Location
+from Dao.User import User
 from Tool.OccupyMatric import is_occupied, get_building_and_number, hex2matric, matric2hex
 from Tool.TimeCount import count_days_distance
 from __init__ import db
 from itertools import chain
-from Tool.Mappings import time_mapping, role_mapping
+from Tool.Mappings import time_mapping, role_mapping, event_type_mapping
 
 def get_user_role(user_id):
     role = Role.query.filter_by(roleName=user_id).first()
@@ -129,20 +130,24 @@ def locationArrange():
 def getArrangedEvents():
     arranged_events = Event.query.filter(Event.arrangedLocation != None).all()
     return jsonify([{
-        'eventID': event.eventID,
         'eventName': event.eventName,
-        'date': event.date,  
-        'time': time_mapping[event.time],
-        'ArrangedLocation': event.ArrangedLocation
+        'time': event.date+' '+time_mapping[event.time], 
+        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first(),
+        'reservationUserRole': Role.query.filter_by(RoleID=event.reservationUserId).first(), 
+        'arrangedLocation': event.arrangedLocation,
+        'eventType': event_type_mapping[event.eventType],
+        'numberOfPeople': event.numberOfPeople
     } for event in arranged_events])
 
 def getUnarrangedEvents():
     unarranged_events = Event.query.filter(Event.arrangedLocation == None).all()
     return jsonify([{
-        'eventID': event.eventID,
         'eventName': event.eventName,
-        'date': event.date,  
-        'time': time_mapping[event.time],
-        'prefferedLocation': event.prefferedLocation
+        'time': event.date+' '+time_mapping[event.time],  
+        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first(),
+        'reservationUserRole': Role.query.filter_by(RoleID=event.reservationUserId).first(),
+        'prefferedLocation': event.prefferedLocation,
+        'eventType': event_type_mapping[event.eventType],
+        'numberOfPeople': event.numberOfPeople
     } for event in unarranged_events])
 

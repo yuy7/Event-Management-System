@@ -8,8 +8,8 @@
                 <th>活动名称</th>
                 <th>地点</th>
             </tr>
-			<!-- <tr v-for="activity in activityEvents" :key="activity.activityID"> -->
-            <tr v-for="index in 10" :key="index">
+			<tr v-for="activity in activityEvents" :key="activity.activityID">
+            <!-- <tr v-for="index in 10" :key="index"> -->
                 <td>{{ applicantname }}</td>
                 <td>{{ time }}</td>
                 <td>{{ activityname }}</td>
@@ -64,16 +64,16 @@
 				this.applicantname = "申请人";
 				this.activityname = "开会";
 				this.place = "会议室";
-			// 	axios.get('http://localhost:5000/avtivityget')
-			// 		.then(response => {
-			// 			this.time = response.data.time;
-			// 			this.applicantname = response.data.applicantname;
-			// 			this.activityname = response.data.activityname;
-			// 			this.place = response.data.place;
-			// 		})
-			// 		.catch(error => {
-			// 			console.error('Error fetching acyivity:', error);
-			// 		});
+				axios.get('http://localhost:5000/avtivityget')
+					.then(response => {
+						this.time = response.data.time;
+						this.applicantname = response.data.applicantname;
+						this.activityname = response.data.activityname;
+						this.place = response.data.place;
+					})
+					.catch(error => {
+						console.error('Error fetching acyivity:', error);
+					});
 			},
 			openDateModal() {
 				this.showModal = true;
