@@ -9,7 +9,7 @@ class Event(db.Model):
     eventTypeID = db.Column(db.Integer, nullable=False)
     numberOfPeople = db.Column(db.Integer, nullable=False)
     preferredLocation = db.Column(db.String(100), nullable=False)
-    arrangedLocation = db.Column(db.String(100))
+    arrangedLocation = db.Column(db.String(100), nullable=True)
     requireApproval = db.Column('requireApproval', db.Boolean, default=False)
     time = db.Column(db.String(100), nullable=False)
 

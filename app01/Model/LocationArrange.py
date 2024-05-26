@@ -3,21 +3,19 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from Dao.TempEvent import Event
 from Dao.Role import Role
-from Tool.HexMatricTranslate import hex2matrix
-
-role_mapping = {
-    "教师":0,
-    "辅导员":1,
-    "班长":2,
-    "社团负责人":3,
-    "学生":4
-}
+from Dao.Location import Location
+from Tool.OccupyMatric import is_occupied, get_building_and_number, hex2matric, matric2hex
+from Tool.TimeCount import count_days_distance
+from __init__ import db
+from itertools import chain
+from Tool.Mappings import time_mapping, role_mapping
 
 def get_user_role(user_id):
-    role = Role.query.filter_by(userID=user_id).first()
+    role = Role.query.filter_by(roleName=user_id).first()
     return role_mapping[role.roleName] if role else None
 
-def eventArrange(event_list):
+
+def eventArrange(days_distance, event_list):
     # roleNameList = [get_user_role(event.reservationUserId) for event in event_list]
     # 遍历所有event，如果当前preferredLocation在当天的time时间段为空，则将event、preferredLocation、time加入arrange_list
     # 这个字典将用来存储已安排的事件信息，键为日期和时间的组合，值为Event对象
@@ -28,6 +26,9 @@ def eventArrange(event_list):
 
     for event in event_list:
         key = "{}_{}".format(event.time, event.preferredLocation)
+        # 判断在数据库表中该时间该地点是否被占用
+        if is_occupied(days_distance, event.time, event.preferredLocation):
+            pass
         if key in scheduled_events:
             existing_event = scheduled_events[key]
             # eventTypeID 越小, role 数值越小, 优先级越高。
@@ -55,9 +56,9 @@ def eventArrange(event_list):
     # 将未能安排的事件也添加到结果列表，但他们的地点为 None
     for event in unscheduled_events:
         result_list.append((event, None))
+    print(result_list)
     
     return result_list
-
 
 def locationArrange():
     data = request.get_json()  # 获取JSON数据
@@ -85,13 +86,63 @@ def locationArrange():
     while current_date <= endDate:
         # 转换日期的格式至'yyyy-mm-dd'
         current_date_string = str(current_date.date())
-        print(current_date_string)
+        # print(current_date_string)
         # 添加逻辑来获取每一天的事件
         events = Event.query.filter_by(date=current_date_string).all()
-        eventArrange(events)
-        # 为了简化示例，我们这里直接将日期添加至列表
+        days_distance = count_days_distance(current_date, now)
+        result_list = eventArrange(days_distance, events)
+        arrangeEvents = list(chain(arrangeEvents, result_list))
         current_date += timedelta(days=1)  # 移至下一天
-        
-    return jsonify({
-        'status': 'success'
-    }), 200
+    
+    # 遍历列表中的每个元组
+    row1 = 1
+    row2 = 1
+    for event_tuple in arrangeEvents:
+        event_obj, location_name = event_tuple  # 解包元组，获取Event对象和位置信息
+            
+        # 如果位置信息不是None，则更新Event对象的arrangeLocation属性
+        if location_name is not None:
+            # 假设Event对象有一个方法set_location，你也可能需要替换这一行以适应你的类设计
+            row1 &= Event.query.filter_by(eventID = event_obj.eventID).update({"arrangedLocation":location_name})
+            building, number = get_building_and_number(location_name)
+            location_obj = Location.query.filter_by(building=building, number=number).first()
+            matric = hex2matric(location_obj.occupy)
+            matric[days_distance][event_obj.time] = 1
+            row2 &= Location.query.filter_by(locationId = location_obj.locationId).update({"occupy":matric2hex(matric)})
+    try:
+        db.session.commit()
+        if(row1 & row2):
+            return jsonify({
+                "status": "Success"
+            })
+        elif (row1 == 0):
+            raise Exception("Update eventList error!")
+        else:
+            return Exception("Update Location occupy status error!")
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "status": "Error",
+            "message": str(e)
+        }), 500
+
+def getArrangedEvents():
+    arranged_events = Event.query.filter(Event.arrangedLocation != None).all()
+    return jsonify([{
+        'eventID': event.eventID,
+        'eventName': event.eventName,
+        'date': event.date,  
+        'time': time_mapping[event.time],
+        'ArrangedLocation': event.ArrangedLocation
+    } for event in arranged_events])
+
+def getUnarrangedEvents():
+    unarranged_events = Event.query.filter(Event.arrangedLocation == None).all()
+    return jsonify([{
+        'eventID': event.eventID,
+        'eventName': event.eventName,
+        'date': event.date,  
+        'time': time_mapping[event.time],
+        'prefferedLocation': event.prefferedLocation
+    } for event in unarranged_events])
+

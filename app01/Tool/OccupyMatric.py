@@ -1,42 +1,5 @@
-# 如果没有比自己优先级更高的人，则能在选择的偏好时间段预约到偏好的教室
-# 如果有，则
-
-
-# 人员优先级：
-# 教师 / 辅导员 / 班长 / 社团/部门负责人 / 学生
-
-# 大型考试——四六级考试或考研（抢占式）
-# 教务员：考试周考试（抢占式）
-# 重要的宣讲（优先级较高）
-# 老师：授课、考试（符合人数要求）、个人活动
-# 辅导员：年级会、个人活动
-# 班长：班级会、个人活动
-# 社团/部门负责人：社团 / 部门活动
-# 学生：个人活动
-
-# event_mapping = {
-#     0:"大型考试",
-#     1:"统一考试",
-#     2:"宣讲",
-#     3:"授课",
-#     4:"课程考试",
-#     5:"开会",
-#     6:"学生活动",
-#     7:"其他"
-# }
-# from Dao.TempEvent import Event
-# startDate = '2024-05-27'
-# events = Event.query.filter_by(date=startDate).all()
-# print(events)
-
-# building_mapping = {
-#     "逸夫楼": 0,
-#     "机电楼": 1,
-#     "教学楼": 2
-# }
-
-# print(building_mapping["逸夫楼"])
-# 示例十六进制字符串的转换
+from Dao.Location import Location
+from Tool.Mappings import building_mapping
 
 def hex2matric(hex_string):
     # 将十六进制字符串转换为二进制字符串，去除前缀'0b'并确保位数为184
@@ -88,11 +51,31 @@ def matric2hex(matric):
 
     return hex_string
 
-hex_string = '0300FFFFFFFFFFFFFFFFFFF0300FFFFFFFFFFFFFFFFFF'  # 示例十六进制字符串
-print(hex_string)
-matric = hex2matric(hex_string)
+def get_building_and_number(location_name):
+    import re
+    # Use regex to match characters and numbers
+    matches = re.match(r'(\D+)(\d+)', location_name)
+
+    if matches:
+        building_string, number = matches.groups()
+        building = building_mapping[building_string]
+        
+    return building, number
+
+
+def is_occupied(days_distance, time, location_name):
+    building, number = get_building_and_number(location_name)
+    location = Location.query.filter_by(building=building, number=number).first()
+    matric = hex2matric(location.occupy)
+    return matric[days_distance][time]
+
+# 示例十六进制字符串的转换
+# hex_string = '0300FFFFFFFFFFFFFFFFFFF0300FFFFFFFFFFFFFFFFFF'  # 示例十六进制字符串
+# matric = hex2matric(hex_string)
 # 打印转换后的矩阵
-for row in matric:
-    print(row)
-hex = matric2hex(matric)
-print(hex)
+# for row in matric:
+#     print(row)
+
+
+
+
