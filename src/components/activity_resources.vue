@@ -79,17 +79,17 @@
 			confirmDateSelection() {
 				this.$router.push({ path: '/goal', query: { startDate: this.selectedStartDate, endDate: this.selectedEndDate } });
 				this.closeModal();
-				// axios.post('http://localhost:5000/locationArrange', {
-				// 		startDate: this.selectedStartDate,
-				// 		endDate: this.selectedEndDate
-				// 	})
-				// 	.then(response => {
-				// 		this.$router.push({ path: '/goal', query: { startDate: this.selectedStartDate, endDate: this.selectedEndDate } });
-				// 		this.closeModal();
-				// 	})
-				// 	.catch(error => {
-				// 		console.error('Error posting activitydate:', error);
-				// 	});
+				axios.post('http://localhost:5000/locationArrange', {
+						startDate: this.selectedStartDate,
+						endDate: this.selectedEndDate
+					})
+					.then(response => {
+						this.$router.push({ path: '/goal', query: { startDate: this.selectedStartDate, endDate: this.selectedEndDate } });
+						this.closeModal();
+					})
+					.catch(error => {
+						console.error('Error posting activitydate:', error);
+					});
 			}
 		},
     }

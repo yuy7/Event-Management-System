@@ -130,12 +130,13 @@ def locationArrange():
 def getArrangedEvents():
     arranged_events = Event.query.filter(Event.arrangedLocation != None).all()
     return jsonify([{
+        'eventID': event.eventID,
         'eventName': event.eventName,
         'time': event.date+' '+time_mapping[event.time], 
-        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first(),
-        'reservationUserRole': Role.query.filter_by(RoleID=event.reservationUserId).first(), 
+        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first().Username,
+        'reservationUserRole': Role.query.filter_by(roleID=event.reservationUserId).first().roleName,
         'arrangedLocation': event.arrangedLocation,
-        'eventType': event_type_mapping[event.eventType],
+        'eventType': event_type_mapping[event.eventTypeID],
         'numberOfPeople': event.numberOfPeople
     } for event in arranged_events])
 
@@ -145,8 +146,8 @@ def getUnarrangedEvents():
         'eventID': event.eventID,
         'eventName': event.eventName,
         'time': event.date+' '+time_mapping[event.time],  
-        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first(),
-        'reservationUserRole': Role.query.filter_by(roleID=event.reservationUserId).first(),
+        'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first().Username,
+        'reservationUserRole': Role.query.filter_by(roleID=event.reservationUserId).first().roleName,
         'prefferedLocation': event.preferredLocation,
         'eventType': event_type_mapping[event.eventTypeID],
         'numberOfPeople': event.numberOfPeople
