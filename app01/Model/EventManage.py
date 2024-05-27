@@ -1,5 +1,5 @@
 from flask import jsonify, request, session
-from Dao.Event import Event
+from Dao.TempEvent import Event
 from Dao.User import User
 
 def get_events():
