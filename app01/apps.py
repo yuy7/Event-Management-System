@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from Model.Login import user_login
 from Model.EventCreate import EventCreate
-from Model.EventManage import get_events
+from Model.EventManage import get_events,getUserEvent,deleteEvent
 from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply,get_users
 from Model.Invite import invite
 from Model.ApplyEvent import apply_event
@@ -29,6 +29,8 @@ db.init_app(app)
 app.route("/login", methods=["POST"])(user_login)
 app.route("/eventCreate", methods=["POST"])(EventCreate)
 app.route("/events", methods=["GET"])(get_events)
+app.route("/getUserEvent", methods=["GET"])(getUserEvent)
+app.route("/deleteEvent", methods=["POST"])(deleteEvent)
 app.route("/userinterface", methods=["GET"])(get_user)
 app.route("/userinterface/bindEmail", methods=["POST"])(bindEmail)
 app.route("/userinterface/bindPhone", methods=["POST"])(bindPhone)
