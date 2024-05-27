@@ -1,4 +1,6 @@
-from __init__ import db
+# from __init__ import db
+from app01 import db
+
 
 class UserEvent(db.Model):
     __tablename__ = 'user_event'

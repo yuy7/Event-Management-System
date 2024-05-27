@@ -8,6 +8,7 @@
             <li><router-link to="/manage">活动管理</router-link></li>
             <li><router-link to="/history">历史活动</router-link></li>
             <li><router-link to="/notifications">消息通知</router-link></li>
+            <li><router-link to="/budget">预算管理</router-link></li>
           </ul>
         </div>
         <div class="user-profile">
