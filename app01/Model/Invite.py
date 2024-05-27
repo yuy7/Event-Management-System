@@ -16,7 +16,7 @@ def invite():
 
     # 检查被邀请对象是否存在
     if invite_type == 1:  # 个人
-        invited = User.query.filter_by(userID=invited_id).first()
+        invited = User.query.filter_by(UserID=invited_id).first()
         if not invited:
             return jsonify({'message': 'User not found'}), 404
         

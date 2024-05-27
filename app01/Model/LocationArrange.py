@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from datetime import datetime, timedelta
 from dateutil import parser
-from Dao.TempEvent import Event
+from Dao.Event import Event
 from Dao.Role import Role
 from Dao.Location import Location
 from Dao.User import User
