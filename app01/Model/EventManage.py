@@ -9,19 +9,19 @@ def get_events():
     userID = session.get("userID")
     if not userID:
         return jsonify({'error': 'User not logged in'}), 401  # 如果没有userID，返回错误信息
-    events = Event.query.all()
+    events = db.session.query(Event, TimeSlot).join(TimeSlot, Event.time == TimeSlot.timeID).all()
     print(events)
     return jsonify([{
-        'eventID': event.eventID,
-        'eventName': event.eventName,
-        'date': event.date,
-        'reservationUserId': event.reservationUserId,
-        'eventTypeID': event.eventTypeID,
-        'numberOfPeople': event.numberOfPeople,
-        'preferredLocation': event.preferredLocation,
-        'arrangedLocation': event.arrangedLocation if event.arrangedLocation else "Not arranged",
-        'requireApproval': event.requireApproval,
-        'time': event.time # 使用映射转换时间
+        'eventID': event.Event.eventID,
+        'eventName': event.Event.eventName,
+        'date': event.Event.date,
+        'reservationUserId': event.Event.reservationUserId,
+        'eventTypeID': event.Event.eventTypeID,
+        'numberOfPeople': event.Event.numberOfPeople,
+        'preferredLocation': event.Event.preferredLocation,
+        'arrangedLocation': event.Event.arrangedLocation if event.Event.arrangedLocation else "Not arranged",
+        'requireApproval': event.Event.requireApproval,
+        'time': event.TimeSlot.timeDescription
     } for event in events])
 
 
