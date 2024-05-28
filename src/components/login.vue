@@ -46,9 +46,15 @@ const submitForm = () => {
     // Process the returned data
     console.log(response.data);
     if (response.data.status === 'Success') {
-      const userId = response.data.UserId;
-      // 通过模板字符串或字符串拼接，将userId附加到URL上
-      window.location.href = `/manage?userid=${userId}`;
+      if (response.data.role === 'root'){
+        window.location.href = `/resources`;
+      }
+      else{
+        const userId = response.data.UserId;
+        // 通过模板字符串或字符串拼接，将userId附加到URL上
+        window.location.href = `/manage?userid=${userId}`;
+      }
+      
     } else {
       // If the response status is not success, show an alert with an error message
       alert('输入密码错误');
