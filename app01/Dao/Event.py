@@ -1,7 +1,7 @@
 from __init__ import db
 
 class Event(db.Model):
-    __tablename__ = 'tempevent'
+    __tablename__ = 'event'
     eventID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     eventName = db.Column(db.String(45), nullable=False)
     date = db.Column(db.String(10), nullable=False)

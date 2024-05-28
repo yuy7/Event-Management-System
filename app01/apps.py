@@ -10,7 +10,6 @@ from Model.ApplyEvent import apply_event
 from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArrangedEvents
 from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
 from Model.NotificationGet import get_notifications
-from flask_jwt_extended import JWTManager, jwt_required
 import os
 
 app = Flask(__name__)
