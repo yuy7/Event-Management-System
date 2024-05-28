@@ -1,5 +1,7 @@
+from app01 import db
 
-from __init__ import db
+
+# from __init__ import db
 
 class Location(db.Model):
     __tablename__ = 'location'
