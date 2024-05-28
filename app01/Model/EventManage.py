@@ -5,10 +5,9 @@ from Dao.User import User
 
 
 def get_events():
-    # userID = session.get("userID")
-    userID = 251101163
-    if not userID:
-        return jsonify({'error': 'User not logged in'}), 401  # 如果没有userID，返回错误信息
+    userID = session.get("userID")
+    # if not userID:
+    #     return jsonify({'error': 'User not logged in'}), 401  # 如果没有userID，返回错误信息
     events = Event.query.all()
     print(events)
     return jsonify([{
