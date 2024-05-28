@@ -18,6 +18,7 @@
   </div>
 </template>
 
+
 <script>
 import Navbar from './navbar.vue';
 import axios from 'axios';
@@ -51,10 +52,6 @@ export default {
         this.events = response.data;
         console.log('Events:', this.events); // 打印获取到的所有事件
         this.filteredEvents = this.events.filter(event => event.reservationUserId.toString() === userid.toString());
-        console.log('Filtered Events:', this.filteredEvents); // 打印筛选后的事件列表
-      })
-      .catch(error => {
-        console.error('Error fetching events:', error);
       });
     },
     goToDetail(eventId) {
@@ -107,6 +104,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .activity-manage-container {
