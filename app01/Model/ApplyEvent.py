@@ -6,12 +6,13 @@ from Dao.User import User
 from Dao.Notification import Notification  
 from __init__ import db
 
-def notify_user(recipient_id, sender_id, event_id, message):
+def notify_user(recipient_id, sender_id, event_id, message, type = 0):
     notification = Notification(
         recipient_id=recipient_id,
         sender_id=sender_id,
         event_id=event_id,
-        message=message
+        message=message,
+        type=type  # 传入通知类型
     )
     db.session.add(notification)
     db.session.commit()
@@ -37,7 +38,7 @@ def apply_event():
         # 通知活动创建者有新的申请
         applicant = User.query.get(user_id)
         message = f"{applicant.Username} 申请加入您的活动 {event.eventName}"
-        notify_user(reservationUserId, user_id, event_id, message)
+        notify_user(reservationUserId, user_id, event_id, message, 2)  # 申请消息
 
         return jsonify({"status": "Success", "message": "申请已提交等待审批"}), 200
     else:
@@ -49,6 +50,6 @@ def apply_event():
         # 通知活动创建者有新的成员加入
         new_member = User.query.get(user_id)
         message = f"{new_member.Username} 加入了您的活动 {event.eventName}"
-        notify_user(reservationUserId, user_id, event_id, message)
+        notify_user(reservationUserId, user_id, event_id, message, 1)  # 系统消息
 
         return jsonify({"status": "Success", "message": "成功加入活动"}), 200
