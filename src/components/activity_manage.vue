@@ -11,7 +11,6 @@
 			<button @click="selectType('all')">所有活动</button>
 		</div>
 		<div class="events-container">
-			<div v-if="selectedType === 'create'">
 				<div class="event-row" v-for="(eventRow, index) in chunkedEvents" :key="index">
 					<div class="event-card" v-for="singleEvent in eventRow" :key="singleEvent.eventID"
 						@click="goToDetail(singleEvent.eventID)">
@@ -21,13 +20,6 @@
 						<p>活动地点：{{ singleEvent.preferredLocation }}</p>
 					</div>
 				</div>
-			</div>
-			<div v-if="selectedType === 'join'">
-				111
-			</div>
-			<div v-if="selectedType === 'all'">
-				222
-			</div>
 		</div>
 
 
@@ -66,9 +58,8 @@
 					.then(response => {
 						this.events = response.data;
 						console.log('Events:', this.events); // 打印获取到的所有事件
-						this.filteredEvents = this.events.filter(event => event.reservationUserId.toString() === userid
-							.toString());
-						console.log('Filtered Events:', this.filteredEvents); // 打印筛选后的事件列表
+						this.event_create = this.events.filter(event => event.reservationUserId.toString() == userid.toString());
+						console.log('Filtered Events:', this.event_create); // 打印筛选后的事件列表
 					})
 					.catch(error => {
 						console.error('Error fetching events:', error);
@@ -96,23 +87,33 @@
 				}
 			},
 			search() {
-
-				this.filteredEvents = [];
-				this.isSearch = true;
-				this.events.forEach(event => {
-					if (event.eventName.includes(this.searchQuery)) {
-						this.filteredEvents.push(event);
-					}
-				});
-				console.log('Filtered Events:', this.filteredEvents);
+				// this.filteredEvents = [];
+				// this.isSearch = true;
+				// this.events.forEach(event => {
+				// 	if (event.eventName.includes(this.searchQuery)) {
+				// 		this.event_search.push(event);
+				// 	}
+				// });
+				// console.log('Filtered Events:', this.event_search);
 			}
 		},
 		computed: {
 			chunkedEvents() {
 				const chunkSize = 3; // 每行最多显示三个卡片
 				const resultArray = [];
-				for (let i = 0; i < this.filteredEvents.length; i += chunkSize) {
-					resultArray.push(this.filteredEvents.slice(i, i + chunkSize));
+				let nowevent = [];
+				if(this.selectedType=='join')
+				{
+					nowevent = this.event_join;
+				}else if(this.selectedType=='create')
+				{
+					nowevent = this.event_create;
+				}else if(this.selectedType=='all')
+				{
+					nowevent = this.events;
+				}
+				for (let i = 0; i < nowevent.length; i += chunkSize) {
+					resultArray.push(nowevent.slice(i, i + chunkSize));
 				}
 				return resultArray;
 			}
