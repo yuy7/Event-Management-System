@@ -4,7 +4,6 @@ import router from './router.js'
 import mitt from 'mitt'
 import axios from 'axios';
 
-
 axios.defaults.withCredentials = true;
 
 const app=createApp(App)

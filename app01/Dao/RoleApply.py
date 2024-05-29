@@ -1,4 +1,6 @@
-from __init__ import db
+# from __init__ import db
+from app01 import db
+
 
 class RoleApply(db.Model):
     __tablename__ = 'RoleApply'
