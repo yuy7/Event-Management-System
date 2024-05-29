@@ -10,7 +10,6 @@ from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArran
 from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
 from Model.NotificationGet import get_notifications
 import os
-
 from __init__ import db
 
 app = Flask(__name__)

@@ -6,20 +6,36 @@
       <button @click="search">搜索</button>
     </div>
 	<div class="sidebar">
+<<<<<<< HEAD
 	  <button @click="filterByJoined">我加入的</button>
 	  <button @click="filterByCreated">我创建的</button>
 	  <button @click="showAll">所有活动</button>
+=======
+	  <button @click="selectType('join')">我加入的</button>
+	  <button @click="selectType('create')">我创建的</button>
+	  <button @click="selectType('all')">所有活动</button>
+>>>>>>> 5d7ac5bb74d739e5d744b5df9e6422697fb88cab
 	</div>
     <div class="events-container">
-      <div class="event-row" v-for="(eventRow, index) in chunkedEvents" :key="index">
-        <div class="event-card" v-for="singleEvent in eventRow" :key="singleEvent.eventID" @click="goToDetail(singleEvent.eventID)">
-          <h3>{{ singleEvent.eventName }}</h3>
-          <p>活动日期：{{ singleEvent.date }}</p>
-          <p>活动时间：{{ singleEvent.time }}</p>
-          <p>活动地点：{{ singleEvent.preferredLocation }}</p>
-        </div>
-      </div>
+	   <div v-if="selectedType === 'create'">
+		   <div class="event-row" v-for="(eventRow, index) in chunkedEvents" :key="index">
+		     <div class="event-card" v-for="singleEvent in eventRow" :key="singleEvent.eventID" @click="goToDetail(singleEvent.eventID)">
+		       <h3>{{ singleEvent.eventName }}</h3>
+		       <p>活动日期：{{ singleEvent.date }}</p>
+		       <p>活动时间：{{ singleEvent.time }}</p>
+		       <p>活动地点：{{ singleEvent.preferredLocation }}</p>
+		     </div>
+		   </div>
+	   </div>
+	   <div v-if="selectedType === 'join'">
+			111
+	   </div>
+	   <div v-if="selectedType === 'all'">
+	   			222
+	   </div>
     </div>
+	
+	
   </div>
 </template>
 
@@ -34,9 +50,13 @@ export default {
   data() {
     return {
       events: [],
+	  event_create:[],
+	  event_join:[],
+	  event_search:[],
       filteredEvents: [],
       searchQuery: '',
       isSearch: false,
+	  selectedType:"join",
     };
   },
   created() {
@@ -58,6 +78,9 @@ export default {
         console.error('Error fetching events:', error);
       });
     },
+	selectType(type) {
+		this.selectedType = type;
+	},
     goToDetail(eventId) {
       const params = new URLSearchParams(window.location.search);
       const userid = params.get('userid');
