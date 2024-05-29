@@ -1,5 +1,5 @@
 <!-- src/components/Budget.vue -->
-<template>
+<!-- <template>
   <div style="padding-left: 16px;padding-right: 16px">
     <h1>Budget Data</h1>
     <el-button type="primary" style="margin-bottom: 4px" @click="dialogFormVisible = true; form={
@@ -147,4 +147,4 @@ const handleDelete = (id) => {
 onMounted(()=>{
   fetchBudgetData()
 })
-</script>
+</script> -->

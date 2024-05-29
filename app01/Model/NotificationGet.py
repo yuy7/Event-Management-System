@@ -5,8 +5,9 @@ from Dao.Notification import Notification
 
 def get_notifications():
     # 获取当前用户的 ID
-    user_id = session.get("userID")
-    
+    # user_id = session.get("userid")
+    user_id = request.args.get("userid")
+    print(user_id)
     # 查询通知
     notifications = Notification.query.filter_by(recipient_id=user_id).order_by(Notification.timestamp.desc()).all()
     
@@ -20,5 +21,5 @@ def get_notifications():
         'read': notification.read,
         'timestamp': notification.timestamp
     } for notification in notifications]
-    
+    print(notifications_list)
     return jsonify(notifications_list)

@@ -6,7 +6,8 @@ from __init__ import db
 
 
 def get_events():
-    userID = session.get("userID")
+    # userID = session.get("userid")
+    userID = request.args.get("userid")
     if not userID:
         return jsonify({'error': 'User not logged in'}), 401  # 如果没有userID，返回错误信息
     events = db.session.query(Event, TimeSlot).join(TimeSlot, Event.time == TimeSlot.timeID).all()

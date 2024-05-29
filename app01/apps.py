@@ -10,7 +10,6 @@ from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArran
 from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
 from Model.NotificationGet import get_notifications
 import os
-
 from __init__ import db
 
 app = Flask(__name__)
@@ -18,7 +17,7 @@ app.secret_key = os.urandom(24)
 app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
 # username: root, password: root
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/activitymanagementsystemdb?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/emsdb?charset=utf8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = False  # 设置为 True 在生产环境中
