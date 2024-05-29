@@ -18,6 +18,7 @@
 						<p>活动日期：{{ singleEvent.date }}</p>
 						<p>活动时间：{{ singleEvent.time }}</p>
 						<p>活动地点：{{ singleEvent.preferredLocation }}</p>
+						<p v-if="selectedType === 'search'">{{singleEvent.state}}</p>
 					</div>
 				</div>
 		</div>
