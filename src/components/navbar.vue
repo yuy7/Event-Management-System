@@ -11,7 +11,7 @@
           </ul>
         </div>
         <div class="user-profile">
-			<a @click="navigateTo('/schedule')">
+			<a @click="navigateTo('/person')">
 				<img src="../../src/assets/touxiang.png" alt="User Avatar" >
 			</a>
         </div>
