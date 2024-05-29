@@ -5,6 +5,11 @@
       <input type="text" v-model="searchQuery" placeholder="  搜索活动名称加入活动">
       <button @click="search">搜索</button>
     </div>
+	<div class="sidebar">
+	  <button @click="filterByJoined">我加入的</button>
+	  <button @click="filterByCreated">我创建的</button>
+	  <button @click="showAll">所有活动</button>
+	</div>
     <div class="events-container">
       <div class="event-row" v-for="(eventRow, index) in chunkedEvents" :key="index">
         <div class="event-card" v-for="singleEvent in eventRow" :key="singleEvent.eventID" @click="goToDetail(singleEvent.eventID)">
@@ -129,7 +134,7 @@ export default {
   border: 1px solid #333333;
 }
 
-search-container button {
+.search-container button {
   margin-left: 10px;
   width: 70px;
   height: 30px;
@@ -139,7 +144,19 @@ search-container button {
   border-radius: 7px;
   transition: background-color 0.3s ease;
 }
-
+.sidebar button {
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 70px;
+  height: 30px;
+  font-size: 13px;
+  background-color: #fff;
+  color: #262626;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
 .events-container {
   display: flex;
   flex-wrap: wrap;
@@ -153,7 +170,7 @@ search-container button {
 }
 
 .event-card {
-  margin-top: 30px;
+  margin-top: 20px;
   margin-right: 20px; /* 减小右侧间距 */
   border: 1px solid #ccc;
   border-radius: 8px;
