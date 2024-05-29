@@ -53,24 +53,14 @@
 				
 				const params = new URLSearchParams(window.location.search);
 				const userid = params.get('userid');
-<<<<<<< HEAD
 				console.log(userid);
 				axios.get('http://localhost:5000/notifications?userid=' + userid)
-=======
-				axios.get('http://localhost:5000/notifications', {
-						userID: userid
-					})
->>>>>>> 5d7ac5bb74d739e5d744b5df9e6422697fb88cab
 					.then(response => {
 						this.messages = response.data;
 						console.log(this.messages);
 					})
 					.catch(error => {
-<<<<<<< HEAD
 						console.error('Error fetching messages:', error);
-=======
-						console.error('Error fetching acyivity:', error);
->>>>>>> 5d7ac5bb74d739e5d744b5df9e6422697fb88cab
 					});
 			},
 			selectMessageType(type) {
