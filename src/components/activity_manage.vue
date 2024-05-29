@@ -64,6 +64,14 @@
 					.catch(error => {
 						console.error('Error fetching events:', error);
 					});
+				
+				axios.get('http://localhost:5000/eventsJoin?userid=' + userid)
+					.then(response => {
+						this.event_join = response.data;
+					})
+					.catch(error => {
+						console.error('Error fetching events:', error);
+					});
 			},
 			selectType(type) {
 				this.selectedType = type;
@@ -87,14 +95,15 @@
 				}
 			},
 			search() {
-				// this.filteredEvents = [];
-				// this.isSearch = true;
-				// this.events.forEach(event => {
-				// 	if (event.eventName.includes(this.searchQuery)) {
-				// 		this.event_search.push(event);
-				// 	}
-				// });
-				// console.log('Filtered Events:', this.event_search);
+				this.selectedType = 'search';
+				console.log('搜索');
+				axios.get('http://localhost:5000/searchEvents?searchQuery=' + this.searchQuery)
+					.then(response => {
+						this.event_search = response.data;
+					})
+					.catch(error => {
+						console.error('Error fetching events:', error);
+					});
 			}
 		},
 		computed: {
@@ -111,6 +120,9 @@
 				}else if(this.selectedType=='all')
 				{
 					nowevent = this.events;
+				}else if(this.selectedType=='search')
+				{
+					nowevent = this.event_search;
 				}
 				for (let i = 0; i < nowevent.length; i += chunkSize) {
 					resultArray.push(nowevent.slice(i, i + chunkSize));
