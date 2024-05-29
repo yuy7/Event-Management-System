@@ -72,6 +72,10 @@ const routes = [
   	  path: '/notifications',
   	  name: 'activity_notifications',
   	  component: activity_notifications,
+  }, {
+    path:'/budget',
+    name:'budget',
+    component: ()=>import('./components/budget.vue'),
   },
 ]
 
