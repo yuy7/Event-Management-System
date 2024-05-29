@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import login from './components/login.vue'
 import register from './components/register.vue'
 import forget_password from './components/forget_password.vue'
+import chat_room from "./components/chat_room.vue";
 import schedule from './components/calendar.vue'
 import navbar from './components/navbar.vue'
 import activity_create from './components/activity_create.vue'
@@ -72,11 +73,17 @@ const routes = [
   	  path: '/notifications',
   	  name: 'activity_notifications',
   	  component: activity_notifications,
-  }, {
+  },
+  {
     path:'/budget',
     name:'budget',
     component: ()=>import('./components/budget.vue'),
   },
+  {
+    path: '/chat-room',
+    name: 'chat-room',
+    component: chat_room
+  }
 ]
 
 const router = createRouter({
