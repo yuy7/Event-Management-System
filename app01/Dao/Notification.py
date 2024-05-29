@@ -1,8 +1,5 @@
-# from __init__ import db
+from __init__ import db
 from datetime import datetime
-
-from app01 import db
-
 
 class Notification(db.Model):
     __tablename__ = 'notifications'

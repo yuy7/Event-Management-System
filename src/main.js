@@ -10,4 +10,3 @@ const app=createApp(App)
 app.config.globalProperties.emitter = mitt()
 app.use(router)
 app.mount('#app')
-
