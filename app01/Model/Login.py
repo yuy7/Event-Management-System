@@ -10,6 +10,7 @@ def user_login():
     data = request.get_json()
     phoneNumber = data.get("phoneNumber")
     password = data.get("password")
+    print(password)
     update_db()
     # 查询数据库 传入的可能是电话号码或userid
     user = User.query.filter_by(PhoneNumber=phoneNumber).first()
