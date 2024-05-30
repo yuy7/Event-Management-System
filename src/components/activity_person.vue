@@ -4,7 +4,6 @@
 		<div class="left">
 			<div class="avatar-info">
 				<img id="bigImg" src="../../src/assets/touxiang.png" alt="User Avatar" class="avatar">
-				<!-- <img :src="user.avatar" alt="User Avatar" class="avatar"> -->
 			</div>
 			<div class="info">
 				<h4>用户名：{{ username }}</h4>
@@ -13,7 +12,6 @@
 		</div>
 		<div class="right">
 			<button>编辑资料</button>
-			<!-- <button @click="editProfile">编辑资料</button> -->
 		</div>
 	</div>
 	<hr class="separator">
@@ -30,23 +28,25 @@
 			</div>
 			<div class="identity">
 				<p>身份：{{ Role }}</p>
-				<label>{{Rolestate}}</label>
+				<label>{{ Rolestate }}</label>
 				<button @click="showRoleModal = true">申请</button>
 			</div>
 		</div>
 	</div>
 	<div class="mo">
-		<modal v-if="showPhoneNumberModal" @close="showPhoneNumberModal = false" title="修改电话号码">
+		<modal v-if="showPhoneNumberModal" title="修改电话号码">
 			<input type="text" v-model="newPhoneNumber">
 			<button @click="updatePhoneNumber">保存</button>
+			<button @click="closePhoneNumber">关闭</button>
 		</modal>
 		
-		<modal v-if="showEmailModal" @close="showEmailModal = false" title="修改邮箱">
+		<modal v-if="showEmailModal" title="修改邮箱">
 			<input type="email" v-model="newEmail">
 			<button @click="updateEmail">保存</button>
+			<button @click="closeEmail">关闭</button>
 		</modal>
 		
-		<modal v-if="showRoleModal" @close="showRoleModal = false" title="申请身份信息">
+		<modal v-if="showRoleModal" title="申请身份信息">
 			<select id="identity" v-model="newRole">
 				<option value="教师">教师</option>
 				<option value="辅导员">辅导员</option>
@@ -56,8 +56,8 @@
 				<option value="学生">学生</option>
 			</select>
 			<button @click="updateRole">保存</button>
+			<button @click="closeRole">关闭</button>
 		</modal>
-		
 	</div>
 </template>
 
@@ -107,11 +107,10 @@
 					})
 					.then(response => {
 						this.username = response.data.Username;
-						// this.userIP = response.data.UserIP;
 						this.phoneNumber = response.data.Phone;
 						this.email = response.data.Email;
 						this.Role = response.data.Role;
-						// this.Rolestate=response.data.Rolestate;
+						console.log(this.phoneNumber);
 					})
 					.catch(error => {
 						console.error('Error fetching users:', error);
@@ -129,6 +128,9 @@
 						console.error('Error updating phone number:', error);
 					});
 			},
+			closePhoneNumber(){
+				this.showPhoneNumberModal = false;
+			},
 			updateEmail() {
 				axios.post('http://localhost:5000/userinterface/bindEmail', {
 						email: this.newEmail
@@ -140,6 +142,9 @@
 					.catch(error => {
 						console.error('Error updating email:', error);
 					});
+			},
+			closeEmail(){
+				this.showEmailModal = false;
 			},
 			updateRole() {
 				axios.post('http://localhost:5000/userinterface/roleApply', {
@@ -153,6 +158,9 @@
 						console.error('Error updating role:', error);
 					});
 			},
+			closeRole(){
+				this.showRoleModal = false;
+			},
 			editProfile() {
 				//修改姓名
 			}
@@ -164,7 +172,6 @@
 	.upper {
 		display: flex;
 		justify-content: space-between;
-		/* 将子元素分布在两端 */
 	}
 
 	.right {
@@ -172,7 +179,6 @@
 		align-self: flex-end;
 		padding-top: 50px;
 		margin-left: auto;
-		/* 将右侧按钮推到右边 */
 		padding-right: 50px;
 	}
 
@@ -193,6 +199,7 @@
 		cursor: pointer;
 		transition: background-color 0.3s ease;
 		margin-right: 10px;
+		margin-top:10px;
 	}
 
 	.mo button:hover {
@@ -217,9 +224,7 @@
 	.left {
 		display: flex;
 		flex-direction: row;
-		/* 将子元素水平排列 */
 		align-items: center;
-		/* 垂直居中 */
 		padding-top: 50px;
 		padding-left: 50px;
 	}
@@ -228,7 +233,6 @@
 		display: flex;
 		align-items: center;
 		margin-right: 20px;
-		/* 调整 "头像" 和用户信息之间的间距 */
 	}
 
 	.avatar {
@@ -252,25 +256,17 @@
 
 	.separator {
 		width: calc(100% - 100px);
-		/* 100px 是左侧内容的宽度 */
 		height: 1px;
 		background-color: #ccc;
-		/* 分隔线颜色 */
 		margin-top: 20px;
-		/* 调整分隔线与上方内容的间距 */
 		margin-bottom: 20px;
-		/* 调整分隔线与下方内容的间距 */
 		margin-left: auto;
-		/* 将分隔线推到右边 */
 		margin-right: auto;
-		/* 将分隔线推到右边 */
 	}
 
 	.down {
 		margin-left: 50px;
-		/* 将分隔线推到右边 */
 		margin-top: 20px;
-		/* 调整下拉框与上方内容的间距 */
 	}
 
 	.info h4 {
@@ -285,10 +281,8 @@
 	}
 	.identity {
 		display: flex;
-		/* 使用 flex 布局 */
 		align-items: center;
-		/* 垂直居中 */
-		flex-direction: raw;
+		flex-direction: row;
 	}
 
 	.identity label {
@@ -308,7 +302,7 @@
 	}
 
 	.identity button {
-		padding: 6px 20px;
+		padding: 6px 10px;
 		font-size: 14px;
 		background-color: #262626;
 		color: #fff;
@@ -316,7 +310,6 @@
 		border-radius: 7px;
 		cursor: pointer;
 		transition: background-color 0.3s ease;
-
 	}
 
 	.identity button:hover {
