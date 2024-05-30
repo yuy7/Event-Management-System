@@ -3,17 +3,17 @@
       <nav class="navbar">
         <div class="nav-links">
           <ul class="nav-list">
-            <li><router-link to="/schedule">活动日程</router-link></li>
-            <li><router-link to="/create">活动创建</router-link></li>
-            <li><router-link to="/manage">活动管理</router-link></li>
-            <li><router-link to="/history">历史活动</router-link></li>
-            <li><router-link to="/notifications">消息通知</router-link></li>
+            <li><a @click="navigateTo('/schedule')">活动日程</a></li>
+            <li><a @click="navigateTo('/create')">活动创建</a></li>
+            <li><a @click="navigateTo('/manage')">活动管理</a></li>
+            <li><a @click="navigateTo('/history')">历史活动</a></li>
+            <li><a @click="navigateTo('/notifications')">消息通知</a></li>
           </ul>
         </div>
         <div class="user-profile">
-			<router-link to="/person">
+			<a @click="navigateTo('/person')">
 				<img src="../../src/assets/touxiang.png" alt="User Avatar" >
-			</router-link>
+			</a>
         </div>
       </nav>
     </div>
@@ -23,6 +23,19 @@
 // 确保已经在你的项目中安装并配置了Vue Router
 export default {
   name: "Navbar",
+    methods: {
+      navigateTo(route) {
+        // 获取当前用户ID
+        const params = new URLSearchParams(window.location.search);
+        const userid = params.get('userid');
+        
+        // 构建下一个路由的URL
+        const nextRoute = `${route}?userid=${userid}`;
+        
+        // 导航到下一个路由
+        window.location.href = nextRoute;
+      }
+  }
   
   
   

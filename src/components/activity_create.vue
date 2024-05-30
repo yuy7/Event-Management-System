@@ -1,173 +1,243 @@
 <template>
-  <div class="container">
-    <navbar></navbar>
-    <div class="activity-create">
-      <form @submit.prevent="submitForm">
-        <div class="form-group">
-          <label for="activity-name">活动名称:</label>
-          <input type="text" id="activity-name" v-model="activity.name" required />
-        </div>
+	<div class="container">
+		<navbar></navbar>
+		<div class="activity-create">
+			<form @submit.prevent="submitForm" @reset="resetForm">
+				<div class="form-group">
+					<label for="activity-name">活动名称:</label>
+					<input type="text" id="activity-name" v-model="activity.name" required />
+				</div>
 
-        <div class="form-group">
-          <label for="activity-startDate">活动开始时间:</label>
-          <input
-            type="datetime-local"
-            id="activity-startDate"
-            v-model="activity.startDate"
-            required
-          />
-        </div>
+				<div class="form-group">
+					<label for="activity-startDate">活动日期:</label>
+					<input type="date" id="activity-startDate" v-model="activity.date" required />
+					<select v-model="activity.time" required>
+						<option disabled value="">请选择时间段</option>
+						<option value="1">8:00-9:35</option>
+						<option value="2">9:55-11:30</option>
+						<option value="3">13:30-15:05</option>
+						<option value="4">15:20-16:55</option>
+						<option value="5">17:05-18:45</option>
+						<option value="6">19:30-21:05</option>
+					</select>
+				</div>
 
-        <div class="form-group">
-          <label for="activity-endDate">活动结束时间:</label>
+				<!-- <div class="form-group">
+          <label for="activity-endDate">活动结束日期:</label>
           <input
-            type="datetime-local"
+            type="date"
             id="activity-endDate"
             v-model="activity.endDate"
             required
           />
-        </div>
+          <select v-model="activity.endTime" required>
+            <option disabled value="">请选择时间段</option>
+            <option value="1">8:00-9:35</option>
+            <option value="2">9:55-11:30</option>
+            <option value="3">13:30-15:05</option>
+            <option value="4">15:20-16:55</option>
+            <option value="5">17:05-18:45</option>
+            <option value="6">19:30-21:05</option>
+          </select>
+        </div> -->
 
-        <div class="form-group">
-          <label for="activity-location">活动地点:</label>
-          <input
-            type="text"
-            id="activity-location"
-            v-model="activity.location"
-            required
-          />
-        </div>
+				<div class="form-group">
+					<label for="activity-location">活动地点:</label>
+					<select v-model="activity.preferredLocation" required>
+						<option disabled value="">请选择活动地点</option>
+						<option value="逸夫楼">逸夫楼</option>
+						<option value="机电楼">机电楼</option>
+						<option value="教学楼">教学楼</option>
+					</select>
+				</div>
 
-        <div class="form-group">
-          <label for="organizer">负责人:</label>
-          <input type="text" id="organizer" v-model="activity.organizer" required />
-        </div>
+				<div class="form-group">
+					<label for="activity-eventtype">活动类型:</label>
+					<select v-model="activity.eventTypeID" required>
+						<option disabled value="">请选择时间段</option>
+						<option value="0">大型考试</option>
+						<option value="1">统一考试</option>
+						<option value="2">宣讲</option>
+						<option value="3">授课</option>
+						<option value="4">课程考试</option>
+						<option value="5">开会</option>
+						<option value="6">学生活动</option>
+						<option value="7">其他</option>
+					</select>
+				</div>
 
-        <div class="form-group">
-          <label for="contact">联系方式:</label>
-          <input type="text" id="contact" v-model="activity.contact" required />
-        </div>
-        <div class="form-group">
-          <label for="require-approval">是否需要审批:</label>
-          <input
-            type="checkbox"
-            id="require-approval"
-            v-model="activity.requireApproval"
-          />
-          <div class="form-buttons">
-            <button type="submit">提交</button>
-            <button type="reset">重置</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
+
+				<div class="form-group">
+					<label for="numberOfPeople">预计参与人数:</label>
+					<input type="text" id="numberOfPeople" v-model="activity.numberOfPeople" required />
+				</div>
+
+				<div class="form-group">
+					<label for="require-approval">是否需要审批:</label>
+					<input type="checkbox" id="require-approval" v-model="activity.requireApproval" />
+					<div class="form-buttons">
+						<button type="submit">提交</button>
+						<button type="reset">重置</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </template>
 
 <script>
-import axios from "axios"; // 引入axios
-import Navbar from "./navbar.vue";
+	import axios from "axios"; // 引入axios
+	import Navbar from "./navbar.vue";
 
-export default {
-  components: {
-    Navbar,
-  },
-  data() {
-    return {
-      activity: {
-        name: "",
-        startDate: "",
-        endDate: "",
-        location: "",
-        organizer: "",
-        contact: "",
-        requireApproval: false, // 新增审批标志
-      },
-    };
-  },
+	export default {
+		components: {
+			Navbar,
+		},
+		data() {
+			return {
+				activity: {
+					userid: "",
+					name: "",
+					date: "",
+					eventTypeID: "",
+					numberOfPeople: "",
+					time: "",
+					// startDate: "",
+					// startTime: "",
+					// endDate: "",
+					// endTime: "",
+					preferredLocation: "",
+					// organizer: "",
+					// contact: "",
+					requireApproval: false, // 新增审批标志
+				},
+			};
+		},
 
-  methods: {
-    submitForm() {
-      axios
-        .post("http://localhost:5000/eventCreate", this.activity)
-        .then((response) => {
-          console.log("Success:", response);
-          // 处理响应数据
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          // 处理错误情况
-        });
-    },
-  },
-};
+		methods: {
+			submitForm() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				this.activity.userid = userid;
+				axios
+					.post("http://localhost:5000/eventCreate", this.activity)
+					.then((response) => {
+						console.log("Success:", response);
+						// 处理响应数据
+						alert("提交成功！"); // 弹出消息框
+
+						// 重置表单数据
+						this.activity.name = "";
+						this.activity.date = "";
+						this.activity.eventTypeID = "";
+						this.activity.numberOfPeople = "";
+						this.activity.time = "";
+						this.activity.preferredLocation = "";
+						this.activity.requireApproval = false;
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+						// 处理错误情况
+					});
+			},
+			resetForm() {
+			    // 重置表单数据
+			    this.activity.name = "";
+			    this.activity.date = "";
+			    this.activity.eventTypeID = "";
+			    this.activity.numberOfPeople = "";
+			    this.activity.time = "";
+			    this.activity.preferredLocation = "";
+			    this.activity.requireApproval = false;
+			  }
+		},
+	};
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: column; /* 设置为垂直布局 */
-  justify-content: flex-start; /* 从顶部开始对齐内容 */
-  align-items: center; /* 水平居中对齐子元素 */
-  min-height: 100vh; /* 使容器至少与视口一样高 */
-}
+	.container {
+		display: flex;
+		flex-direction: column;
+		/* 设置为垂直布局 */
+		justify-content: flex-start;
+		/* 从顶部开始对齐内容 */
+		align-items: center;
+		/* 水平居中对齐子元素 */
+		min-height: 100vh;
+		/* 使容器至少与视口一样高 */
+	}
 
-.activity-create {
-  width: 100%; /* 设置为100%可适应容器宽度 */
-  max-width: 600px; /* 最大宽度 */
-  padding: 20px;
-  background: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 20px; /* 调整顶部边距 */
-}
+	.activity-create {
+		width: 100%;
+		/* 设置为100%可适应容器宽度 */
+		max-width: 600px;
+		/* 最大宽度 */
+		padding: 20px;
+		background: #f9f9f9;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		margin-top: 20px;
+		/* 调整顶部边距 */
+	}
 
-.activity-create .form-group {
-  margin-bottom: 20px;
-}
+	.activity-create .form-group {
+		margin-bottom: 20px;
+	}
 
-.activity-create label {
-  display: block;
-  margin-bottom: 5px;
-  color: #333;
-}
+	.activity-create label {
+		display: block;
+		margin-bottom: 5px;
+		color: #333;
+	}
 
-.activity-create input[type="text"],
-.activity-create input[type="datetime-local"] {
-  width: calc(100% - 20px); /* 减去padding的宽度 */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+	.activity-create input[type="text"],
+	.activity-create input[type="date"],
+	.activity-create input[type="time"] {
+		width: calc(100% - 20px);
+		/* 减去padding的宽度 */
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
 
-.form-buttons button {
-  padding: 10px 20px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #333;
-  color: white;
-  cursor: pointer;
-}
+	.activity-create select {
+		width: 100%;
+		/* 减去padding的宽度 */
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		margin-top: 10px;
+	}
 
-.form-buttons button:hover {
-  background-color: #555;
-}
+	.form-buttons button {
+		padding: 10px 20px;
+		margin-right: 10px;
+		border: none;
+		border-radius: 4px;
+		background-color: #333;
+		color: white;
+		cursor: pointer;
+	}
 
-.form-buttons button[type="reset"] {
-  background-color: #ccc;
-  color: black;
-}
+	.form-buttons button:hover {
+		background-color: #555;
+	}
 
-.form-buttons button[type="reset"]:hover {
-  background-color: #ddd;
-}
+	.form-buttons button[type="reset"] {
+		background-color: #ccc;
+		color: black;
+	}
 
-.form-buttons {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
-}
-.activity-create input[type="checkbox"] {
-  margin-top: 3px;
-}
+	.form-buttons button[type="reset"]:hover {
+		background-color: #ddd;
+	}
+
+	.form-buttons {
+		display: flex;
+		justify-content: center;
+		padding-top: 20px;
+	}
+
+	.activity-create input[type="checkbox"] {
+		margin-top: 3px;
+	}
 </style>

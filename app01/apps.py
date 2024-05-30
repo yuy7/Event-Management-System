@@ -1,17 +1,17 @@
 from flask import Flask
 from flask_cors import CORS
-from __init__ import db
 from Model.Login import user_login
 from Model.EventCreate import EventCreate
-from Model.EventManage import get_events
+from Model.EventManage import get_events,getUserEvent,deleteEvent
 from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply,get_users
 from Model.Invite import invite
 from Model.ApplyEvent import apply_event
 from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArrangedEvents
 from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
 from Model.NotificationGet import get_notifications
-from flask_jwt_extended import JWTManager, jwt_required
+from Model.EventSearch import search_events
 import os
+from __init__ import db
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -27,6 +27,8 @@ db.init_app(app)
 app.route("/login", methods=["POST"])(user_login)
 app.route("/eventCreate", methods=["POST"])(EventCreate)
 app.route("/events", methods=["GET"])(get_events)
+app.route("/getUserEvent", methods=["GET"])(getUserEvent)
+app.route("/deleteEvent", methods=["POST"])(deleteEvent)
 app.route("/userinterface", methods=["GET"])(get_user)
 app.route("/userinterface/bindEmail", methods=["POST"])(bindEmail)
 app.route("/userinterface/bindPhone", methods=["POST"])(bindPhone)
@@ -40,6 +42,6 @@ app.route("/roleApplyCheck", methods=["GET"])(getRoleApply)
 app.route("/getUnarrangedEvents", methods=["GET"])(getUnarrangedEvents)    
 app.route("/getArrangedEvents", methods=["GET"])(getArrangedEvents)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 app.route("/notifications", methods=["GET"])(get_notifications)
-
+app.route("/searchEvents", methods=["GET"])(search_events)
 if __name__ == "__main__":
     app.run(debug=True)

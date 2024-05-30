@@ -16,7 +16,7 @@ def notify_user(recipient_id, sender_id, event_id, message, type = 0):
     )
     db.session.add(notification)
     db.session.commit()
-
+    
 def apply_event():
     data = request.get_json()
     user_id = data.get("userID")
@@ -30,9 +30,9 @@ def apply_event():
     # 获取活动创建者ID
     reservationUserId = event.reservationUserId
     if event.requireApproval:
-        # 如果活动需要审批，则创建申请记录
-        application = Application(eventID=event_id, userID=user_id, status='pending')
-        db.session.add(application)
+        # 如果活动需要审批，则创建用户事件记录，并设置状态为0
+        user_event = UserEvent(userID=user_id, eventID=event_id, state=0)
+        db.session.add(user_event)
         db.session.commit()
 
         # 通知活动创建者有新的申请
@@ -42,8 +42,8 @@ def apply_event():
 
         return jsonify({"status": "Success", "message": "申请已提交等待审批"}), 200
     else:
-        # 如果活动不需要审批，则直接添加用户到活动
-        user_event = UserEvent(userID=user_id, eventID=event_id)
+        # 如果活动不需要审批，则直接添加用户到活动，并设置状态为1
+        user_event = UserEvent(userID=user_id, eventID=event_id, state=1)
         db.session.add(user_event)
         db.session.commit()
 

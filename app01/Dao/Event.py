@@ -1,5 +1,6 @@
 from __init__ import db
 
+
 class Event(db.Model):
     __tablename__ = 'event'
     eventID = db.Column(db.Integer, primary_key=True, autoincrement=True)

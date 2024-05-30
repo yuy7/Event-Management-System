@@ -15,7 +15,7 @@
 						<h3>{{message.message}}</h3>
 					</div>
 					<div class="message_time">
-						<p>{{message.time}}</p>
+						<p>{{message.timestamp}}</p>
 					</div>
 					
 				</div>
@@ -51,17 +51,17 @@
 		methods: {
 			fetchmessage() {
 				
-				// const params = new URLSearchParams(window.location.search);
-				// const userid = params.get('userid');
-				// axios.get('http://localhost:5000/getEventMessage', {
-				// 		userid: userid
-				// 	})
-				// 	.then(response => {
-				// 		this.messages = response.data;
-				// 	})
-				// 	.catch(error => {
-				// 		console.error('Error fetching acyivity:', error);
-				// 	});
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				console.log(userid);
+				axios.get('http://localhost:5000/notifications?userid=' + userid)
+					.then(response => {
+						this.messages = response.data;
+						console.log(this.messages);
+					})
+					.catch(error => {
+						console.error('Error fetching messages:', error);
+					});
 			},
 			selectMessageType(type) {
 				this.selectedMessageType = type;

@@ -5,7 +5,7 @@ from Dao.Event import Event
 from Dao.Role import Role
 from Dao.Location import Location
 from Dao.User import User
-from Tool.OccupyMatric import is_occupied, get_building_and_number, hex2matric, matric2hex
+from Tool.OccupyMatrix import is_occupied, get_building_and_number, hex2matric, matric2hex
 from Tool.TimeCount import count_days_distance
 from __init__ import db
 from itertools import chain

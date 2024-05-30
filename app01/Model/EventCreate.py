@@ -4,8 +4,9 @@ from __init__ import db
 
 def EventCreate():
     # user_id = session.get("userID")
-    user_id = 251101164
+    # user_id = 251101164
     data = request.get_json()
+    user_id = data.get("userid")
     eventName = data.get("name")
     date = data.get("date")
     eventTypeID = data.get("eventTypeID")

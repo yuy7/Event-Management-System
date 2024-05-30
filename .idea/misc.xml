@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
+<<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (2)" project-jdk-type="Python SDK" />
+=======
   <component name="Black">
     <option name="sdkName" value="Python 3.10 (Event-Management-System)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (Event-Management-System)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (支撑材料)" project-jdk-type="Python SDK" />
+>>>>>>> bf69418 (活动创建、消息等界面修正)
+=======
+  <component name="Black">
+    <option name="sdkName" value="Python 3.10 (Event-Management-System)" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (支撑材料)" project-jdk-type="Python SDK" />
+=======
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (2)" project-jdk-type="Python SDK" />
+>>>>>>> 4b6cb9c7358cb70b5fafc4688a8caaf6f6950dbf
+>>>>>>> 5d7ac5bb74d739e5d744b5df9e6422697fb88cab
   <component name="PyCharmProfessionalAdvertiser">
     <option name="shown" value="true" />
   </component>

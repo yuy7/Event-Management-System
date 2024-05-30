@@ -1,4 +1,3 @@
-
 from __init__ import db
 
 class Location(db.Model):

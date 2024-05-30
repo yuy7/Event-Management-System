@@ -1,7 +1,5 @@
+from __init__ import db
 
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
 
 class InvitedList(db.Model):
     __tablename__ = 'invitedlist'
