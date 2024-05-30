@@ -10,6 +10,7 @@ from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArran
 from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
 from Model.NotificationGet import get_notifications
 from Model.Budgetview import set_budget, get_budget
+from Model.GetEventDetails import get_event
 # from flask_socketio import SocketIO, send
 import os
 from __init__ import db
@@ -49,7 +50,7 @@ app.route("/getArrangedEvents", methods=["GET"])(getArrangedEvents)
 app.route("/notifications", methods=["GET"])(get_notifications)
 app.route('/budget/set', methods=['POST'])(set_budget)
 app.route('/budget', methods=['GET', 'PATCH', 'PUT', 'POST'])(get_budget)
-
+app.route("/getEventDetails", methods=["POST"])(get_event)
 # @socketio.on("message")
 # def handle_message(msg):
 #     print("Message: " + msg)
