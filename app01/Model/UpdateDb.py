@@ -16,8 +16,9 @@ def matrix_shift(matrix, days):
     return new_matrix
 
 def update_db():
-    locationList = Location.query.all()
-    flag = 1
+    pass
+    # locationList = Location.query.all()
+    # flag = 1
     # for location in locationList:
         
     pass

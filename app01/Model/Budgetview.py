@@ -1,12 +1,9 @@
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
 
-from app01 import db
-from app01.Dao.Budget import Budget
-
-budget_blueprint = Blueprint('budget', __name__)
+from __init__ import db
+from Dao.Budget import Budget
 
 
-@budget_blueprint.route('/set', methods=['POST'])
 def set_budget():
     data = request.get_json()
     new_budget = Budget(
@@ -20,7 +17,6 @@ def set_budget():
     return jsonify({"status": "Budget set successfully"}), 201
 
 
-@budget_blueprint.route('', methods=['GET', 'PATCH', 'PUT', 'POST'])
 def get_budget():
     if request.method == 'GET':
         budgets = Budget.query.all()
