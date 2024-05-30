@@ -1,4 +1,6 @@
 import copy
+from Tool.OccupyMatrix import matric2hex, hex2matric
+from Dao.Location import Location
 def matrix_shift(matrix, days):
     new_matrix = matrix
     days = 30 if days>30 else days
@@ -13,7 +15,9 @@ def matrix_shift(matrix, days):
     print(new_matrix)
     return new_matrix
 
-
-
 def update_db():
+    locationList = Location.query.all()
+    flag = 1
+    # for location in locationList:
+        
     pass

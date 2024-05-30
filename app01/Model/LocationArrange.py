@@ -81,7 +81,6 @@ def locationArrange():
     if startDate < now or startDate > now + timedelta(days=30):
         return jsonify({'error': 'Start date is not within the next 30 days'}), 400
 
-    days_data = []  # 用于存储每日的安排
     arrangeEvents = []  # 假设这是我们要返回的最终列表
     current_date = startDate
     while current_date <= endDate:
@@ -90,9 +89,10 @@ def locationArrange():
         # print(current_date_string)
         # 添加逻辑来获取每一天的事件
         events = Event.query.filter_by(date=current_date_string).all()
-        days_distance = count_days_distance(current_date, now)
-        result_list = eventArrange(days_distance, events)
-        arrangeEvents = list(chain(arrangeEvents, result_list))
+        if events is not None:
+            days_distance = count_days_distance(current_date, now)
+            result_list = eventArrange(days_distance, events)
+            arrangeEvents = list(chain(arrangeEvents, result_list))
         current_date += timedelta(days=1)  # 移至下一天
     
     # 遍历列表中的每个元组
