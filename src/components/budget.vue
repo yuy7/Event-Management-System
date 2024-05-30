@@ -1,7 +1,8 @@
 <!-- src/components/Budget.vue -->
-<!-- <template>
+<template>
   <div style="padding-left: 16px;padding-right: 16px">
-    <h1>Budget Data</h1>
+    <navbar></navbar>
+    <h1>预算管理</h1>
     <el-button type="primary" style="margin-bottom: 4px" @click="dialogFormVisible = true; form={
   initialBudget: 0,
   actualCost: 0
@@ -62,6 +63,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import Navbar from "./navbar.vue";
 
 const dialogFormVisible = ref(false)
 const dialogFormVisible1 = ref(false)
@@ -147,4 +149,4 @@ const handleDelete = (id) => {
 onMounted(()=>{
   fetchBudgetData()
 })
-</script> -->
+</script>
