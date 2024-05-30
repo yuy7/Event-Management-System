@@ -5,7 +5,7 @@ from Dao.Event import Event
 from Dao.Role import Role
 from Dao.Location import Location
 from Dao.User import User
-from Tool.OccupyMatrix import is_occupied, get_building_and_number, hex2matric, matric2hex
+from Tool.OccupyMatrix import is_occupied, get_building_and_number, hex2matrix, matrix2hex
 from Tool.TimeCount import count_days_distance
 from __init__ import db
 from itertools import chain
@@ -107,9 +107,9 @@ def locationArrange():
             row1 &= Event.query.filter_by(eventID = event_obj.eventID).update({"arrangedLocation":location_name})
             building, number = get_building_and_number(location_name)
             location_obj = Location.query.filter_by(building=building, number=number).first()
-            matric = hex2matric(location_obj.occupy)
-            matric[days_distance][event_obj.time] = 1
-            row2 &= Location.query.filter_by(locationId = location_obj.locationId).update({"occupy":matric2hex(matric)})
+            matrix = hex2matrix(location_obj.occupy)
+            matrix[days_distance][event_obj.time] = 1
+            row2 &= Location.query.filter_by(locationId = location_obj.locationId).update({"occupy":matrix2hex(matrix)})
     try:
         db.session.commit()
         if(row1 & row2):
@@ -119,7 +119,7 @@ def locationArrange():
         elif (row1 == 0):
             raise Exception("Update eventList error!")
         else:
-            return Exception("Update Location occupy status error!")
+            raise Exception("Update Location occupy status error!")
     except Exception as e:
         db.session.rollback()
         return jsonify({
