@@ -10,3 +10,4 @@ class Notification(db.Model):
     message = db.Column('message', db.String(255), nullable=False)
     read = db.Column('read', db.Boolean, default=False)
     timestamp = db.Column('timestamp', db.TIMESTAMP, default=datetime.now())
+    type = db.Column(db.Integer, nullable=False)

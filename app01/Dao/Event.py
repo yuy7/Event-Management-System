@@ -15,5 +15,6 @@ class Event(db.Model):
     time = db.Column(db.String(100), nullable=False)
 
 
+
     def __repr__(self):
         return f"<Event {self.eventName}>"

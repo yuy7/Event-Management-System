@@ -27,6 +27,7 @@
 	</div>
 </template>
 
+
 <script>
 	import Navbar from './navbar.vue';
 	import axios from 'axios';
@@ -144,6 +145,7 @@
 		}
 	};
 </script>
+
 
 <style scoped>
 	.activity-manage-container {
