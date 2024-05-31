@@ -6,8 +6,8 @@ from __init__ import db
 
 # 得到当前用户信息，GET方法
 def get_user():
-    # userID = session.get("userID")
-    userID = 251101164
+    userID = session.get("userID")
+    # userID = 251101164
     print(userID)
     user = User.query.filter_by(UserID=userID).first()
     roleApply = RoleApply.query.filter_by(userID=userID).first()
