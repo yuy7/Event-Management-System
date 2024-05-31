@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 from Dao.User import User
-from apps import db
-register_blueprint = Blueprint('register', __name__)
-@register_blueprint.route("/register", methods=["POST"])
+from __init__ import db
+
+
 def user_register():
     """
     用户注册

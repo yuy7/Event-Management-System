@@ -8,6 +8,7 @@ from __init__ import db
 def get_user():
     userID = session.get("userID")
     # userID = 251101164
+    print(userID)
     user = User.query.filter_by(UserID=userID).first()
     return jsonify({
         'UserID': user.UserID,

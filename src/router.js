@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import login from './components/login.vue'
 import register from './components/register.vue'
 import forget_password from './components/forget_password.vue'
+import budget from './components/budget.vue'
+// import chat_room from "./components/chat_room.vue";
 import schedule from './components/calendar.vue'
 import navbar from './components/navbar.vue'
 import activity_create from './components/activity_create.vue'
@@ -12,6 +14,7 @@ import activity_goal from './components/activity_goal.vue'
 import activity_detail from './components/activity_detail.vue'
 import activity_invite from './components/activity_invite.vue'
 import activity_notifications from './components/activity_notifications.vue'
+import activity_member from './components/activity_member.vue'
 const routes = [
   {
     path: '/login',
@@ -72,11 +75,22 @@ const routes = [
   	  path: '/notifications',
   	  name: 'activity_notifications',
   	  component: activity_notifications,
-  }, {
+  },
+  // {
+  //   path: '/chat-room',
+  //   name: 'chat-room',
+  //   component: chat_room
+  // },
+  {
     path:'/budget',
     name:'budget',
-    component: ()=>import('./components/budget.vue'),
+    component: budget,
   },
+  {
+    path:'/member',
+    name:'member',
+    component: activity_member,
+  }
 ]
 
 const router = createRouter({
