@@ -7,7 +7,7 @@ from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply,get_users
 from Model.Invite import invite
 from Model.ApplyEvent import apply_event
 from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArrangedEvents
-from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
+from Model.RoleApplyCheck import acceptRoleApply, getRoleApply,refuseRoleApply
 from Model.NotificationGet import get_notifications
 from Model.EventSearch import search_events
 from Model.Budgetview import set_budget, get_budget
@@ -44,6 +44,7 @@ app.route("/userinterface/get_users", methods=["GET"])(get_users)
 app.route("/invite", methods=["POST"])(invite)
 app.route("/applyEvent", methods=["POST"])(apply_event)
 app.route("/locationArrange", methods=["POST"])(locationArrange)
+app.route("/refuseRoleApply", methods=["POST"])(refuseRoleApply)
 app.route("/acceptRoleApply", methods=["POST"])(acceptRoleApply)
 app.route("/roleApplyCheck", methods=["GET"])(getRoleApply)             
 app.route("/getUnarrangedEvents", methods=["GET"])(getUnarrangedEvents)    

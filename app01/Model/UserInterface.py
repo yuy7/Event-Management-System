@@ -80,6 +80,8 @@ def roleApply():
     role = request.json.get("role")
     roleID = Role.query.filter_by(roleName=role).first().roleID
     roleApply = RoleApply.query.filter_by(userID=userID).first()
+    user = User.query.filter_by(UserID=userID).first()
+    user.Role = "申请中"
     try:
         if roleApply is not None:
             roleApply.roleID = roleID
