@@ -1,11 +1,10 @@
-<!-- src/components/Budget.vue -->
 <!-- <template>
   <div style="padding-left: 16px;padding-right: 16px">
     <navbar></navbar>
     <h1>预算管理</h1>
     <el-button type="primary" style="margin-bottom: 4px" @click="dialogFormVisible = true; form={
-  initialBudget: 0,
-  actualCost: 0
+		  initialBudget: 0,
+		  actualCost: 0
     }">新增预算</el-button>
     <el-table :data="budgetData" style="width: 100%">
       <el-table-column prop="budgetID" label="ID" />

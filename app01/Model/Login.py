@@ -10,14 +10,16 @@ def user_login():
     data = request.get_json()
     phoneNumber = data.get("phoneNumber")
     password = data.get("password")
-    flag = update_db()
-    if flag == "Success":
-        pass
-    else:
-        return jsonify({
-            "status": "Error",
-            "data": "更新场地数据库失败, 请重试"
-        })
+    # flag = update_db()
+    # if flag == "Success":
+    #     pass
+    # else:
+    #     return jsonify({
+    #         "status": "Error",
+    #         "data": "更新场地数据库失败, 请重试"
+    #     })
+    print(password)
+    # update_db()
     # 查询数据库 传入的可能是电话号码或userid
     user = User.query.filter_by(PhoneNumber=phoneNumber).first()
     if user is not None:

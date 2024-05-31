@@ -14,6 +14,7 @@ import activity_goal from './components/activity_goal.vue'
 import activity_detail from './components/activity_detail.vue'
 import activity_invite from './components/activity_invite.vue'
 import activity_notifications from './components/activity_notifications.vue'
+import activity_member from './components/activity_member.vue'
 const routes = [
   {
     path: '/login',
@@ -74,12 +75,7 @@ const routes = [
   	  path: '/notifications',
   	  name: 'activity_notifications',
   	  component: activity_notifications,
-  }
-  // {
-  //   path:'/budget',
-  //   name:'budget',
-  //   component: ()=>import('./components/budget.vue'),
-  // },
+  },
   // {
   //   path: '/chat-room',
   //   name: 'chat-room',
@@ -89,7 +85,12 @@ const routes = [
   //   path:'/budget',
   //   name:'budget',
   //   component: budget,
-  // }
+  // },
+  {
+    path:'/member',
+    name:'member',
+    component: activity_member,
+  }
 ]
 
 const router = createRouter({

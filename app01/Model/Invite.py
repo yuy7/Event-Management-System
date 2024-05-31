@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
+from __init__ import db
 from Dao.Event import Event
 from Dao.User import User
-from Dao.InvitedList import InvitedList, db  # 导入模型和数据库实例
+from Dao.Class import Class
+from Dao.InvitedList import InvitedList
 
 def invite():
     data = request.get_json()
@@ -19,16 +21,10 @@ def invite():
         invited = User.query.filter_by(UserID=invited_id).first()
         if not invited:
             return jsonify({'message': 'User not found'}), 404
-        
-    # 班级类还没有相应的实现
-    # elif invite_type == 2:  # 班级
-    #     # 假设你有一个 Class 模型来表示班级
-    #     invited = Class.query.filter_by(classID=invited_id).first()
-    #     if not invited:
-    #         return jsonify({'message': 'Class not found'}), 404
-    
-    
-    
+    elif invite_type == 2:  # 班级
+        invited = Class.query.filter_by(ClassID=invited_id).first()
+        if not invited:
+            return jsonify({'message': 'Class not found'}), 404
     else:
         return jsonify({'message': 'Invalid inviteType'}), 400
 
@@ -37,3 +33,4 @@ def invite():
     db.session.add(invite_record)
     db.session.commit()
 
+    return jsonify({'message': 'Invite sent successfully'}), 200
