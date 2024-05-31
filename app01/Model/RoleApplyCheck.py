@@ -22,10 +22,10 @@ def getRoleApply():
 def acceptRoleApply():
     roleApplyID = request.json.get("roleApplyID")
     roleApply = RoleApply.query.filter_by(roleApplyID=roleApplyID).first()
-    roleApply.roleState = 1
     user = User.query.filter_by(UserID=roleApply.userID).first()
     user.Role = Role.query.filter_by(roleID=roleApply.roleID).first().roleName
     try:
+        db.session.delete(roleApply)
         db.session.commit()
         return jsonify({
             "status": "Success"
