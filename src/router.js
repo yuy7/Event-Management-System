@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import login from './components/login.vue'
 import register from './components/register.vue'
 import forget_password from './components/forget_password.vue'
-import budget from './components/budget.vue'
+// import budget from './components/budget.vue'
 // import chat_room from "./components/chat_room.vue";
 import schedule from './components/calendar.vue'
 import navbar from './components/navbar.vue'
@@ -81,11 +81,11 @@ const routes = [
   //   name: 'chat-room',
   //   component: chat_room
   // },
-  {
-    path:'/budget',
-    name:'budget',
-    component: budget,
-  },
+  // {
+  //   path:'/budget',
+  //   name:'budget',
+  //   component: budget,
+  // },
   {
     path:'/member',
     name:'member',

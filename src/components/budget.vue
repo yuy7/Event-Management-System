@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div style="padding-left: 16px;padding-right: 16px">
     <navbar></navbar>
     <h1>预算管理</h1>
@@ -148,4 +148,4 @@ const handleDelete = (id) => {
 onMounted(()=>{
   fetchBudgetData()
 })
-</script>
+</script> -->

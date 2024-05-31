@@ -11,6 +11,7 @@ from Model.RoleApplyCheck import acceptRoleApply, getRoleApply,refuseRoleApply
 from Model.NotificationGet import get_notifications
 from Model.EventSearch import search_events
 from Model.Budgetview import set_budget, get_budget
+# from Model.HistoryEvent import getHistoryEvents
 from Model.GetEventDetails import get_event
 # from flask_socketio import SocketIO, send
 import os
@@ -53,6 +54,8 @@ app.route("/notifications", methods=["GET"])(get_notifications)
 app.route("/searchEvents", methods=["GET"])(search_events)
 app.route('/budget/set', methods=['POST'])(set_budget)
 app.route('/budget', methods=['GET', 'PATCH', 'PUT', 'POST'])(get_budget)
+# app.route('/history', methods=['GET'])(getHistoryEvents)
+
 app.route("/getEventDetails", methods=["POST"])(get_event)
 # @socketio.on("message")
 # def handle_message(msg):
