@@ -105,11 +105,11 @@
 								})
 								.then((response) => {
 									console.log("Success:", response);
-									window.alert('加入活动成功！'); // 弹出弹窗
+									window.alert('提交申请成功！'); // 弹出弹窗
 								})
 								.catch((error) => {
 									console.error("Error:", error);
-									window.alert('加入活动失败！'); // 弹出弹窗
+									window.alert('提交申请失败！'); // 弹出弹窗
 								});
 						}else{
 							axios.post("http://localhost:5000/applyEvent", {

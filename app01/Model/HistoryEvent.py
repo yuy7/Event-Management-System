@@ -2,13 +2,15 @@ from datetime import datetime
 from Dao.UserEvent import UserEvent
 from Dao.UserAddEvent import UserAddEvent
 from  Dao.Event import Event
-from flask import session
+from flask import session,request
 from __init__ import db
 from Dao.TimeSlot import TimeSlot
 from Tool.Mappings import mapping_add_state
 
 def getHistoryEvents():
-    userID = session.get("userid")  # 从session中获取userID
+    data = request.get_json()
+    userID = data.get("userid")
+    # userID = session.get("userid")  # 从session中获取userID
     print(userID)
     today_str = datetime.now().strftime('%Y-%m-%d')
 
