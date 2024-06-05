@@ -13,7 +13,7 @@
     "@fullcalendar/timegrid": "^6.1.11",
     "@fullcalendar/vue3": "^6.1.11",
     "axios": "^1.6.8",
-    "element-plus": "^2.7.3",
+    "element-plus": "^2.7.4",
     "mitt": "^3.0.1",
     "socket.io-client": "^4.7.5",
     "vue": "^3.2.8",

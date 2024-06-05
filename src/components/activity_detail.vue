@@ -1,166 +1,162 @@
 <template>
-	<navbar></navbar>
-	<div class="events-container">
-		<h3>活动详情</h3>
-		<table>
-			<tbody>
-				<tr>
-					<th>活动名称</th>
-					<td>{{ eventName }}</td>
-				</tr>
-				<tr>
-					<th>活动开始时间</th>
-					<td>{{ eventStartDate }}</td>
-				</tr>
-				<tr>
-					<th>活动结束时间</th>
-					<td>{{ eventEndDate }}</td>
-				</tr>
-				<tr>
-					<th>活动地点</th>
-					<td>{{ eventLocation }}</td>
-				</tr>
-				<tr>
-					<th>活动人员</th>
-					<td>{{ eventUser.join(', ') }}</td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<div class="discussion-area">
-		    <h3>讨论区</h3>
-		    <div v-for="comment in comments" :key="comment.id" class="comment">
-				<div class="ask">
-					<div class="profile-picture">
-						<img src="../../src/assets/touxiang.png" alt="Profile Picture">
-					</div>
-					<div class="words">
-						<h4>{{ comment.askUser }}</h4>
-						<p>{{ comment.problem }}</p>
-					</div>
-					<div class="time">
-						<p>{{comment.askTime}}</p>
-					</div>
-					<button @click="showCommentInput">回复</button>
-				</div>
-				<hr class="detailseparator">
-		        <div v-for="ans in comment.ans" :key="ans.ansUser" class="answer">
-					<div class="profile-picture">
-						<img src="../../src/assets/touxiang.png" alt="Profile Picture">
-					</div>
-					<div class="words">
-						<h4>{{ ans.ansUser }}</h4>
-						<p>{{ ans.answer }}</p>
-					</div>
-					<div class="time">
-						<p>{{ans.ansTime}}</p>
-					</div>
-		        </div>
-		    </div>
-		</div>
-		<div v-if="isCommentInputVisible" class="commentInput">
-		    <input type="text" v-model="newComment"></input>
-		    <button @click="submitComment">提交评论</button>
-		</div>
+  <navbar></navbar>
+  <div class="events-container">
+    <h3>活动详情</h3>
+    <table>
+      <tbody>
+        <tr>
+          <th>活动名称</th>
+          <td>{{ eventName }}</td>
+        </tr>
+        <tr>
+          <th>活动日期</th>
+          <td>{{ eventDate }}</td>
+        </tr>
+        <tr>
+          <th>活动时间段</th>
+          <td>{{ eventTime }}</td>
+        </tr>
+        <tr>
+          <th>活动地点</th>
+          <td>{{ eventLocation }}</td>
+        </tr>
+        <tr>
+          <th>活动人员</th>
+          <td>{{ eventUser.join(', ') }}</td>
+        </tr>
+      </tbody>
+    </table>
 
-		<button @click="invite">邀请新成员加入活动</button>
-	</div>
+    <div class="discussion-area">
+      <h3>讨论区</h3>
+      <div v-for="comment in comments" :key="comment.comment_id" class="comment">
+        <div class="ask">
+          <div class="profile-picture">
+            <img src="../../src/assets/touxiang.png" alt="Profile Picture">
+          </div>
+          <div class="words">
+            <h4>{{ comment.username }}</h4>
+            <p>{{ comment.answer }}</p>
+          </div>
+          <div class="time">
+            <p>{{ comment.ans_time }}</p>
+          </div>
+          <button @click="showCommentInput(comment.comment_id)">回复</button>
+        </div>
+        <hr class="detailseparator">
+        <div v-for="ans in comment.ans" :key="ans.ansUser" class="answer">
+          <div class="profile-picture">
+            <img src="../../src/assets/touxiang.png" alt="Profile Picture">
+          </div>
+          <div class="words">
+            <h4>{{ ans.ansUser }}</h4>
+            <p>{{ ans.answer }}</p>
+          </div>
+          <div class="time">
+            <p>{{ ans.ansTime }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="isCommentInputVisible" class="commentInput">
+      <input type="text" v-model="newComment">
+      <button @click="submitComment">提交评论</button>
+    </div>
+
+    <button @click="invite">邀请新成员加入活动</button>
+  </div>
 </template>
 
 <script>
-	import Navbar from './navbar.vue';
-	import axios from 'axios';
-	export default {
-		components: {
-			Navbar
-		},
-		data() {
-			return {
-				eventName: "活动名称",
-				eventStartDate: "活动开始时间",
-				eventEndDate: "活动结束时间",
-				eventLocation: "活动地点",
-				eventUser:["小红","小明"],
-				comments: [
-					{ id: 1, askUser: '小红', problem: '我很期待这个活动!',askTime:"2024-05-23 20:00:00",
-						ans:[
-							{ansid:1,ansUser:"小明",answer:"我也很期待！",ansTime:"2024-05-23 21:00:00"},
-							{ansid:2,ansUser:"小绿",answer:"我也是！",ansTime:"2024-05-23 22:00:00"}
-							] },
-				],
-				newComment: '',
-				isCommentInputVisible:false,
-			};
-		},
-		created() {
-			this.fetchEvents();
-		},
-		methods: {
-			fetchEvents() {
-				// 从当前URL中解析出eventid的值
-				const params = new URLSearchParams(window.location.search);
-				const eventid = params.get('eventid');
-				const userid = params.get('userid');
-				console.log('userid:', userid);
-				console.log('eventid:', eventid);
-				// axios.get('http://localhost:5000/get_single_event', {
-				// 		params: {
-				// 			eventid: eventid
-				// 		}
-				// 	})
-				// 	.then(response => {
-				// 		this.eventName = response.data.eventName;
-				// 		this.eventStartDate = response.data.eventStartDate;
-				// 		this.eventEndDate = response.data.eventEndDate;
-				// 		this.eventLocation = response.data.eventLocation;
-				//		this.eventUser = response.data.eventUser;
-				//		this.comments = response.data.comments;
-				// 	})
-				// 	.catch(error => {
-				// 		console.error('Error fetching events:', error);
-				// 	});
-			},
-			invite() {
-				const params = new URLSearchParams(window.location.search);
-				const userid = params.get('userid');
-				const eventid = params.get('eventid');
-				window.location.href = `/invite?userid=${userid}&eventid=${eventid}`;
-				// console.log('userid:', userid);
-				// console.log('eventid:', eventid);
-			},
-			showCommentInput() {
-				// 显示输入框
-				this.isCommentInputVisible = true;
-			},
-			submitComment() {
-				const params = new URLSearchParams(window.location.search);
-				const userid = params.get('userid');
-				// 打印评论信息
-				console.log('userid:', userid);
-				console.log('评论时间:', new Date());
-				console.log('评论内容:', this.newComment);
-				// axios.post('http://localhost:5000/updateComment', {
-				// 		userid: userid,
-				// 		answer:this.newComment,
-				// 		ansTime:new Date(),
-				// 	})
-				// 	.then(response => {
-						
-				// 	})
-				// 	.catch(error => {
-				// 		console.error('Error updating newcomment:', error);
-				// 	});
-				// }
-				
-				// 清空评论输入框
-				this.newComment = '';
-				// 隐藏评论输入框
-				this.isCommentInputVisible = false;
-			},
-		},
-	}
-</script>
+import Navbar from './navbar.vue';
+import axios from 'axios';
 
+export default {
+  components: {
+    Navbar
+  },
+  data() {
+    return {
+      eventName: "",
+      eventDate: "",
+      eventTime: "",
+      eventLocation: "",
+      eventUser: [],
+      comments: [],
+      newComment: '',
+      isCommentScrolled: false,
+      isCommentInputVisible: false,
+      currentCommentId: null,
+    };
+  },
+  created() {
+    this.fetchEvents();
+    this.fetchComments();
+  },
+  methods: {
+    fetchEvents() {
+      const params = new URLSearchParams(window.location.search);
+      const eventid = params.get('eventid');
+      axios.post('http://localhost:5000/getEventDetails', { eventID: eventid })
+        .then(response => {
+          const event = response.data.event;
+          this.eventName = event.eventName;
+          this.eventDate = event.date;
+          this.eventTime = event.time;
+          this.eventLocation = event.arrangedLocation;
+          this.eventUser = [event.reservationUserId]; // Assuming there is one main organizer
+        })
+        .catch(error => {
+          console.error('Error fetching events:', error);
+        });
+    },
+    fetchComments() {
+      const params = new URLSearchParams(window.location.search);
+      const eventid = params.get('eventid');
+      axios.get(`http://localhost:5000/getcomments?eventid=${eventid}`)
+        .then(response => {
+          this.comments = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching comments:', error);
+        });
+    },
+    invite() {
+      const params = new URLSearchParams(window.location.search);
+      const userid = params.get('userid');
+      const eventid = params.get('eventid');
+      window.location.href = `/invite?userid=${userid}&eventid=${eventid}`;
+    },
+    showCommentInput(commentId) {
+      this.isCommentInputVisible = true;
+      this.currentCommentId = commentId;
+    },
+    submitComment() {
+      const params = new URLSearchParams(window.location.search);
+      const userid = params.get('userid');
+      const eventid = params.get('eventid');
+      const newComment = {
+        userId: userid,
+        eventID: eventid,
+        answer: this.newComment,
+        ansTime: new Date().toISOString()
+      };
+
+      axios.post('http://localhost:5000/addcomment', newComment)
+        .then(response => {
+          console.log(response.data.message);
+          this.fetchComments();
+        })
+        .catch(error => {
+          console.error('Error submitting comment:', error);
+        });
+
+      this.newComment = '';
+      this.isCommentInputVisible = false;
+    },
+  },
+}
+</script>
 <style>
 	.events-container {
 		display: flex;

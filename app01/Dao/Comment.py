@@ -7,5 +7,5 @@ class Comment(db.Model):
     Username = db.Column('Username', db.String(50), nullable=False)
     Answer = db.Column('Answer', db.Text, nullable=False)
     AnsTime = db.Column('AnsTime', db.TIMESTAMP, default=db.func.current_timestamp())
-    
+    EventID = db.Column('EventID', db.Integer, db.ForeignKey('event.eventID'), nullable=False)
     user = db.relationship('User', backref=db.backref('comments', lazy=True))

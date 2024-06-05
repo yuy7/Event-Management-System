@@ -12,6 +12,8 @@ from Model.NotificationGet import get_notifications
 from Model.EventSearch import search_events
 from Model.Budgetview import set_budget, get_budget
 from Model.GetEventDetails import get_event
+from Model.CommentGet import get_comments
+from Model.CommentSave import add_comment
 # from flask_socketio import SocketIO, send
 import os
 from __init__ import db
@@ -54,6 +56,8 @@ app.route("/searchEvents", methods=["GET"])(search_events)
 app.route('/budget/set', methods=['POST'])(set_budget)
 app.route('/budget', methods=['GET', 'PATCH', 'PUT', 'POST'])(get_budget)
 app.route("/getEventDetails", methods=["POST"])(get_event)
+app.route("/getcomments", methods=["GET"])(get_comments)
+app.route("/addcomment", methods=["POST"])(add_comment)
 # @socketio.on("message")
 # def handle_message(msg):
 #     print("Message: " + msg)

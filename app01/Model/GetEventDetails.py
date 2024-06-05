@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from Dao.Event import Event
 from Dao.EventDetail import EventDetail
 from __init__ import db
-
+from Tool.Mappings import time_mapping
 app = Flask(__name__)
 
 def get_event():
@@ -33,7 +33,7 @@ def get_event():
 
     # 查询活动详情
     event_detail = EventDetail.query.filter_by(eventID=event_id).first()
-
+    time_slot = time_mapping.get(event.time, "未知时间段")
     # 返回活动的相关信息
     event_info = {
         "eventID": event.eventID,
@@ -45,7 +45,7 @@ def get_event():
         "preferredLocation": event.preferredLocation,
         "arrangedLocation": event.arrangedLocation,
         "requireApproval": event.requireApproval,
-        "time": event.time,
+        "time": time_slot,
         "description": event_detail.description if event_detail else None,
         "notification": event_detail.notification if event_detail else None
     }
