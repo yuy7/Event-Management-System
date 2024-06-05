@@ -66,13 +66,13 @@
 						console.error('Error fetching events:', error);
 					});
 
-				// axios.get('http://localhost:5000/eventsJoin?userid=' + userid)
-				// 	.then(response => {
-				// 		this.event_join = response.data;
-				// 	})
-				// 	.catch(error => {
-				// 		console.error('Error fetching events:', error);
-				// 	});
+				axios.get('http://localhost:5000/eventsJoin?userid=' + userid)
+					.then(response => {
+						this.event_join = response.data;
+					})
+					.catch(error => {
+						console.error('Error fetching events:', error);
+					});
 				axios.get('http://localhost:5000/getUserEvent?userid=' + userid)
 					.then(response => {
 						this.event_join = response.data;

@@ -29,6 +29,7 @@ CREATE TABLE `notifications` (
   `event_id` int NOT NULL,
   `message` varchar(255) NOT NULL,
   `read` tinyint(1) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `recipient_id` (`recipient_id`),
@@ -44,11 +45,6 @@ CREATE TABLE `notifications` (
 -- Dumping data for table `notifications`
 --
 
-LOCK TABLES `notifications` WRITE;
-/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (2,251101163,251101163,5,'yuyan2003 申请加入您的活动 哈哈',0,'2024-05-23 09:15:46'),(6,251101163,251101163,10,'yuyan2003 加入了您的活动 Event J',0,'2024-05-26 14:19:05');
-/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
