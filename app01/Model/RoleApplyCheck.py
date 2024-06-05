@@ -21,6 +21,7 @@ def getRoleApply():
 # 超管接受身份申请，POST方法
 def acceptRoleApply():
     roleApplyID = request.json.get("roleApplyID")
+    print(roleApplyID)
     roleApply = RoleApply.query.filter_by(roleApplyID=roleApplyID).first()
     user = User.query.filter_by(UserID=roleApply.userID).first()
     user.Role = Role.query.filter_by(roleID=roleApply.roleID).first().roleName

@@ -15,6 +15,7 @@ import activity_detail from './components/activity_detail.vue'
 import activity_invite from './components/activity_invite.vue'
 import activity_notifications from './components/activity_notifications.vue'
 import activity_member from './components/activity_member.vue'
+import activity_history from './components/activity_history.vue'
 const routes = [
   {
     path: '/login',
@@ -90,6 +91,11 @@ const routes = [
     path:'/member',
     name:'member',
     component: activity_member,
+  },
+  {
+    path:'/history',
+    name:'history',
+    component: activity_history,
   }
 ]
 

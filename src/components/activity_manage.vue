@@ -13,13 +13,15 @@
 		<div class="events-container">
 			<div class="event-row" v-for="(eventRow, index) in chunkedEvents" :key="index">
 				<div class="event-card" v-for="singleEvent in eventRow" :key="singleEvent.eventID"
-					@click="goToDetail(singleEvent)">
-					<h3>{{ singleEvent.eventName }}</h3>
+				  @click="goToDetail(singleEvent)">
+				  <h3>{{ singleEvent.eventName }}</h3>
 					<p>活动日期：{{ singleEvent.date }}</p>
 					<p>活动时间：{{ singleEvent.time }}</p>
 					<p>活动地点：{{ singleEvent.preferredLocation }}</p>
 					<p v-if="selectedType === 'join'">申请状态：{{ singleEvent.state }}</p>
 					<p v-if="selectedType === 'search'">是否需要申请：{{ singleEvent.requireApproval ? '是' : '否' }}</p>
+					<button v-if="selectedType === 'search'" @click.stop="joinEvent(singleEvent)">加入</button>
+					<!-- <button v-if="selectedType === 'search' && singleEvent.label == 1" @click.stop="joinEvent(singleEvent)">加入</button> -->
 				</div>
 			</div>
 		</div>
@@ -42,7 +44,6 @@
 				event_search: [],
 				filteredEvents: [],
 				searchQuery: '',
-				isSearch: false,
 				selectedType: "join",
 			};
 		},
@@ -84,55 +85,57 @@
 			selectType(type) {
 				this.selectedType = type;
 			},
-			goToDetail(singleEvent) {
-				const params = new URLSearchParams(window.location.search);
-				const userid = params.get('userid');
-				if (this.isSearch === true) {
-					let message = singleEvent.requireApproval ?
-						'是否确认向创建者发送申请' :
-						'该活动无需审核，是否确认加入';
-
-					if (window.confirm(message)) {
-						let applicationReason = '';
-						if (singleEvent.requireApproval) {
-							applicationReason = window.prompt('请输入申请理由：');
-						}
-						if(singleEvent.requireApproval){
-							axios.post("http://localhost:5000/applyEventWithReason", {
-									userID: userid,
-									eventID: singleEvent.eventID,
-									reason: applicationReason // 申请理由
-								})
-								.then((response) => {
-									console.log("Success:", response);
-									window.alert('提交申请成功！'); // 弹出弹窗
-								})
-								.catch((error) => {
-									console.error("Error:", error);
-									window.alert('提交申请失败！'); // 弹出弹窗
-								});
-						}else{
-							axios.post("http://localhost:5000/applyEvent", {
-									userID: userid,
-									eventID: singleEvent.eventID,
-								})
-								.then((response) => {
-									console.log("Success:", response);
-									window.alert('加入活动成功！'); // 弹出弹窗
-								})
-								.catch((error) => {
-									console.error("Error:", error);
-									window.alert('加入活动失败！'); // 弹出弹窗
-								});
-						}
-						
+			joinEvent(singleEvent) {
+			    const params = new URLSearchParams(window.location.search);
+			    const userid = params.get('userid');
+			    let message = singleEvent.requireApproval ?
+			    	'是否确认向创建者发送申请' :
+			    	'该活动无需审核，是否确认加入';
+				if (window.confirm(message)) {
+					let applicationReason = '';
+					if (singleEvent.requireApproval) {
+						applicationReason = window.prompt('请输入申请理由：');
 					}
-				} else {
-					window.location.href = `/detail?userid=${userid}&eventid=${singleEvent.eventID}`;
+					if(singleEvent.requireApproval){
+						axios.post("http://localhost:5000/applyEventWithReason", {
+								userID: userid,
+								eventID: singleEvent.eventID,
+								reason: applicationReason // 申请理由
+							})
+							.then((response) => {
+								console.log("Success:", response);
+								window.alert('提交申请成功！'); // 弹出弹窗
+							})
+							.catch((error) => {
+								console.error("Error:", error);
+								window.alert('提交申请失败！'); // 弹出弹窗
+							});
+					}else{
+						axios.post("http://localhost:5000/applyEvent", {
+								userID: userid,
+								eventID: singleEvent.eventID,
+							})
+							.then((response) => {
+								console.log("Success:", response);
+								window.alert('加入活动成功！'); // 弹出弹窗
+							})
+							.catch((error) => {
+								console.error("Error:", error);
+								window.alert('加入活动失败！'); // 弹出弹窗
+							});
+					}
+					
 				}
+				
+				
+			  },
+			goToDetail(singleEvent) {
+			  const params = new URLSearchParams(window.location.search);
+			  console.log(window.location.search);
+			  const userid = params.get('userid');
+			  window.location.href = `/detail?userid=${userid}&eventid=${singleEvent.eventID}`;
 			},
 			search() {
-				this.isSearch = true
 				this.selectedType = 'search';
 				console.log('搜索');
 				axios.get('http://localhost:5000/searchEvents?searchQuery=' + this.searchQuery)

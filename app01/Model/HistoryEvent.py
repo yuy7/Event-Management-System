@@ -8,9 +8,10 @@ from Dao.TimeSlot import TimeSlot
 from Tool.Mappings import mapping_add_state
 
 def getHistoryEvents():
-    data = request.get_json()
-    userID = data.get("userid")
+    # data = request.get_json()
+    # userID = data.get("userid")
     # userID = session.get("userid")  # 从session中获取userID
+    userID = request.args.get("userid")
     print(userID)
     today_str = datetime.now().strftime('%Y-%m-%d')
 
