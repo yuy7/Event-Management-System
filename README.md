@@ -12,4 +12,5 @@ npm install element-plus//vite组件
 ```bash
 conda install flask-socketio
 conda install websocket-client 
+pip install aliyun-python-sdk-core-v3 aliyun-python-sdk-dysmsapi
 ```

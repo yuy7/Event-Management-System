@@ -13,7 +13,9 @@ from Model.Budgetview import set_budget, get_budget
 from flask_socketio import SocketIO, send
 import os
 from __init__ import db
+from app01.Model.Email import send_code
 from app01.Model.Register import user_register
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -49,11 +51,13 @@ app.route("/getArrangedEvents", methods=["GET"])(getArrangedEvents)
 app.route("/notifications", methods=["GET"])(get_notifications)
 app.route('/budget/set', methods=['POST'])(set_budget)
 app.route('/budget', methods=['GET', 'PATCH', 'PUT', 'POST'])(get_budget)
+app.route('/send-code', methods=['POST'])(send_code)
 
 @socketio.on("message")
 def handle_message(msg):
     print("Message: " + msg)
     send(msg, broadcast=True)
+
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
