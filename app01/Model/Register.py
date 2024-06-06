@@ -11,6 +11,7 @@ def user_register():
     data = request.get_json()
     nickname = data.get("nickname")
     phoneNumber = data.get("phoneNumber")
+    email = data.get("email")
     password = data.get("password")
     # 检查手机号是否已经被注册
     existing_user = User.query.filter_by(PhoneNumber=phoneNumber).first()
@@ -20,7 +21,7 @@ def user_register():
             "message": "手机号已经被注册"
         }), 400
     # 创建新用户并保存到数据库
-    new_user = User(Username=nickname, PhoneNumber=phoneNumber, Password=password)
+    new_user = User(Username=nickname, PhoneNumber=phoneNumber, Password=password, Email=email)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({

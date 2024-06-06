@@ -4,67 +4,73 @@
             <form class="form" id="a-form" @submit.prevent="register">
               <h1 class="form_title title">注册</h1>
               <div class="form__label">昵称：</div>
-              <input class="form__input" type="text" placeholder="请输入昵称" v-model="nickname">
-              <div class="form__label">手机号：</div>
+              <input class="form__input" type="text" placeholder="请输入昵称" v-model="this.nickname">
+			  <div class="form__label">手机号：</div>
+			  <input class="form__input" type="text" placeholder="请输入手机号" v-model="this.phoneNumber">
+              <div class="form__label">邮箱号：</div>
               <div class="input-group">
-                <input class="form__input input-with-button" type="text" placeholder="请输入手机号码" v-model="phoneNumber">
+                <input class="form__input input-with-button" type="text" placeholder="请输入邮箱号码" v-model="this.email">
                 <button type="button" class="verify-button" @click="getVerificationCode">点击获取验证码</button>
               </div>
               <div class="form__label">验证码：</div>
-              <input class="form__input" type="text" placeholder="请输入验证码" v-model="verificationCode">
+              <input class="form__input" type="text" placeholder="请输入验证码" v-model="this.verificationCode">
               <div class="form__label">密码：</div>
-              <input class="form__input" type="password" placeholder="请输入密码" v-model="password">
-              <button type="submit" class="form__button button submit">提交</button>
+              <input class="form__input" type="password" placeholder="请输入密码" v-model="this.password">
+              <button class="form__button button submit" @click="submitForm">提交</button>
             </form>
         </div>
     </div>
 </template>
 
  
-<script setup lang="ts">	 
-	 // 获取验证码的方法
-   import { ref } from 'vue'
-   import axios from 'axios'
+<script>	 
+import { ref } from 'vue';
+import axios from 'axios';
+export default {
+	data() {
+		return {
+			nickname:"",
+			code:"",
+			email:"",
+			verificationCode:"",
+			password:"",
+			phoneNumber:""
+		};
+	},
+	methods: {
+		getVerificationCode() {
+			axios.post('http://localhost:5000/send-code',{email: this.email})
+			    .then(response => {
+			        // console.log('Response:', response.data);
+			        this.code = response.data.code;
+					console.log(this.code);
+					alert('验证码已发送到您的邮箱');
+			    })
+			    .catch(error => {
+			        console.error('Error approving message:', error);
+					alert('发送验证码失败，请重试');
+			    });
 
-const nickname = ref('')
-const phoneNumber = ref('')
-const verificationCode = ref('')
-const password = ref('')
-const FPath = 'http://localhost:5000/sms/send_verification_code'
-const getVerificationCode = async () => {
-    try {
-        const response = await axios.post(FPath, {
-            phoneNumber: phoneNumber.value
-        })
-        if (response.data.status === 'Success') {
-            alert('验证码发送成功')
-        } else {
-            alert('验证码发送失败: ' + response.data.message)
-        }
-    } catch (error) {
-        console.error('Error sending verification code:', error)
-        alert('验证码发送失败111')
-    }
-}
-
-const register = async () => {
-    try {
-        const response = await axios.post('/user/register', {
-            nickname: nickname.value,
-            phoneNumber: phoneNumber.value,
-            password: password.value,
-            verificationCode: verificationCode.value
-        })
-        if (response.data.status === 'Success') {
-            alert('注册成功')
-            // 跳转到登录页面或其他页面
-        } else {
-            alert('注册失败: ' + response.data.message)
-        }
-    } catch (error) {
-        console.error('Error during registration:', error)
-        alert('注册失败')
-    }
+		},
+		submitForm(){
+			if(this.code == this.verificationCode)
+			{
+				axios.post('http://localhost:5000/register',{nickname:this.nickname,email: this.email,password:this.password,phoneNumber:this.phoneNumber})
+				    .then(response => {
+				        console.log('Response:', response.data);
+						alert('注册成功');
+						window.location.href = '/login';
+				    })
+				    .catch(error => {
+				        console.error('Error approving message:', error);
+						alert('注册失败，请重试');
+				    });
+			}else{
+				alert('验证码输入有误，请重试');
+			}
+			
+		}
+	},
 }
 </script>
  
