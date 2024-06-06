@@ -125,33 +125,38 @@ export default defineComponent({
   },
   methods: {
 	fetchEvents(fetchInfo, successCallback, failureCallback) {
-	    axios.get('http://localhost:5000/events')
-	        .then(response => {
-	            let events = []
-	            response.data.forEach(event => {
-	                let start = this.parseDateTime(event.eventStartDate);
-	                let end = this.parseDateTime(event.eventEndDate);
+		const params = new URLSearchParams(window.location.search);
+		const userid = params.get('userid');
+		axios.get('http://localhost:5000/getUserEvent?userid=' + userid)
+			.then(response => {
+				let events = []
+				response.data.forEach(event => {
+					let start = this.parseDateTime(event.date,event.time,0);
+					let end = this.parseDateTime(event.date,event.time,1);
 	
-	                events.push({
-	                    id: event.eventID,
-	                    title: event.eventName,
-	                    start: start,
-	                    end: end,
+					events.push({
+						id: event.eventID,
+						title: event.eventName,
+						start: start,
+						end: end,
 						display: 'block', 
-	                })
-	            })
-	            successCallback(events)
-	        })
-	        .catch((error) => {
-	            failureCallback(error)
-	            console.log(error);
-	        });
+					})
+				})
+				successCallback(events)
+			})
+			.catch(error => {
+				console.error('Error fetching events:', error);
+			});
 	},
-	parseDateTime(dateTime) {
+	parseDateTime(dateday,dateTime,type) {
 	    // 将'2024.05.02 21:45:56'转换为'2024-05-02T21:45:56'
-	    let date = dateTime.split(' ')[0].split('.').join('-');
-	    let time = dateTime.split(' ')[1];
-	    return date + 'T' + time;
+		if(type == 0)
+		{
+			let date = dateday;
+			let time = dateTime.split(' ')[type];
+			return date + 'T' + time;
+		}
+	    
 	},
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends
