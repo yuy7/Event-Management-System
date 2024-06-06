@@ -88,7 +88,7 @@ def acceptEventApply():
             notification.read = 1
 
         # 删除的是eventApply，之前代码中的roleApply
-        # db.session.delete(eventApply)
+        db.session.delete(eventApply)
 
         db.session.commit()
         return jsonify({

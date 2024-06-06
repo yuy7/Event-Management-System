@@ -18,7 +18,7 @@ from Model.CommentSave import add_comment
 # from flask_socketio import SocketIO, send
 import os
 from __init__ import db
-from app01.Model.Email import send_code
+from Model.Email import send_code
 from Model.Register import user_register
 
 
