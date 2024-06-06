@@ -97,6 +97,8 @@ def getUserAddEvent():
 
 def deleteEvent():
     eventID = request.json.get('eventID')
+    # eventID = request.args.get("eventID")
+    print(eventID)
     event = Event.query.filter_by(eventID=eventID).first()
     db.session.delete(event)
     db.session.commit()
