@@ -162,7 +162,7 @@ export default defineComponent({
       this.calendarOptions.weekends = !this.calendarOptions.weekends
     },
     handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event')
+      let title = prompt('请输入你的私人行程名称：')
       let calendarApi = selectInfo.view.calendar
 
       calendarApi.unselect()
@@ -178,8 +178,19 @@ export default defineComponent({
       }
     },
     handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove()
+      if (confirm(`你确定要删除活动'${clickInfo.event.title}'吗`)) {
+        
+		console.log(clickInfo.event.id);
+		axios.post('http://localhost:5000/deleteEvent',{eventID: clickInfo.event.id})
+		    .then(response => {
+		        console.log('Response:', response.data);
+				clickInfo.event.remove()
+				alert('活动删除成功');
+		    })
+		    .catch(error => {
+		        console.error('Error approving message:', error);
+				alert('活动删除失败，请重试');
+		    });
       }
     },
     handleEvents(events) {
