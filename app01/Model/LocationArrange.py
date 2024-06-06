@@ -5,7 +5,7 @@ from Dao.Event import Event
 from Dao.Role import Role
 from Dao.Location import Location
 from Dao.User import User
-from Tool.OccupyMatrix import is_occupied, get_building_and_number, hex2matric, matric2hex
+from Tool.OccupyMatrix import is_occupied, get_building_and_number, hex2matrix, matrix2hex
 from Tool.TimeCount import count_days_distance
 from __init__ import db
 from itertools import chain
@@ -81,7 +81,6 @@ def locationArrange():
     if startDate < now or startDate > now + timedelta(days=30):
         return jsonify({'error': 'Start date is not within the next 30 days'}), 400
 
-    days_data = []  # 用于存储每日的安排
     arrangeEvents = []  # 假设这是我们要返回的最终列表
     current_date = startDate
     while current_date <= endDate:
@@ -90,9 +89,10 @@ def locationArrange():
         # print(current_date_string)
         # 添加逻辑来获取每一天的事件
         events = Event.query.filter_by(date=current_date_string).all()
-        days_distance = count_days_distance(current_date, now)
-        result_list = eventArrange(days_distance, events)
-        arrangeEvents = list(chain(arrangeEvents, result_list))
+        if events is not None:
+            days_distance = count_days_distance(current_date, now)
+            result_list = eventArrange(days_distance, events)
+            arrangeEvents = list(chain(arrangeEvents, result_list))
         current_date += timedelta(days=1)  # 移至下一天
     
     # 遍历列表中的每个元组
@@ -107,9 +107,9 @@ def locationArrange():
             row1 &= Event.query.filter_by(eventID = event_obj.eventID).update({"arrangedLocation":location_name})
             building, number = get_building_and_number(location_name)
             location_obj = Location.query.filter_by(building=building, number=number).first()
-            matric = hex2matric(location_obj.occupy)
-            matric[days_distance][event_obj.time] = 1
-            row2 &= Location.query.filter_by(locationId = location_obj.locationId).update({"occupy":matric2hex(matric)})
+            matrix = hex2matrix(location_obj.occupy)
+            matrix[days_distance][event_obj.time] = 1
+            row2 &= Location.query.filter_by(locationId = location_obj.locationId).update({"occupy":matrix2hex(matrix)})
     try:
         db.session.commit()
         if(row1 & row2):
@@ -119,7 +119,7 @@ def locationArrange():
         elif (row1 == 0):
             raise Exception("Update eventList error!")
         else:
-            return Exception("Update Location occupy status error!")
+            raise Exception("Update Location occupy status error!")
     except Exception as e:
         db.session.rollback()
         return jsonify({
@@ -142,12 +142,13 @@ def getArrangedEvents():
 
 def getUnarrangedEvents():
     unarranged_events = Event.query.filter(Event.arrangedLocation == None).all()
+    print(unarranged_events)
     return jsonify([{
         'eventID': event.eventID,
         'eventName': event.eventName,
         'time': event.date+' '+time_mapping[event.time],  
         'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first().Username,
-        'reservationUserRole': Role.query.filter_by(roleID=event.reservationUserId).first().roleName,
+        'reservationUserRole': "学生",
         'prefferedLocation': event.preferredLocation,
         'eventType': event_type_mapping[event.eventTypeID],
         'numberOfPeople': event.numberOfPeople

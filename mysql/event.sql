@@ -1,54 +1,26 @@
--- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
---
--- Host: localhost    Database: emsdb
--- ------------------------------------------------------
--- Server version	8.0.33
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `event`
---
-
 DROP TABLE IF EXISTS `event`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `event` (
-  `eventID` int NOT NULL AUTO_INCREMENT,
-  `eventName` varchar(45) NOT NULL,
-  `eventStartDate` timestamp NOT NULL,
-  `eventEndDate` timestamp NOT NULL,
-  `eventLocation` varchar(45) NOT NULL,
-  `eventTypeID` int DEFAULT NULL,
+  `eventID` INT NOT NULL AUTO_INCREMENT,
+  `eventName` VARCHAR(45) NOT NULL,
+  `date` VARCHAR(10) NOT NULL,
+  `reservationUserId` INT NOT NULL,
+  `eventTypeID` INT NOT NULL,
+  `numberOfPeople` INT NOT NULL,
+  `preferredLocation` VARCHAR(100) NOT NULL,
+  `arrangedLocation` VARCHAR(100),
+  `requireApproval` tinyint(1) DEFAULT '0',
+  `time` INT NOT NULL,
   PRIMARY KEY (`eventID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `event`
---
-
-LOCK TABLES `event` WRITE;
-/*!40000 ALTER TABLE `event` DISABLE KEYS */;
-/*!40000 ALTER TABLE `event` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-05-15 14:24:45
+INSERT INTO `event` VALUES ('1', 'Event A', '2024-05-27', '1', '1', '100', '逸夫楼101', '逸夫楼101', '0', '0');
+INSERT INTO `event` VALUES ('2', 'Event B', '2024-05-27', '2', '2', '50', '逸夫楼101', '逸夫楼101', '0', '1');
+INSERT INTO `event` VALUES ('3', 'Event C', '2024-05-27', '3', '3', '200', '逸夫楼101', null, '0', '1');
+INSERT INTO `event` VALUES ('4', 'Event D', '2024-05-27', '1', '4', '30', '逸夫楼101', null, '0', '1');
+INSERT INTO `event` VALUES ('5', 'Event E', '2024-05-27', '3', '5', '150', '逸夫楼102', '逸夫楼102', '0', '1');
+INSERT INTO `event` VALUES ('6', 'Event F', '2024-05-28', '2', '1', '120', '逸夫楼102', '逸夫楼102', '0', '2');
+INSERT INTO `event` VALUES ('7', 'Event G', '2024-05-28', '1', '2', '60', '逸夫楼102', null, '0', '2');
+INSERT INTO `event` VALUES ('8', 'Event H', '2024-05-28', '2', '3', '250', '逸夫楼103', '逸夫楼103', '0', '2');
+INSERT INTO `event` VALUES ('9', 'Event I', '2024-05-28', '3', '4', '35', '逸夫楼103', '逸夫楼103', '0', '3');
+INSERT INTO `event` VALUES ('10', 'Event J', '2024-05-28', '1', '5', '160', '逸夫楼103', '逸夫楼103', '0', '4');

@@ -2,19 +2,22 @@ from flask import Flask
 from flask_cors import CORS
 from Model.Login import user_login
 from Model.EventCreate import EventCreate
-from Model.EventManage import get_events,getUserEvent,deleteEvent
-from Model.UserInterface import get_user,bindEmail,bindPhone,roleApply,get_users
+from Model.EventManage import get_events, getUserEvent, deleteEvent, getUserAddEvent
+from Model.UserInterface import get_user, bindEmail, bindPhone, roleApply, get_users
 from Model.Invite import invite
-from Model.ApplyEvent import apply_event
+from Model.ApplyEvent import apply_event, applyEventWithReason
 from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArrangedEvents
-from Model.RoleApplyCheck import acceptRoleApply, getRoleApply
-from Model.NotificationGet import get_notifications
+from Model.RoleApplyCheck import acceptRoleApply, getRoleApply, refuseRoleApply
+from Model.NotificationGet import getSystemNotifications, getApprovalNotifications, acceptEventApply, refuseEventApply
+from Model.EventSearch import search_events
 from Model.Budgetview import set_budget, get_budget
-from flask_socketio import SocketIO, send
+from Model.HistoryEvent import getHistoryEvents
+from Model.GetEventDetails import get_event
+# from flask_socketio import SocketIO, send
 import os
 from __init__ import db
 from app01.Model.Email import send_code
-from app01.Model.Register import user_register
+from Model.Register import user_register
 
 
 app = Flask(__name__)
@@ -22,7 +25,7 @@ app.secret_key = os.urandom(24)
 app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+# socketio = SocketIO(app, cors_allowed_origins="*")
 # username: root, password: root
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/emsdb?charset=utf8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -43,21 +46,31 @@ app.route("/userinterface/roleApply", methods=["POST"])(roleApply)
 app.route("/userinterface/get_users", methods=["GET"])(get_users)
 app.route("/invite", methods=["POST"])(invite)
 app.route("/applyEvent", methods=["POST"])(apply_event)
+app.route("/applyEventWithReason", methods=["POST"])(applyEventWithReason)
 app.route("/locationArrange", methods=["POST"])(locationArrange)
+app.route("/refuseRoleApply", methods=["POST"])(refuseRoleApply)
 app.route("/acceptRoleApply", methods=["POST"])(acceptRoleApply)
 app.route("/roleApplyCheck", methods=["GET"])(getRoleApply)             
 app.route("/getUnarrangedEvents", methods=["GET"])(getUnarrangedEvents)    
 app.route("/getArrangedEvents", methods=["GET"])(getArrangedEvents)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-app.route("/notifications", methods=["GET"])(get_notifications)
+app.route("/getSystemNotifications", methods=["GET"])(getSystemNotifications)
+app.route("/getApprovalNotifications", methods=["GET"])(getApprovalNotifications)
+app.route("/acceptEventApply", methods=["POST"])(acceptEventApply)
+app.route("/refuseEventApply", methods=["POST"])(refuseEventApply)
+app.route("/searchEvents", methods=["GET"])(search_events)
 app.route('/budget/set', methods=['POST'])(set_budget)
 app.route('/budget', methods=['GET', 'PATCH', 'PUT', 'POST'])(get_budget)
 app.route('/send-code', methods=['POST'])(send_code)
+app.route('/eventsJoin', methods=['GET'])(getUserAddEvent)
+app.route('/history', methods=['GET'])(getHistoryEvents)
 
-@socketio.on("message")
-def handle_message(msg):
-    print("Message: " + msg)
-    send(msg, broadcast=True)
+app.route("/getEventDetails", methods=["POST"])(get_event)
+# @socketio.on("message")
+# def handle_message(msg):
+#     print("Message: " + msg)
+#     send(msg, broadcast=True)
 
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
+    # socketio.run(app, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
+    app.run(debug=True)

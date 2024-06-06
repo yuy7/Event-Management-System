@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="chat-room">
       <navbar></navbar>
       <div class="messages">
@@ -104,4 +104,4 @@
   button:hover {
     background-color: #0056b3;
   }
-  </style>
+  </style> -->

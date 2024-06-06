@@ -8,7 +8,7 @@
             <li><a @click="navigateTo('/manage')">活动管理</a></li>
             <li><a @click="navigateTo('/history')">历史活动</a></li>
             <li><a @click="navigateTo('/notifications')">消息通知</a></li>
-            <li><router-link to="/budget">预算管理</router-link></li>
+            <li><a @click="navigateTo('/budget')">预算管理</a></li>
             <li><a @click="navigateTo('/chat-room')">谈天说地</a></li>
           </ul>
         </div>
