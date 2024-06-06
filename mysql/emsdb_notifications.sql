@@ -16,36 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `event`
+-- Table structure for table `notifications`
 --
 
-DROP TABLE IF EXISTS `event`;
+DROP TABLE IF EXISTS `notifications`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `event` (
-  `eventID` int NOT NULL AUTO_INCREMENT,
-  `eventName` varchar(45) NOT NULL,
-  `eventStartDate` timestamp NOT NULL,
-  `eventEndDate` timestamp NOT NULL,
-  `eventLocation` varchar(45) NOT NULL,
-  `eventTypeID` int DEFAULT NULL,
-  `requireApproval` tinyint(1) DEFAULT '0',
-  `creator_id` int DEFAULT NULL,
-  PRIMARY KEY (`eventID`),
-  KEY `creator_id` (`creator_id`),
-  CONSTRAINT `event_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `user` (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `notifications` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `recipient_id` int NOT NULL,
+  `sender_id` int NOT NULL,
+  `event_id` int NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `read` tinyint(1) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `recipient_id` (`recipient_id`),
+  KEY `sender_id` (`sender_id`),
+  KEY `notifications_ibfk_3` (`event_id`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`recipient_id`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `notifications_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `notifications_ibfk_3` FOREIGN KEY (`event_id`) REFERENCES `event` (`eventID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `event`
+-- Dumping data for table `notifications`
 --
 
-LOCK TABLES `event` WRITE;
-/*!40000 ALTER TABLE `event` DISABLE KEYS */;
-INSERT INTO `event` VALUES (5,'哈哈','2024-05-24 06:41:00','2024-05-30 06:42:00','12',NULL,1,NULL),(6,'123','2024-05-25 08:01:00','2024-05-29 08:01:00','123',NULL,0,NULL),(7,'442221','2024-05-23 11:13:00','2024-05-11 08:13:00','123',NULL,1,NULL),(8,'12345566677','2024-05-10 08:36:00','2024-05-09 08:36:00','123',NULL,1,NULL),(9,'888','2024-05-25 08:40:00','2024-05-23 11:40:00','8',NULL,0,NULL);
-/*!40000 ALTER TABLE `event` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -56,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-23 21:20:51
+-- Dump completed on 2024-05-27 14:08:13

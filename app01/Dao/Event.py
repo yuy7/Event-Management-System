@@ -12,7 +12,7 @@ class Event(db.Model):
     preferredLocation = db.Column(db.String(100), nullable=False)
     arrangedLocation = db.Column(db.String(100), nullable=True)
     requireApproval = db.Column('requireApproval', db.Boolean, default=False)
-    time = db.Column(db.String(100), nullable=False)
+    time = db.Column(db.Integer, nullable=False)
 
 
 

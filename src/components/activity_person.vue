@@ -84,7 +84,7 @@
 				email: 'example@example.com',
 				newPhoneNumber: '',
 				newEmail: '',
-				Role:"学生",
+				Role:" ",
 				newRole: '',
 				showPhoneNumberModal: false,
 				showEmailModal: false,
@@ -102,7 +102,7 @@
 				console.log('userid:', userid);
 				axios.get('http://localhost:5000/userinterface', {
 					  params: {
-						userid: userid
+						userID: userid
 					  }
 					})
 					.then(response => {
@@ -111,6 +111,12 @@
 						this.email = response.data.Email;
 						this.Role = response.data.Role;
 						console.log(this.phoneNumber);
+						if(this.Role == "申请中"){
+							this.Rolestate="申请中";
+							this.Role == " ";
+						}else{
+							this.Rolestate="申请已通过";
+						}
 					})
 					.catch(error => {
 						console.error('Error fetching users:', error);
@@ -151,8 +157,10 @@
 						role: this.newRole
 					})
 					.then(response => {
-						this.Role = this.newRole;
+						this.Role = " ";
 						this.showRoleModal = false;
+						this.Rolestate = "申请中";
+						this.fetchUsers();
 					})
 					.catch(error => {
 						console.error('Error updating role:', error);

@@ -10,7 +10,7 @@
 		</div>
 		<div class="message-content">
 			<div v-if="selectedMessageType === 'system'">
-				<div class="systemMessage" v-for="message in messages" :key="message.messageid">
+				<div class="systemMessage" v-for="message in messages" :key="message.id">
 					<div class="message_info">
 						<h3>{{message.message}}</h3>
 					</div>
@@ -20,13 +20,13 @@
 				</div>
 			</div>
 			<div v-else-if="selectedMessageType === 'approval'">
-				<div class="systemMessage" v-for="message in message_examine" :key="message.messageid">
+				<div class="systemMessage" v-for="message in message_examine" :key="message.id">
 					<div class="message_info">
 						<h3>{{message.message}}</h3>
 					</div>
 					<div class="message-button">
-						<button @click="handleApproval(message.messageid, 1)">同意</button>
-						<button @click="handleApproval(message.messageid, 0)">拒绝</button>
+						<button @click="handleApproval(message.id, 1)">同意</button>
+						<button @click="handleApproval(message.id, 0)">拒绝</button>
 					</div>
 					<div class="message_time">
 						<p>{{message.timestamp}}</p>
@@ -70,7 +70,7 @@
 				const params = new URLSearchParams(window.location.search);
 				const userid = params.get('userid');
 				console.log(userid);
-				axios.get('http://localhost:5000/notifications?userid=' + userid)
+				axios.get('http://localhost:5000/getSystemNotifications?userid=' + userid)
 					.then(response => {
 						this.messages = response.data;
 						console.log(this.messages);
@@ -78,7 +78,7 @@
 					.catch(error => {
 						console.error('Error fetching messages:', error);
 					});
-				axios.get('http://localhost:5000/message_examine?userid=' + userid)
+				axios.get('http://localhost:5000/getApprovalNotifications?userid=' + userid)
 					.then(response => {
 						this.message_examine = response.data;
 						console.log(this.message_examine);
@@ -92,17 +92,29 @@
 			},
 			handleApproval(messageid, agree) {
 				console.log(messageid, agree);
-				axios.post('http://localhost:5000/approve_message', {
-						messageid: messageid,
-						agree: agree
-					})
-					.then(response => {
-						console.log('Response:', response.data);
-						this.fetchmessage(); // Refresh the messages after approval
-					})
-					.catch(error => {
-						console.error('Error approving message:', error);
-					});
+				if(agree == 1)
+				{
+					axios.post('http://localhost:5000/acceptEventApply',{notificationID: messageid})
+					    .then(response => {
+					        console.log('Response:', response.data);
+					        this.fetchmessage(); // 更新
+					    })
+					    .catch(error => {
+					        console.error('Error approving message:', error);
+					    });
+				}else{
+					axios.post('http://localhost:5000/refuseEventApply', {
+							notificationID: messageid,
+						})
+						.then(response => {
+							console.log('Response:', response.data);
+							this.fetchmessage(); // 更新
+						})
+						.catch(error => {
+							console.error('Error approving message:', error);
+						});
+				}
+				
 			}
 		},
 	}

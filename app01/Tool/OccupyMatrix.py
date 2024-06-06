@@ -1,7 +1,7 @@
 from Dao.Location import Location
 from Tool.Mappings import building_mapping
 
-def hex2matric(hex_string):
+def hex2matrix(hex_string):
     # 将十六进制字符串转换为二进制字符串，去除前缀'0b'并确保位数为184
     binary_string = bin(int(hex_string, 16))[2:].zfill(184)
 
@@ -12,7 +12,7 @@ def hex2matric(hex_string):
     # 提取用于表示矩阵的180位
     binary_string = binary_string[4:]
 
-    matric = []
+    matrix = []
     for i in range(30):  # 对每一天
         row = []
         for j in range(6):  # 对每个时间段
@@ -21,22 +21,22 @@ def hex2matric(hex_string):
             # 将这一位的值添加到当天的占用情况列表中
             row.append(int(binary_string[index]))
         # 将当天的占用情况添加到整个月的矩阵中
-        matric.append(row)
+        matrix.append(row)
         
-    return matric
+    return matrix
 
-def matric2hex(matric):
-    if len(matric) != 30 or any(len(row) != 6 for row in matric):
-        raise ValueError("Input matric must be 30x6 size")
+def matrix2hex(matrix):
+    if len(matrix) != 30 or any(len(row) != 6 for row in matrix):
+        raise ValueError("Input matrix must be 30x6 size")
 
     # 开始构建二进制字符串，先添加4个前导0
     binary_string = '0000'
 
     # 遍历30x6的矩阵，并将1或0添加到二进制字符串中
-    for row in matric:
+    for row in matrix:
         for value in row:
             if value not in [0, 1]:
-                raise ValueError("matric values must be 0 or 1 only")
+                raise ValueError("matrix values must be 0 or 1 only")
             binary_string += str(value)
 
     # 确保二进制字符串长度正好为184位
@@ -66,14 +66,14 @@ def get_building_and_number(location_name):
 def is_occupied(days_distance, time, location_name):
     building, number = get_building_and_number(location_name)
     location = Location.query.filter_by(building=building, number=number).first()
-    matric = hex2matric(location.occupy)
-    return matric[days_distance][time]
+    matrix = hex2matrix(location.occupy)
+    return matrix[days_distance][time]
 
 # 示例十六进制字符串的转换
 # hex_string = '0300FFFFFFFFFFFFFFFFFFF0300FFFFFFFFFFFFFFFFFF'  # 示例十六进制字符串
-# matric = hex2matric(hex_string)
+# matrix = hex2matrix(hex_string)
 # 打印转换后的矩阵
-# for row in matric:
+# for row in matrix:
 #     print(row)
 
 
