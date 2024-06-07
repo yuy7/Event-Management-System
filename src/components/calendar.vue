@@ -125,39 +125,44 @@ export default defineComponent({
   },
   methods: {
 	fetchEvents(fetchInfo, successCallback, failureCallback) {
-	    axios.get('http://localhost:5000/events')
-	        .then(response => {
-	            let events = []
-	            response.data.forEach(event => {
-	                let start = this.parseDateTime(event.eventStartDate);
-	                let end = this.parseDateTime(event.eventEndDate);
+		const params = new URLSearchParams(window.location.search);
+		const userid = params.get('userid');
+		axios.get('http://localhost:5000/getUserEvent?userid=' + userid)
+			.then(response => {
+				let events = []
+				response.data.forEach(event => {
+					let start = this.parseDateTime(event.date,event.time,0);
+					let end = this.parseDateTime(event.date,event.time,1);
 	
-	                events.push({
-	                    id: event.eventID,
-	                    title: event.eventName,
-	                    start: start,
-	                    end: end,
+					events.push({
+						id: event.eventID,
+						title: event.eventName,
+						start: start,
+						end: end,
 						display: 'block', 
-	                })
-	            })
-	            successCallback(events)
-	        })
-	        .catch((error) => {
-	            failureCallback(error)
-	            console.log(error);
-	        });
+					})
+				})
+				successCallback(events)
+			})
+			.catch(error => {
+				console.error('Error fetching events:', error);
+			});
 	},
-	parseDateTime(dateTime) {
+	parseDateTime(dateday,dateTime,type) {
 	    // 将'2024.05.02 21:45:56'转换为'2024-05-02T21:45:56'
-	    let date = dateTime.split(' ')[0].split('.').join('-');
-	    let time = dateTime.split(' ')[1];
-	    return date + 'T' + time;
+		if(type == 0)
+		{
+			let date = dateday;
+			let time = dateTime.split(' ')[type];
+			return date + 'T' + time;
+		}
+	    
 	},
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends
     },
     handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event')
+      let title = prompt('请输入你的私人行程名称：')
       let calendarApi = selectInfo.view.calendar
 
       calendarApi.unselect()
@@ -173,8 +178,19 @@ export default defineComponent({
       }
     },
     handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove()
+      if (confirm(`你确定要删除活动'${clickInfo.event.title}'吗`)) {
+        
+		console.log(clickInfo.event.id);
+		axios.post('http://localhost:5000/deleteEvent',{eventID: clickInfo.event.id})
+		    .then(response => {
+		        console.log('Response:', response.data);
+				clickInfo.event.remove()
+				alert('活动删除成功');
+		    })
+		    .catch(error => {
+		        console.error('Error approving message:', error);
+				alert('活动删除失败，请重试');
+		    });
       }
     },
     handleEvents(events) {

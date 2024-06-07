@@ -2,10 +2,12 @@ from datetime import datetime
 from Dao.UserEvent import UserEvent
 from Dao.UserAddEvent import UserAddEvent
 from  Dao.Event import Event
+from Dao.User import User
 from flask import session,request
 from __init__ import db
 from Dao.TimeSlot import TimeSlot
 from Tool.Mappings import mapping_add_state
+from Tool.Mappings import event_type_mapping
 
 def getHistoryEvents():
     # data = request.get_json()
@@ -50,8 +52,8 @@ def getHistoryEvents():
         'eventID': event.eventID,
         'eventName': event.eventName,
         'date': event.date,
-        'reservationUserId': event.reservationUserId,
-        'eventTypeID': event.eventTypeID,
+        'reservationUserId': User.query.filter_by(UserID=event.reservationUserId).first().Username,
+        'eventTypeID': event_type_mapping[event.eventTypeID],
         'numberOfPeople': event.numberOfPeople,
         'preferredLocation': event.preferredLocation,
         'arrangedLocation': event.arrangedLocation if event.arrangedLocation else "Not arranged",
