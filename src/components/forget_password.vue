@@ -45,9 +45,11 @@ export default {
 
 		},
 		submitForm(){
+      //alert(this.code)
+      //alert(this.verificationCode)
 			if(this.code == this.verificationCode)
 			{
-				axios.post('http://localhost:5000/forgetpassword',{email: this.email,password:this.newPassword})
+				axios.post('http://localhost:5000/forgetpassword',{email: this.email,password:this.newPassword,verificationCode:this.verificationCode})
 				    .then(response => {
 				        console.log('Response:', response.data);
 						alert('密码重置成功');

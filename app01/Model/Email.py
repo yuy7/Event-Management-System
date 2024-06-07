@@ -3,6 +3,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formataddr
 import random
+from __init__ import db
+from Dao.User import User
 
 app = Flask(__name__)
 
@@ -42,14 +44,25 @@ def send_email(receivers, random_code):
         return False
 
 def send_code():
-    data = request.json
+    data = request.get_json()
+    code = data.get('code')
     email = data.get('email')
     if not email:
         return jsonify({'error': 'No email provided'}), 400
 
-    random_code = random.randint(100000, 999999)
-    if send_email([email], random_code):
-        return jsonify({'message': 'Email sent successfully', 'code': random_code})
+    random_code = str(random.randint(100000, 999999))
+    user = User.query.filter_by(Email=email).first()
+
+    if user:
+        user.VerificationCode = random_code
+        # print(user.VerificationCode)
+        # print(random_code)
+        db.session.commit()
+        if send_email([email], random_code):
+            return jsonify({'status': 'Email sent successfully',
+                            'code': random_code})
+        else:
+            return jsonify({'error': 'Failed to send email'}), 500
     else:
-        return jsonify({'error': 'Failed to send email'}), 500
+        return jsonify({'error': 'Email not found'}), 404
 
