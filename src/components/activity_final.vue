@@ -45,12 +45,18 @@
 					});
 			},
 			submitFeedback() {
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				const userid = params.get("userid");
 				if (this.feedback.length > 1000) {
 					alert("反馈内容不能超过1000个字符。");
 				} else {
 					axios
 						.post('http://localhost:5000/submitFeedback', {
-							feedback: this.feedback
+							feedback: this.feedback,
+							userid:userid,
+							eventid:eventid
+
 						})
 						.then(response => {
 							console.log(response);
@@ -72,7 +78,10 @@
 			}
 		},
 	};
+<<<<<<< HEAD
+=======
 
+>>>>>>> bef9fcd76ad1883bc14ac7a6ff95fe84494bf018
 </script>
 
 <style>
