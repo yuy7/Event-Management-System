@@ -1,5 +1,5 @@
 from Dao.Event import Event
-from Dao.UserAddEvent import UserAddEvent
+from Dao.UserEvent import UserEvent
 from Dao.TimeSlot import TimeSlot
 from Dao.UserAddEvent import UserAddEvent
 from datetime import datetime
@@ -7,16 +7,20 @@ from __init__ import db
 
 def getUserAllEventByUserID(userID):
     today_str = datetime.now().strftime('%Y-%m-%d')
+
+    # 查询 Event 表中 reservationUserId 等于当前 userID 的事件信息
     own_events = db.session.query(Event, TimeSlot).join(TimeSlot, Event.time == TimeSlot.timeID).filter(
             Event.reservationUserId == userID, 
             Event.date >= today_str).all()
         
-    # 查询 Event 表中 reservationUserId 等于当前 userID 的事件信息
-    participated_events_1 = db.session.query(Event, TimeSlot)\
+    # 查询 UserEvent 表中 userID 对应的 eventID 的事件信息
+    participated_events_1 = db.session.query(Event, TimeSlot, UserEvent)\
                            .join(TimeSlot, Event.time == TimeSlot.timeID)\
-                           .filter(Event.reservationUserId == userID)\
+                           .join(UserEvent, UserEvent.eventID == Event.eventID)\
+                           .filter(UserEvent.userID == userID)\
                            .filter(Event.date >= today_str)\
                            .all()
+    
     
 
     # 查询 UserAddEvent 表中 userID 对应的 eventID 的事件信息
