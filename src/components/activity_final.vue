@@ -18,54 +18,6 @@
 <script>
 	import Navbar from "./navbar.vue";
 	import axios from "axios";
-
-<<<<<<< HEAD
-export default {
-  components: {
-    Navbar,
-  },
-data() {
-  return {
-    result:"",
-    feedback: "",
-  };
-},
-  created() {
-    this.fetchresult();
-  },
-  methods: {
-    fetchresult() {
-      const params = new URLSearchParams(window.location.search);
-      const eventid = params.get("eventid");
-      axios
-        .get(`http://localhost:5000/getresult?eventid=${eventid}`)
-        .then((response) => {
-          this.result = response.data;
-        })
-        .catch((error) => {
-          console.error("Error fetching result:", error);
-        });
-    },
-    submitFeedback() {
-      const params = new URLSearchParams(window.location.search);
-      const eventid = params.get("eventid");
-      const userid = params.get("userid");
-      axios
-        .post('http://localhost:5000/submitFeedback', {
-          feedback: this.feedback,
-          userid: userid,
-          eventid: eventid
-        })
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.error("Error submitting feedback:", error);
-        });
-    }
-  },
-};
-=======
 	export default {
 		components: {
 			Navbar,
@@ -120,7 +72,7 @@ data() {
 			}
 		},
 	};
->>>>>>> 232d48f78b907e7a1016a8dfd30e988e857512ad
+
 </script>
 
 <style>

@@ -122,8 +122,10 @@
 
 <style>
 	.message-card {
-		margin-top: 30px;
+		margin: 15px;
 		display: flex;
+		border-collapse: collapse;
+		border-spacing: 0;
 	}
 
 	.message-options {
@@ -135,10 +137,19 @@
 	}
 
 	.message-options ul li {
-		cursor: pointer;
-		padding: 10px;
-		background-color: #eee;
-		margin-bottom: 5px;
+	    cursor: pointer;
+	    margin-right:20px;
+	    margin-bottom:20px;
+	    padding: 10px;
+	    background-color: #ffffff;
+	    border-spacing: 0;
+	    border-radius: 10px;
+	    overflow: hidden;
+	    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+	    transition: 0.3s; /* 添加过渡效果 */
+	    display: flex;
+	    align-items: center; /* 使内容垂直居中 */
+	    justify-content: center; /* 使内容水平居中 */
 	}
 
 	.message-options ul li:hover {
@@ -147,9 +158,22 @@
 
 	.message-content {
 		flex: 3;
-		padding: 10px;
-		border: 1px solid #ccc;
+		padding: 15px;
 		height: 550px;
+		margin:15px;
+		border-collapse: collapse;
+		background-color: #ffffff;
+		border-spacing: 0;
+		/* 移除边框之间的间距 */
+		background-color: #ffffff;
+		/* 更改卡片背景色为白色 */
+		border-radius: 15px;
+		/* 设置表格为圆角 */
+		overflow: hidden;
+		/* 隐藏溢出的边框 */
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+		transition: 0.3s; /* 添加过渡效果 */
+		border-right: 1px solid grey;
 	}
 
 	.systemMessage {

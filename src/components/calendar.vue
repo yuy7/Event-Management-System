@@ -15,7 +15,6 @@
 				<h2>所有活动安排({{ currentEvents.length }})</h2>
 				<ul>
 					<li v-for='event in currentEvents' :key='event.id'>
-						<h3>{{ event.startStr }}</h3>
 						{{ event.title }}
 					</li>
 				</ul>
@@ -248,58 +247,71 @@
 </script>
 
 <style lang='css'>
-	.cal h2 {
-		margin: 0px;
-		font-size: 16px;
-	}
+    body {
+        background-color: #ecf0f3; /* 更改主背景色为蓝色 */
+    }
 
-	.cal ul {
-		margin: 0;
-		padding: 0 0 0 1.5em;
-	}
+    .cal h2 {
+        margin: 0px;
+        font-size: 16px;
+    }
 
-	.cal-left li {
-		margin: 1.5em 0;
-		padding: 0;
-	}
+    .cal ul {
+        margin: 0;
+        padding: 0 0 0 1.5em;
+    }
 
-	.cal b {
-		margin-right: 3px;
-	}
+    .cal-left li {
+        margin: 1.5em 0;
+        padding: 0;
+    }
 
-	.cal {
-		display: flex;
-		min-height: 100%;
-		font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-		font-size: 14px;
-	}
+    .cal b {
+        margin-right: 3px;
+    }
 
-	.cal-left {
-		width: 22%;
-		line-height: 1.5;
-		background: #eaf9ff;
-		border-right: 1px solid #d3e2e8;
-	}
+    .cal {
+        display: flex;
+        min-height: 100%;
+        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        font-size: 14px;
+    }
 
-	.cal-left-label {
-		padding-left: 2em;
-		padding-up: 10px;
-	}
+    .cal-left {
+        width: 17%;
+        line-height: 1.5;
+        border-right: 1px solid grey;
+        background-color: #ffffff; /* 更改卡片背景色为白色 */
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+        transition: 0.3s; /* 添加过渡效果 */
+        border-radius: 15px; /* 设置圆角背景 */
+		margin:15px;
+    }
 
-	.cal-left-title {
-		padding: 2em;
-	}
+    .cal-left-label {
+        padding-left: 2em;
+        padding-up: 10px;
+    }
 
-	.cal-main {
-		flex-grow: 1;
-		padding: 3em;
-	}
+    .cal-left-title {
+        padding: 2em;
+    }
 
-	.fc-event-main {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 100%;
+    .cal-main {
+        flex-grow: 1;
+        padding: 3em;
+		border-right: 1px solid grey;
+        background-color: #ffffff; /* 更改卡片背景色为白色 */
+        border-radius: 15px; /* 设置圆角背景 */
+		margin:15px;
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+		transition: 0.3s; /* 添加过渡效果 */
+    }
 
-	}
+    .fc-event-main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
 </style>
