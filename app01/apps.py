@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from Model.Login import user_login
-from Model.EventCreate import EventCreate
+from Model.EventCreate import EventCreate, getLocationList
 from Model.EventManage import get_events, getUserEvent, deleteEvent, getUserAddEvent
 from Model.UserInterface import get_user, bindEmail, bindPhone, roleApply, get_users
 from Model.Invite import invite
@@ -37,6 +37,7 @@ app.config['SESSION_COOKIE_SECURE'] = False  # 设置为 True 在生产环境中
 db.init_app(app)
 app.route("/login", methods=["POST"])(user_login)
 app.route("/register", methods=["POST"])(user_register)
+app.route("/getLocationList", methods=["GET"])(getLocationList)
 app.route("/eventCreate", methods=["POST"])(EventCreate)
 app.route("/events", methods=["GET"])(get_events)
 app.route("/getUserEvent", methods=["GET"])(getUserEvent)
