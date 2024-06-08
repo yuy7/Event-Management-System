@@ -13,8 +13,8 @@ def user_register():
     phoneNumber = data.get("phoneNumber")
     email = data.get("email")
     password = data.get("password")
-    # 检查手机号是否已经被注册
-    existing_user = User.query.filter_by(PhoneNumber=phoneNumber).first()
+    # 检查邮箱号是否已经被注册
+    existing_user = User.query.filter_by(Email=email).first()
     if existing_user:
         return jsonify({
             "status": "Error",

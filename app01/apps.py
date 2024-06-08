@@ -20,7 +20,7 @@ import os
 from __init__ import db
 from Model.Email import send_code
 from Model.Register import user_register
-
+from Model.Forgetpassword import forget_password
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -64,6 +64,7 @@ app.route("/searchEvents", methods=["GET"])(search_events)
 app.route('/budget/set', methods=['POST'])(set_budget)
 app.route('/budget', methods=['GET', 'PATCH', 'PUT', 'POST'])(get_budget)
 app.route('/send-code', methods=['POST'])(send_code)
+app.route('/forgetpassword', methods=['POST'])(forget_password)
 app.route('/eventsJoin', methods=['GET'])(getUserAddEvent)
 app.route('/history', methods=['GET'])(getHistoryEvents)
 

@@ -60,7 +60,7 @@
 				console.log(activity.eventID);
 				const params = new URLSearchParams(window.location.search);
 				const userid = params.get('userid');
-				window.location.href = `/detail?userid=${userid}&eventid=${activity.eventID}`;
+				window.location.href = `/final?userid=${userid}&eventid=${activity.eventID}`;
 			},
 		},
 	}
