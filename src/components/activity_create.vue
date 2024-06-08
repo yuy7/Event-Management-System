@@ -186,6 +186,7 @@
 		/* 水平居中对齐子元素 */
 		min-height: 100vh;
 		/* 使容器至少与视口一样高 */
+		
 	}
 
 	.activity-create {
@@ -194,10 +195,15 @@
 		max-width: 600px;
 		/* 最大宽度 */
 		padding: 20px;
-		background: #f9f9f9;
+		background: #f7f7f7;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		margin-top: 20px;
 		/* 调整顶部边距 */
+		border-radius: 15px;
+		padding-top:30px;
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+		transition: 0.3s; /* 添加过渡效果 */
+		border-right: 1px solid grey;
 	}
 
 	.activity-create .form-group {
@@ -218,6 +224,7 @@
 		padding: 10px;
 		border: 1px solid #ccc;
 		border-radius: 4px;
+		background: #f7f7f7;
 	}
 
 	.activity-create select {
@@ -227,6 +234,7 @@
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		margin-top: 10px;
+		background: #f7f7f7;
 	}
 
 	.form-buttons button {

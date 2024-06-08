@@ -18,7 +18,6 @@
 <script>
 	import Navbar from "./navbar.vue";
 	import axios from "axios";
-
 	export default {
 		components: {
 			Navbar,
@@ -79,6 +78,10 @@
 			}
 		},
 	};
+<<<<<<< HEAD
+=======
+
+>>>>>>> bef9fcd76ad1883bc14ac7a6ff95fe84494bf018
 </script>
 
 <style>

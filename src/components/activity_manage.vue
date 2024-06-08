@@ -1,6 +1,7 @@
 <template>
+	<navbar></navbar>
 	<div class="activity-manage-container">
-		<navbar></navbar>
+		
 		<div class="search-container">
 			<input type="text" v-model="searchQuery" placeholder="  搜索活动名称加入活动">
 			<button @click="search">搜索</button>
@@ -194,7 +195,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 100%;
+		
 	}
 
 	.search-container {
@@ -207,7 +208,8 @@
 		height: 23px;
 		width: 800px;
 		border-radius: 5px;
-		border: 1px solid #333333;
+		border: 1px solid #bdc4c6;
+		background: #ffffff;
 	}
 
 	.search-container button {
@@ -227,17 +229,16 @@
 		width: 70px;
 		height: 30px;
 		font-size: 13px;
-		background-color: #fff;
+		background-color: #ffffff;
 		color: #262626;
-		border: 1px solid #ccc;
+		border: 0px;
 		border-radius: 7px;
-		transition: background-color 0.3s ease;
-		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+		
 		cursor: pointer;
 	}
 
 	.sidebar button.active {
-		background-color: #d3d3d3;
+		background-color: #bdc4c6;
 	}
 
 	.event-button {
@@ -287,6 +288,7 @@
 		padding: 30px;
 		width: 300px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background: #ffffff;
 	}
 
 	.event-card h3 {
@@ -296,5 +298,6 @@
 
 	.event-card p {
 		margin: 5px 0;
+		
 	}
 </style>
