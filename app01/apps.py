@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from Model.Login import user_login
 from Model.EventCreate import EventCreate, getLocationList
-from Model.EventManage import get_events, getUserEvent, deleteEvent, getUserAddEvent
+from Model.EventManage import get_events, getUserEvent, deleteEvent, getUserAddEvent,getUserAllEvent
 from Model.UserInterface import get_user, bindEmail, bindPhone, roleApply, get_users
 from Model.Invite import invite
 from Model.ApplyEvent import apply_event, applyEventWithReason
@@ -41,6 +41,7 @@ app.route("/getLocationList", methods=["GET"])(getLocationList)
 app.route("/eventCreate", methods=["POST"])(EventCreate)
 app.route("/events", methods=["GET"])(get_events)
 app.route("/getUserEvent", methods=["GET"])(getUserEvent)
+app.route("/getUserAllEvent",methods=["GET"])(getUserAllEvent)   #得到用户所有加入和创建的活动
 app.route("/deleteEvent", methods=["POST"])(deleteEvent)
 app.route("/userinterface", methods=["GET"])(get_user)
 app.route("/userinterface/bindEmail", methods=["POST"])(bindEmail)
