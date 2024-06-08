@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from Dao.Event import Event
 from Dao.EventDetail import EventDetail
+from Dao.UserEvent import UserEvent
+from Dao.User import User
 from __init__ import db
 from Tool.Mappings import time_mapping
 app = Flask(__name__)
@@ -34,6 +36,14 @@ def get_event():
     # 查询活动详情
     event_detail = EventDetail.query.filter_by(eventID=event_id).first()
     time_slot = time_mapping.get(event.time, "未知时间段")
+    
+    # 获取活动参与者的用户名
+    participants = UserEvent.query.filter_by(eventID=event_id).all()
+    participant_usernames = []
+    for participant in participants:
+        user = User.query.filter_by(UserID=participant.userID).first()
+        if user:
+            participant_usernames.append(user.Username)
     # 返回活动的相关信息
     event_info = {
         "eventID": event.eventID,
@@ -47,7 +57,8 @@ def get_event():
         "requireApproval": event.requireApproval,
         "time": time_slot,
         "description": event_detail.description if event_detail else None,
-        "notification": event_detail.notification if event_detail else None
+        "notification": event_detail.notification if event_detail else None,
+        "participants": participant_usernames
     }
 
     return jsonify({
