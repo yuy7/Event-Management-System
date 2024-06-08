@@ -151,6 +151,14 @@
 					.catch((error) => {
 						console.error("Error:", error);
 						// 处理错误情况
+						if (error.response) {
+							// 服务器返回的响应包含错误信息
+							const errorMessage = error.response.data.message;
+							alert(errorMessage);  // 或者使用你喜欢的方式来显示错误信息，比如弹窗或消息框
+						} else {
+							// 其他错误，比如网络错误
+							console.error("An error occurred:", error.message);
+						}
 					});
 			},
 			resetForm() {

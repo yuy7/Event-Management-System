@@ -8,6 +8,7 @@ from Dao.User import User
 from __init__ import db
 from Tool.Mappings import mapping_add_state
 from datetime import datetime
+from Tool.GetUserAllEvent import getUserAllEventByUserID
 
 
 def get_events():
@@ -110,6 +111,7 @@ def deleteEvent():
 def getUserAllEvent():
     userID = session.get("userID")
     # userID = 251101164
+<<<<<<< HEAD
     today_str = datetime.now().strftime('%Y-%m-%d')
     # 查询 Event 表中 reservationUserId 等于当前 userID 的事件信息
     own_events = db.session.query(Event, TimeSlot)\
@@ -163,4 +165,7 @@ def getUserAllEvent():
             'state': event.UserAddEvent.state  # 表示这个事件是用户参与的
         })
     print(event_list)
+=======
+    event_list = getUserAllEventByUserID(userID)
+>>>>>>> 9c2a890af293f2ccbec31222519ff751d3a4e844
     return jsonify(event_list)

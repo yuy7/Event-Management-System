@@ -119,7 +119,14 @@
 							})
 							.catch((error) => {
 								console.error("Error:", error);
-								window.alert('加入活动失败！'); // 弹出弹窗
+								if (error.response) {
+									// 服务器返回的响应包含错误信息
+									const errorMessage = error.response.data.message;
+									alert(errorMessage);  // 或者使用你喜欢的方式来显示错误信息，比如弹窗或消息框
+								} else {
+									// 其他错误，比如网络错误
+									window.alert('加入活动失败！'); // 弹出弹窗
+						}
 							});
 					}
 
