@@ -15,7 +15,7 @@ def getLocationList():
         number_list = [n.number for n in numbers]
         building_info_list.append({"building": building_str, "numbers": number_list})
 
-    return jsonify(building_info_list)
+    return jsonify({"data": building_info_list})
 
 def EventCreate():
     # user_id = session.get("userID")
