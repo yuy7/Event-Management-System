@@ -162,4 +162,5 @@ def getUserAllEvent():
             'time': event.TimeSlot.timeDescription,
             'state': event.UserAddEvent.state  # 表示这个事件是用户参与的
         })
+    print(event_list)
     return jsonify(event_list)

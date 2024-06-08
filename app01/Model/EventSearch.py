@@ -26,13 +26,13 @@ def get_start_and_end_timestamp(date_str, time_range_str):
 
 def isAddEvent(event_id, user_id):
     event = Event.query.filter(Event.eventID==event_id, Event.reservationUserId==user_id).all()
-    if event is None:
+    if event is not None:
         return True
     event = UserEvent.query.filter(UserEvent.userID==user_id, UserEvent.eventID==event_id).all()
-    if event is None:
+    if event is not None:
         return True
     event = UserAddEvent.query.filter(UserAddEvent.userID==user_id, UserAddEvent.eventID==event_id, UserAddEvent.state==1).all()
-    if event is None:
+    if event is not None:
         return True
     return False
 
