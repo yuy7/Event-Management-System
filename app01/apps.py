@@ -67,7 +67,6 @@ app.route('/send-code', methods=['POST'])(send_code)
 app.route('/forgetpassword', methods=['POST'])(forget_password)
 app.route('/eventsJoin', methods=['GET'])(getUserAddEvent)
 app.route('/history', methods=['GET'])(getHistoryEvents)
-
 app.route("/getEventDetails", methods=["POST"])(get_event)
 app.route("/getcomments", methods=["GET"])(get_comments)
 app.route("/addcomment", methods=["POST"])(add_comment)
