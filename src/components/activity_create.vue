@@ -21,33 +21,19 @@
 						<option value="6">19:30-21:05</option>
 					</select>
 				</div>
-
-				<!-- <div class="form-group">
-          <label for="activity-endDate">活动结束日期:</label>
-          <input
-            type="date"
-            id="activity-endDate"
-            v-model="activity.endDate"
-            required
-          />
-          <select v-model="activity.endTime" required>
-            <option disabled value="">请选择时间段</option>
-            <option value="1">8:00-9:35</option>
-            <option value="2">9:55-11:30</option>
-            <option value="3">13:30-15:05</option>
-            <option value="4">15:20-16:55</option>
-            <option value="5">17:05-18:45</option>
-            <option value="6">19:30-21:05</option>
-          </select>
-        </div> -->
-
 				<div class="form-group">
 					<label for="activity-location">活动地点:</label>
-					<select v-model="activity.preferredLocation" required>
+					<select v-model="activity.preferredLocation" required @change="updateClassrooms">
 						<option disabled value="">请选择活动地点</option>
-						<option value="逸夫楼">逸夫楼</option>
-						<option value="机电楼">机电楼</option>
-						<option value="教学楼">教学楼</option>
+						<option v-for="building in buildings" :value="building.building">{{building.building}}</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="activity-classroom">活动教室:</label>
+					<select v-model="activity.preferredClassroom" required>
+						<option v-if="!activity.preferredLocation" disabled value="">请先选中活动地点</option>
+						<option v-else disabled value="">请选择活动教室</option>
+						<option v-for="number in selectedNumbers" :value="number">{{number}}</option>
 					</select>
 				</div>
 
@@ -93,6 +79,9 @@
 		components: {
 			Navbar,
 		},
+		mounted() {
+			this.getLocations();
+		},
 		data() {
 			return {
 				activity: {
@@ -102,19 +91,43 @@
 					eventTypeID: "",
 					numberOfPeople: "",
 					time: "",
-					// startDate: "",
-					// startTime: "",
-					// endDate: "",
-					// endTime: "",
 					preferredLocation: "",
-					// organizer: "",
-					// contact: "",
 					requireApproval: false, // 新增审批标志
+					preferredLocation: '',
+					preferredClassroom: '',
 				},
+				selectedNumbers: [],
+				buildings: [],
+				locations: [],
 			};
 		},
 
 		methods: {
+			getLocations() {
+			    fetch('http://localhost:5000/getLocationList', {
+			        headers : { 
+			          'Content-Type': 'application/json',
+			          'Accept': 'application/json'
+			         }
+			      })
+			    .then(response => {
+			        if (!response.ok) {
+			            throw new Error("HTTP error " + response.status);
+			        }
+			        return response.json();
+			    })
+			    .then(data => {
+			        this.buildings = data.data;
+			    })
+			    .catch(error => {
+			        console.error('Error:', error);
+			    });
+			},
+			updateClassrooms() {
+				let selectedBuilding = this.buildings.find(building => building.building === this.activity
+					.preferredLocation);
+				this.selectedNumbers = selectedBuilding ? selectedBuilding.numbers : [];
+			},
 			submitForm() {
 				const params = new URLSearchParams(window.location.search);
 				const userid = params.get('userid');
@@ -138,18 +151,26 @@
 					.catch((error) => {
 						console.error("Error:", error);
 						// 处理错误情况
+						if (error.response) {
+							// 服务器返回的响应包含错误信息
+							const errorMessage = error.response.data.message;
+							alert(errorMessage);  // 或者使用你喜欢的方式来显示错误信息，比如弹窗或消息框
+						} else {
+							// 其他错误，比如网络错误
+							console.error("An error occurred:", error.message);
+						}
 					});
 			},
 			resetForm() {
-			    // 重置表单数据
-			    this.activity.name = "";
-			    this.activity.date = "";
-			    this.activity.eventTypeID = "";
-			    this.activity.numberOfPeople = "";
-			    this.activity.time = "";
-			    this.activity.preferredLocation = "";
-			    this.activity.requireApproval = false;
-			  }
+				// 重置表单数据
+				this.activity.name = "";
+				this.activity.date = "";
+				this.activity.eventTypeID = "";
+				this.activity.numberOfPeople = "";
+				this.activity.time = "";
+				this.activity.preferredLocation = "";
+				this.activity.requireApproval = false;
+			}
 		},
 	};
 </script>

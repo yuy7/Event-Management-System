@@ -65,3 +65,15 @@ def get_event():
         "status": "Success",
         "event": event_info
     }), 200
+
+def getResult():
+    return '.....'
+
+
+def submitFeedback():
+    data = request.get_json()
+    event_id = data.get("eventid")
+    user_id = data.get("userid")
+    feedback = data.get("feedback")
+    
+    return 1

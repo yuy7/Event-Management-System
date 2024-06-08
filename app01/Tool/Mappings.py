@@ -21,6 +21,12 @@ building_mapping = {
     "教学楼": 2
 }
 
+building_index2str = {
+    0: "逸夫楼",
+    1: "机电楼",
+    2: "教学楼"
+}
+
 event_type_mapping = {
     0:"大型考试",
     1:"统一考试",
