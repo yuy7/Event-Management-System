@@ -3,6 +3,7 @@ from Dao.Event import Event
 from Dao.UserEvent import UserEvent
 from Dao.UserAddEvent import UserAddEvent
 from Dao.TimeSlot import TimeSlot
+from Dao.UserAddEvent import UserAddEvent
 from Dao.User import User
 from __init__ import db
 from Tool.Mappings import mapping_add_state
@@ -34,6 +35,7 @@ def get_events():
 
 def getUserEvent():
     userID = session.get("userID")
+    # userID = 251101164
     today_str = datetime.now().strftime('%Y-%m-%d')
     eventList = db.session.query(Event, TimeSlot).join(TimeSlot, Event.time == TimeSlot.timeID).filter(
             Event.reservationUserId == userID, 
@@ -103,3 +105,61 @@ def deleteEvent():
     db.session.delete(event)
     db.session.commit()
     return jsonify({'message': 'Event deleted'}), 200
+
+# 得到用户加入和创建的所有活动
+def getUserAllEvent():
+    userID = session.get("userID")
+    # userID = 251101164
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    # 查询 Event 表中 reservationUserId 等于当前 userID 的事件信息
+    own_events = db.session.query(Event, TimeSlot)\
+                           .join(TimeSlot, Event.time == TimeSlot.timeID)\
+                           .filter(Event.reservationUserId == userID)\
+                           .filter(Event.date >= today_str)\
+                           .all()
+    
+    print(own_events)
+
+    # 查询 UserAddEvent 表中 userID 对应的 eventID 的事件信息
+    participated_events = db.session.query(Event, TimeSlot, UserAddEvent)\
+                                    .join(TimeSlot, Event.time == TimeSlot.timeID)\
+                                    .join(UserAddEvent, UserAddEvent.eventID == Event.eventID)\
+                                    .filter(UserAddEvent.userID == userID)\
+                                    .filter(Event.date >= today_str)\
+                                    .filter(UserAddEvent.state == 1)\
+                                    .all()
+    # 合并查询结果
+    event_list = []
+    
+    # 处理 own_events
+    for event in own_events:
+        event_list.append({
+            'eventID': event.Event.eventID,
+            'eventName': event.Event.eventName,
+            'date': event.Event.date,
+            'reservationUserId': event.Event.reservationUserId,
+            'eventTypeID': event.Event.eventTypeID,
+            'numberOfPeople': event.Event.numberOfPeople,
+            'preferredLocation': event.Event.preferredLocation,
+            'arrangedLocation': event.Event.arrangedLocation if event.Event.arrangedLocation else "Not arranged",
+            'requireApproval': event.Event.requireApproval,
+            'time': event.TimeSlot.timeDescription,
+            'state': None  # 表示这个事件是用户自己预订的
+        })
+    
+    # 处理 participated_events
+    for event in participated_events:
+        event_list.append({
+            'eventID': event.Event.eventID,
+            'eventName': event.Event.eventName,
+            'date': event.Event.date,
+            'reservationUserId': event.Event.reservationUserId,
+            'eventTypeID': event.Event.eventTypeID,
+            'numberOfPeople': event.Event.numberOfPeople,
+            'preferredLocation': event.Event.preferredLocation,
+            'arrangedLocation': event.Event.arrangedLocation if event.Event.arrangedLocation else "Not arranged",
+            'requireApproval': event.Event.requireApproval,
+            'time': event.TimeSlot.timeDescription,
+            'state': event.UserAddEvent.state  # 表示这个事件是用户参与的
+        })
+    return jsonify(event_list)
