@@ -12,7 +12,7 @@ from Model.NotificationGet import getSystemNotifications, getApprovalNotificatio
 from Model.EventSearch import search_events
 from Model.Budgetview import set_budget, get_budget
 from Model.HistoryEvent import getHistoryEvents
-from Model.GetEventDetails import get_event
+from Model.GetEventDetails import get_event, getResult, submitFeedback
 from Model.CommentGet import get_comments
 from Model.CommentSave import add_comment
 # from flask_socketio import SocketIO, send
@@ -68,6 +68,8 @@ app.route('/send-code', methods=['POST'])(send_code)
 app.route('/forgetpassword', methods=['POST'])(forget_password)
 app.route('/eventsJoin', methods=['GET'])(getUserAddEvent)
 app.route('/history', methods=['GET'])(getHistoryEvents)
+app.route('/getresult', methods=['GET'])(getResult)
+app.route('/submitFeedback', methods=['POST'])(submitFeedback)
 app.route("/getEventDetails", methods=["POST"])(get_event)
 app.route("/getcomments", methods=["GET"])(get_comments)
 app.route("/addcomment", methods=["POST"])(add_comment)

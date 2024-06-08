@@ -46,9 +46,14 @@ data() {
         });
     },
     submitFeedback() {
+      const params = new URLSearchParams(window.location.search);
+      const eventid = params.get("eventid");
+      const userid = params.get("userid");
       axios
         .post('http://localhost:5000/submitFeedback', {
-          feedback: this.feedback
+          feedback: this.feedback,
+          userid: userid,
+          eventid: eventid
         })
         .then(response => {
           console.log(response);
