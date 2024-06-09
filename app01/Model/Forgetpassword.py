@@ -10,7 +10,7 @@ def forget_password():
     email = data.get('email')
     verificationCode = data.get('verificationCode')
     new_password = data.get('password')
-    # print(verificationCode)
+    print(verificationCode)
 
     user = User.query.filter_by(Email=email).first()
 
