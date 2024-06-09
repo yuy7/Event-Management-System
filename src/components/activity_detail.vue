@@ -21,12 +21,19 @@
           <td>{{ eventLocation }}</td>
         </tr>
         <tr>
+          <th>活动简介</th>
+          <td>{{ eventDescription }}</td>
+        </tr>
+        <tr>
+          <th>活动通知</th>
+          <td>{{ eventNotification }}</td>
+        </tr>
+        <tr>
           <th>活动人员</th>
           <td>{{ eventUser.join(", ") }}</td>
         </tr>
       </tbody>
     </table>
-
     <div class="discussion-area">
       <h3>讨论区</h3>
       <div v-for="comment in comments" :key="comment.comment_id" class="comment">
@@ -41,7 +48,6 @@
           <div class="time">
             <p>{{ comment.ans_time }}</p>
           </div>
-          <button @click="showCommentInput(comment.comment_id)">回复</button>
         </div>
         <hr class="detailseparator" />
         <div v-for="ans in comment.ans" :key="ans.ansUser" class="answer">
@@ -58,13 +64,28 @@
         </div>
       </div>
     </div>
+    <div class="comment-button-container">
+      <button @click="showCommentInput">发布评论</button>
+    </div>
+
     <div v-if="isCommentInputVisible" class="commentInput">
       <input type="text" v-model="newComment" />
       <button @click="submitComment">提交评论</button>
     </div>
+    <div class="notification-area">
+      <h3>发布活动通知</h3>
+      <button @click="showNotificationInput">发布通知</button>
 
-    <button @click="showInviteMemberModal">邀请新成员加入活动</button>
-    <button @click="showInviteClassModal">邀请班级加入活动</button>
+      <div v-if="isNotificationInputVisible" class="notificationInput">
+        <textarea v-model="newNotification"></textarea>
+        <button @click="submitNotification">提交通知</button>
+      </div>
+    </div>
+    <div class="invite-buttons">
+      <button @click="showInviteMemberModal">邀请新成员加入活动</button>
+      <button @click="showInviteClassModal">邀请班级加入活动</button>
+    </div>
+
     <div v-if="isInviteMemberModalVisible" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeInviteMemberModal">&times;</span>
@@ -92,23 +113,25 @@ export default {
   components: {
     Navbar,
   },
-data() {
-  return {
-    eventName: "",
-    eventDate: "",
-    eventTime: "",
-    eventLocation: "",
-    eventUser: [],
-    comments: [],
-    newComment: "",
-    isCommentInputVisible: false,
-    currentCommentId: null,
-    isInviteClassModalVisible: false, // 初始化为false
-    classID: "", // 初始化为空字符串
-    isInviteMemberModalVisible: false, // 初始化为false
-    memberID: "" // 初始化为空字符串
-  };
-},
+  data() {
+    return {
+      eventName: "",
+      eventDate: "",
+      eventTime: "",
+      eventLocation: "",
+      eventUser: [],
+      comments: [],
+      newComment: "",
+      newNotification: "",
+      isCommentInputVisible: false,
+      isNotificationInputVisible: false,
+      currentCommentId: null,
+      isInviteClassModalVisible: false,
+      classID: "",
+      isInviteMemberModalVisible: false,
+      memberID: "",
+    };
+  },
   created() {
     this.fetchEvents();
     this.fetchComments();
@@ -125,7 +148,9 @@ data() {
           this.eventDate = event.date;
           this.eventTime = event.time;
           this.eventLocation = event.arrangedLocation;
-          this.eventUser = [event.reservationUserId]; // Assuming there is one main organizer
+          this.eventUser = event.participants; // 修改为使用参与者用户名
+          this.eventDescription = event.description;
+          this.eventNotification = event.notification;
         })
         .catch((error) => {
           console.error("Error fetching events:", error);
@@ -143,6 +168,40 @@ data() {
           console.error("Error fetching comments:", error);
         });
     },
+    showNotificationInput() {
+      this.isNotificationInputVisible = true;
+    },
+submitNotification() {
+  const params = new URLSearchParams(window.location.search);
+  const eventid = params.get("eventid");
+  const userid = params.get("userid"); // 从 URL 中获取用户ID
+  const newNotification = {
+    eventID: eventid,
+    notification: this.newNotification,
+    userID: userid, // 传递用户ID
+  };
+
+  axios
+    .post("http://localhost:5000/updateNotification", newNotification)
+    .then((response) => {
+      console.log(response.data.message);
+      this.fetchEvents(); // 更新活动详情
+      alert("通知发布成功！"); // 发布成功的提醒
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.error("Error submitting notification:", error.response.data.message);
+        alert(`Error: ${error.response.data.message}`); // 使用返回的错误信息
+      } else {
+        console.error("Error submitting notification:", error.message);
+        alert("Error submitting notification."); // 提交错误提醒
+      }
+    });
+
+  this.newNotification = "";
+  this.isNotificationInputVisible = false;
+},
+
     invite() {
       const params = new URLSearchParams(window.location.search);
       const userid = params.get("userid");
@@ -151,7 +210,6 @@ data() {
     },
     showCommentInput(commentId) {
       this.isCommentInputVisible = true;
-      this.currentCommentId = commentId;
     },
     submitComment() {
       const params = new URLSearchParams(window.location.search);
@@ -185,14 +243,19 @@ data() {
     },
     inviteClass() {
       const params = new URLSearchParams(window.location.search);
-      const eventid = params.get('eventid');
-      axios.post('http://localhost:5000/invite', { inviteType: 2, eventID: eventid, invitedID: this.classID })
-        .then(response => {
+      const eventid = params.get("eventid");
+      axios
+        .post("http://localhost:5000/invite", {
+          inviteType: 2,
+          eventID: eventid,
+          invitedID: this.classID,
+        })
+        .then((response) => {
           alert(response.data.message);
           this.closeInviteClassModal();
         })
-        .catch(error => {
-          console.error('Error inviting class:', error);
+        .catch((error) => {
+          console.error("Error inviting class:", error);
         });
     },
     showInviteMemberModal() {
@@ -203,16 +266,51 @@ data() {
     },
     inviteMember() {
       const params = new URLSearchParams(window.location.search);
-      const eventid = params.get('eventid');
-      axios.post('http://localhost:5000/invite', { inviteType: 1, eventID: eventid, invitedID: this.memberID })
-        .then(response => {
+      const eventid = params.get("eventid");
+      const userid = params.get("userid"); // 从 URL 中获取用户ID
+      axios
+        .post("http://localhost:5000/invite", {
+          inviteType: 1,
+          eventID: eventid,
+          invitedID: this.memberID,
+          userID: userid, // 传递用户ID
+        })
+        .then((response) => {
           alert(response.data.message);
           this.closeInviteMemberModal();
         })
-        .catch(error => {
-          console.error('Error inviting member:', error);
+        .catch((error) => {
+          if (error.response) {
+            alert(error.response.data.message);
+          } else {
+            console.error("Error inviting member:", error);
+          }
         });
-    }
+    },
+
+    inviteClass() {
+      const params = new URLSearchParams(window.location.search);
+      const eventid = params.get("eventid");
+      const userid = params.get("userid"); // 从 URL 中获取用户ID
+      axios
+        .post("http://localhost:5000/invite", {
+          inviteType: 2,
+          eventID: eventid,
+          invitedID: this.classID,
+          userID: userid, // 传递用户ID
+        })
+        .then((response) => {
+          alert(response.data.message);
+          this.closeInviteClassModal();
+        })
+        .catch((error) => {
+          if (error.response) {
+            alert(error.response.data.message);
+          } else {
+            console.error("Error inviting class:", error);
+          }
+        });
+    },
   },
 };
 </script>
@@ -279,7 +377,7 @@ data() {
 }
 .time {
   display: flex;
-  fontsize: 10px;
+  font-size: 10px;
   align-self: flex-end;
   margin-left: auto;
   /* 将右侧按钮推到右边 */
@@ -298,14 +396,14 @@ data() {
   border-radius: 50%;
 }
 .comment h4 {
-  fontsize: 15px;
+  font-size: 15px;
   margin-left: 20px;
   margin-top: 20px;
 }
 .comment p {
   margin-top: -20px;
   margin-left: 20px;
-  fontsize: 15px;
+  font-size: 15px;
 }
 .detailseparator {
   width: calc(100% - 15px);
@@ -427,5 +525,85 @@ data() {
   }
 }
 
+.comment-button-container {
+  display: flex;
+  justify-content: flex-end; /* 调整到右下角 */
+  margin-top: 20px;
+}
+
+.comment-button-container button {
+  padding: 6px 20px;
+  font-size: 14px;
+  background-color: #262626;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.comment-button-container button:hover {
+  background-color: #595959;
+}
+.invite-buttons {
+  display: flex;
+  justify-content: space-around; /* 可以根据需要调整按钮之间的间距 */
+  gap: 10px; /* 按钮之间的间距，可以根据需要调整 */
+  margin-top: 20px; /* 与上方内容的间距 */
+}
+
+.invite-buttons button {
+  flex: 1; /* 按钮平分容器宽度 */
+  padding: 6px 20px;
+  font-size: 14px;
+  background-color: #262626;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.invite-buttons button:hover {
+  background-color: #595959;
+}
+.notification-area {
+  width: 90%;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.notificationInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.notificationInput textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: 1px solid #333333;
+  padding: 10px;
+}
+
+.notificationInput button {
+  align-self: flex-end;
+  margin-top: 10px;
+  padding: 6px 20px;
+  font-size: 14px;
+  background-color: #262626;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.notificationInput button:hover {
+  background-color: #595959;
+}
 
 </style>

@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
 from Model.Login import user_login
-from Model.EventCreate import EventCreate
-from Model.EventManage import get_events, getUserEvent, deleteEvent, getUserAddEvent
+from Model.EventCreate import EventCreate, getLocationList
+from Model.EventManage import get_events, getUserEvent, deleteEvent, getUserAddEvent,getUserAllEvent
 from Model.UserInterface import get_user, bindEmail, bindPhone, roleApply, get_users
-from Model.Invite import invite
+from Model.Invite import invite,acceptInvite,refuseInvite,getValidationNotifications
 from Model.ApplyEvent import apply_event, applyEventWithReason
 from Model.LocationArrange import locationArrange, getUnarrangedEvents, getArrangedEvents
 from Model.RoleApplyCheck import acceptRoleApply, getRoleApply, refuseRoleApply
@@ -12,9 +12,10 @@ from Model.NotificationGet import getSystemNotifications, getApprovalNotificatio
 from Model.EventSearch import search_events
 from Model.Budgetview import set_budget, get_budget, get_event_by_user, get_budget_app, get_event_by_app_user
 from Model.HistoryEvent import getHistoryEvents
-from Model.GetEventDetails import get_event
+from Model.GetEventDetails import get_event, getResult, submitFeedback, getAllFeedback, getUserRole
 from Model.CommentGet import get_comments
 from Model.CommentSave import add_comment
+from Model.UpdateNotification import update_notification
 # from flask_socketio import SocketIO, send
 import os
 from __init__ import db
@@ -37,9 +38,11 @@ app.config['SESSION_COOKIE_SECURE'] = False  # 设置为 True 在生产环境中
 db.init_app(app)
 app.route("/login", methods=["POST"])(user_login)
 app.route("/register", methods=["POST"])(user_register)
+app.route("/getLocationList", methods=["GET"])(getLocationList)
 app.route("/eventCreate", methods=["POST"])(EventCreate)
 app.route("/events", methods=["GET"])(get_events)
 app.route("/getUserEvent", methods=["GET"])(getUserEvent)
+app.route("/getUserAllEvent",methods=["GET"])(getUserAllEvent)   #得到用户所有加入和创建的活动
 app.route("/deleteEvent", methods=["POST"])(deleteEvent)
 app.route("/userinterface", methods=["GET"])(get_user)
 app.route("/userinterface/bindEmail", methods=["POST"])(bindEmail)
@@ -69,10 +72,20 @@ app.route('/send-code', methods=['POST'])(send_code)
 app.route('/forgetpassword', methods=['POST'])(forget_password)
 app.route('/eventsJoin', methods=['GET'])(getUserAddEvent)
 app.route('/history', methods=['GET'])(getHistoryEvents)
-
+app.route('/getresult', methods=['GET'])(getResult)
+app.route('/getUserRole', methods=['GET'])(getUserRole)
+app.route('/submitFeedback', methods=['POST'])(submitFeedback)
+app.route('/getAllFeedback', methods=['GET'])(getAllFeedback)
 app.route("/getEventDetails", methods=["POST"])(get_event)
 app.route("/getcomments", methods=["GET"])(get_comments)
 app.route("/addcomment", methods=["POST"])(add_comment)
+app.route("/updateNotification", methods=["POST"])(update_notification)
+app.route("/acceptEventApply", methods=["POST"])(acceptEventApply)
+app.route("/refuseEventApply", methods=["POST"])(refuseEventApply)
+app.route("/acceptInvite", methods=["POST"])(acceptInvite)
+app.route("/refuseInvite", methods=["POST"])(refuseInvite)
+app.route("/getValidationNotifications", methods=["GET"])(getValidationNotifications)
+
 # @socketio.on("message")
 # def handle_message(msg):
 #     print("Message: " + msg)

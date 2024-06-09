@@ -1,6 +1,7 @@
 <template>
+	<navbar></navbar>
 	<div class="activity-manage-container">
-		<navbar></navbar>
+		
 		<div class="search-container">
 			<input type="text" v-model="searchQuery" placeholder="  搜索活动名称加入活动">
 			<button @click="search">搜索</button>
@@ -13,15 +14,20 @@
 		<div class="events-container">
 			<div class="event-row" v-for="(eventRow, index) in chunkedEvents" :key="index">
 				<div class="event-card" v-for="singleEvent in eventRow" :key="singleEvent.eventID"
-				  @click="goToDetail(singleEvent)">
-				  <h3>{{ singleEvent.eventName }}</h3>
+					@click="goToDetail(singleEvent)">
+					<h3>{{ singleEvent.eventName }}</h3>
 					<p>活动日期：{{ singleEvent.date }}</p>
 					<p>活动时间：{{ singleEvent.time }}</p>
 					<p>活动地点：{{ singleEvent.preferredLocation }}</p>
 					<p v-if="selectedType === 'join'">申请状态：{{ singleEvent.state }}</p>
 					<p v-if="selectedType === 'search'">是否需要申请：{{ singleEvent.requireApproval ? '是' : '否' }}</p>
-					<button v-if="selectedType === 'search'" @click.stop="joinEvent(singleEvent)">加入</button>
-					<!-- <button v-if="selectedType === 'search' && singleEvent.label == 1" @click.stop="joinEvent(singleEvent)">加入</button> -->
+					<!-- <button v-if="selectedType === 'search'" @click.stop="joinEvent(singleEvent)">{{ singleEvent.label}}</button> -->
+					<button v-if="selectedType === 'search'" :disabled="singleEvent.label !== '加入'"
+						@click.stop="joinEvent(singleEvent)" class="event-button">
+						{{ singleEvent.label }}
+					</button>
+					<!-- <button v-if="selectedType === 'search' && singleEvent.label == '加入'" @click.stop="joinEvent(singleEvent)">加入</button> -->
+
 				</div>
 			</div>
 		</div>
@@ -79,17 +85,17 @@
 				this.selectedType = type;
 			},
 			joinEvent(singleEvent) {
-			    const params = new URLSearchParams(window.location.search);
-			    const userid = params.get('userid');
-			    let message = singleEvent.requireApproval ?
-			    	'是否确认向创建者发送申请' :
-			    	'该活动无需审核，是否确认加入';
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				let message = singleEvent.requireApproval ?
+					'是否确认向创建者发送申请' :
+					'该活动无需审核，是否确认加入';
 				if (window.confirm(message)) {
 					let applicationReason = '';
 					if (singleEvent.requireApproval) {
 						applicationReason = window.prompt('请输入申请理由：');
 					}
-					if(singleEvent.requireApproval){
+					if (singleEvent.requireApproval) {
 						axios.post("http://localhost:5000/applyEventWithReason", {
 								userID: userid,
 								eventID: singleEvent.eventID,
@@ -103,7 +109,7 @@
 								console.error("Error:", error);
 								window.alert('提交申请失败！'); // 弹出弹窗
 							});
-					}else{
+					} else {
 						axios.post("http://localhost:5000/applyEvent", {
 								userID: userid,
 								eventID: singleEvent.eventID,
@@ -114,19 +120,26 @@
 							})
 							.catch((error) => {
 								console.error("Error:", error);
-								window.alert('加入活动失败！'); // 弹出弹窗
+								if (error.response) {
+									// 服务器返回的响应包含错误信息
+									const errorMessage = error.response.data.message;
+									alert(errorMessage);  // 或者使用你喜欢的方式来显示错误信息，比如弹窗或消息框
+								} else {
+									// 其他错误，比如网络错误
+									window.alert('加入活动失败！'); // 弹出弹窗
+						}
 							});
 					}
-					
+
 				}
-				
-				
-			  },
+
+
+			},
 			goToDetail(singleEvent) {
-			  const params = new URLSearchParams(window.location.search);
-			  console.log(window.location.search);
-			  const userid = params.get('userid');
-			  window.location.href = `/detail?userid=${userid}&eventid=${singleEvent.eventID}`;
+				const params = new URLSearchParams(window.location.search);
+				console.log(window.location.search);
+				const userid = params.get('userid');
+				window.location.href = `/detail?userid=${userid}&eventid=${singleEvent.eventID}`;
 			},
 			search() {
 				this.selectedType = 'search';
@@ -182,7 +195,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 100%;
+		
 	}
 
 	.search-container {
@@ -195,7 +208,8 @@
 		height: 23px;
 		width: 800px;
 		border-radius: 5px;
-		border: 1px solid #333333;
+		border: 1px solid #bdc4c6;
+		background: #ffffff;
 	}
 
 	.search-container button {
@@ -215,8 +229,22 @@
 		width: 70px;
 		height: 30px;
 		font-size: 13px;
-		background-color: #fff;
+		background-color: #ffffff;
 		color: #262626;
+		border: 0px;
+		border-radius: 7px;
+		
+		cursor: pointer;
+	}
+
+	.sidebar button.active {
+		background-color: #bdc4c6;
+	}
+
+	.event-button {
+		font-size: 13px;
+		background-color: #333;
+		color: white;
 		border: 1px solid #ccc;
 		border-radius: 7px;
 		transition: background-color 0.3s ease;
@@ -224,8 +252,20 @@
 		cursor: pointer;
 	}
 
-	.sidebar button.active {
-		background-color: #d3d3d3;
+	.event-button:hover {
+		background-color: darkblue;
+		/* hover 背景色 */
+	}
+
+	.event-button:disabled {
+		background-color: grey;
+		/* 禁用时的背景色 */
+		cursor: not-allowed;
+	}
+
+	.event-button:disabled:hover {
+		background-color: grey;
+		/* 禁用时 hover 背景色 */
 	}
 
 	.events-container {
@@ -248,6 +288,7 @@
 		padding: 30px;
 		width: 300px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background: #ffffff;
 	}
 
 	.event-card h3 {
@@ -257,5 +298,6 @@
 
 	.event-card p {
 		margin: 5px 0;
+		
 	}
 </style>

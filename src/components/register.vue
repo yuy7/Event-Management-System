@@ -60,6 +60,7 @@ export default {
 				        console.log('Response:', response.data);
 						alert('注册成功');
 						window.location.href = '/login';
+						window.event.returnValue=false;
 				    })
 				    .catch(error => {
 				        console.error('Error approving message:', error);

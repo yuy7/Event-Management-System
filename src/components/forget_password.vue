@@ -54,6 +54,7 @@ export default {
 				        console.log('Response:', response.data);
 						alert('密码重置成功');
 						window.location.href = '/login';
+						window.event.returnValue=false;
 				    })
 				    .catch(error => {
 				        console.error('Error approving message:', error);

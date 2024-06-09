@@ -6,124 +6,191 @@
 				<li @click="selectMessageType('system')">系统消息</li>
 				<li @click="selectMessageType('approval')">审核消息</li>
 				<li @click="selectMessageType('group')">群聊消息</li>
+				<li @click="selectMessageType('validation')">验证消息</li>
 			</ul>
 		</div>
 		<div class="message-content">
 			<div v-if="selectedMessageType === 'system'">
 				<div class="systemMessage" v-for="message in messages" :key="message.id">
 					<div class="message_info">
-						<h3>{{message.message}}</h3>
+						<h3>{{ message.message }}</h3>
 					</div>
 					<div class="message_time">
-						<p>{{message.timestamp}}</p>
+						<p>{{ message.timestamp }}</p>
 					</div>
 				</div>
 			</div>
 			<div v-else-if="selectedMessageType === 'approval'">
 				<div class="systemMessage" v-for="message in message_examine" :key="message.id">
 					<div class="message_info">
-						<h3>{{message.message}}</h3>
+						<h3>{{ message.message }}</h3>
 					</div>
 					<div class="message-button">
-						<button @click="handleApproval(message.id, 1)">同意</button>
-						<button @click="handleApproval(message.id, 0)">拒绝</button>
+						<button @click="handleApproval(message.id, message.userID, message.eventID, 1)">
+							同意
+						</button>
+						<button @click="handleApproval(message.id, message.userID, message.eventID, 0)">
+							拒绝
+						</button>
 					</div>
 					<div class="message_time">
-						<p>{{message.timestamp}}</p>
+						<p>{{ message.timestamp }}</p>
 					</div>
 				</div>
 			</div>
+			<div v-else-if="selectedMessageType === 'validation'">
+				<div class="systemMessage" v-for="message in validationMessages" :key="message.id">
+					<div class="message_info">
+						<h3>{{ message.message }}</h3>
+					</div>
+					<div class="message-button">
+						<button @click="handleValidation(message.event_id, message.recipient_id, 1)">
+							同意
+						</button>
+						<button @click="handleValidation(message.event_id, message.recipient_id, 0)">
+							拒绝
+						</button>
+					</div>
+					<div class="message_time">
+						<p>{{ message.timestamp }}</p>
+					</div>
+				</div>
+			</div>
+
 			<div v-else-if="selectedMessageType === 'group'">群聊消息内容</div>
+			<div v-if="errorMessage" class="error-message">
+				<p>{{ errorMessage }}</p>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import Navbar from './navbar.vue';
-	import axios from 'axios';
+	import Navbar from "./navbar.vue";
+	import axios from "axios";
 
 	export default {
 		name: "MessageCard",
 		components: {
-			Navbar
+			Navbar,
 		},
 		data() {
 			return {
-				messages: [{
-					messageid: 1,
-					message: "您已加入XXX活动",
-					timestamp: "2024-05-23 20:00:00"
-				}],
-				message_examine: [{
-					messageid: 1,
-					message: "XXX想加入你的活动",
-					timestamp: "2024-05-23 20:00:00"
-				}],
-				selectedMessageType: 'system' // 默认选中系统消息
+				messages: [],
+				message_examine: [],
+				validationMessages: [],
+				selectedMessageType: "system", // 默认选中系统消息
+				errorMessage: "", // 错误消息
 			};
 		},
 		created() {
-			this.fetchmessage();
+			this.fetchMessages();
 		},
 		methods: {
-			fetchmessage() {
+			fetchMessages() {
 				const params = new URLSearchParams(window.location.search);
-				const userid = params.get('userid');
-				console.log(userid);
-				axios.get('http://localhost:5000/getSystemNotifications?userid=' + userid)
-					.then(response => {
+				const userid = params.get("userid");
+				axios
+					.get("http://localhost:5000/getSystemNotifications", {
+						params: {
+							userid
+						}
+					})
+					.then((response) => {
 						this.messages = response.data;
-						console.log(this.messages);
 					})
-					.catch(error => {
-						console.error('Error fetching messages:', error);
+					.catch((error) => {
+						console.error("Error fetching messages:", error);
 					});
-				axios.get('http://localhost:5000/getApprovalNotifications?userid=' + userid)
-					.then(response => {
-						this.message_examine = response.data;
-						console.log(this.message_examine);
+				axios
+					.get("http://localhost:5000/getApprovalNotifications", {
+						params: {
+							userid
+						}
 					})
-					.catch(error => {
-						console.error('Error fetching message_examine:', error);
+					.then((response) => {
+						this.message_examine = response.data;
+					})
+					.catch((error) => {
+						console.error("Error fetching approval messages:", error);
+					});
+				axios
+					.get("http://localhost:5000/getValidationNotifications", {
+						params: {
+							userid
+						}
+					})
+					.then((response) => {
+						this.validationMessages = response.data;
+					})
+					.catch((error) => {
+						console.error("Error fetching validation messages:", error);
 					});
 			},
 			selectMessageType(type) {
 				this.selectedMessageType = type;
 			},
-			handleApproval(messageid, agree) {
-				console.log(messageid, agree);
-				if(agree == 1)
-				{
-					axios.post('http://localhost:5000/acceptEventApply',{notificationID: messageid})
-					    .then(response => {
-					        console.log('Response:', response.data);
-					        this.fetchmessage(); // 更新
-					    })
-					    .catch(error => {
-					        console.error('Error approving message:', error);
-					    });
-				}else{
-					axios.post('http://localhost:5000/refuseEventApply', {
-							notificationID: messageid,
-						})
-						.then(response => {
-							console.log('Response:', response.data);
-							this.fetchmessage(); // 更新
-						})
-						.catch(error => {
-							console.error('Error approving message:', error);
-						});
-				}
-				
-			}
+			handleApproval(notificationID, userID, eventID, agree) {
+				const url =
+					agree == 1 ?
+					"http://localhost:5000/acceptEventApply" :
+					"http://localhost:5000/refuseEventApply";
+				axios
+					.post(url, {
+						notificationID,
+						userID,
+						eventID
+					})
+					.then((response) => {
+						console.log("Response:", response.data);
+						// 更新前端界面
+						this.message_examine = this.message_examine.filter(
+							(message) => message.id !== notificationID
+						);
+						this.errorMessage = ""; // 清除错误消息
+					})
+					.catch((error) => {
+						console.error("Error approving message:", error);
+						this.errorMessage = error.response ?
+							error.response.data.message :
+							"An error occurred while processing your request.";
+					});
+			},
+			handleValidation(eventID, userID, agree) {
+				const url =
+					agree == 1 ?
+					"http://localhost:5000/acceptInvite" :
+					"http://localhost:5000/refuseInvite";
+				axios
+					.post(url, {
+						eventID,
+						userID
+					})
+					.then((response) => {
+						console.log("Response:", response.data);
+						// 更新前端界面
+						this.validationMessages = this.validationMessages.filter(
+							(message) => message.event_id !== eventID || message.recipient_id !== userID
+						);
+						this.errorMessage = ""; // 清除错误消息
+					})
+					.catch((error) => {
+						console.error("Error processing invite:", error);
+						this.errorMessage = error.response ?
+							error.response.data.message :
+							"An error occurred while processing your request.";
+					});
+			},
 		},
-	}
+	};
 </script>
 
 <style>
 	.message-card {
-		margin-top: 30px;
+		margin: 15px;
 		display: flex;
+		border-collapse: collapse;
+		border-spacing: 0;
 	}
 
 	.message-options {
@@ -136,9 +203,22 @@
 
 	.message-options ul li {
 		cursor: pointer;
+		margin-right: 20px;
+		margin-bottom: 20px;
 		padding: 10px;
-		background-color: #eee;
-		margin-bottom: 5px;
+		background-color: #ffffff;
+		border-spacing: 0;
+		border-radius: 10px;
+		overflow: hidden;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		/* 添加阴影效果 */
+		transition: 0.3s;
+		/* 添加过渡效果 */
+		display: flex;
+		align-items: center;
+		/* 使内容垂直居中 */
+		justify-content: center;
+		/* 使内容水平居中 */
 	}
 
 	.message-options ul li:hover {
@@ -147,18 +227,30 @@
 
 	.message-content {
 		flex: 3;
-		padding: 10px;
-		border: 1px solid #ccc;
+		padding: 15px;
 		height: 550px;
+		margin: 15px;
+		border-collapse: collapse;
+		background-color: #ffffff;
+		border-spacing: 0;
+		/* 移除边框之间的间距 */
+		background-color: #ffffff;
+		/* 更改卡片背景色为白色 */
+		border-radius: 15px;
+		/* 设置表格为圆角 */
+		overflow: hidden;
+		/* 隐藏溢出的边框 */
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		/* 添加阴影效果 */
+		transition: 0.3s;
+		/* 添加过渡效果 */
+		border-right: 1px solid grey;
 	}
 
 	.systemMessage {
 		border: 1px solid #ccc;
-		/* 添加边框 */
 		border-radius: 10px;
-		/* 设置边框的圆角程度 */
 		margin-bottom: 10px;
-		/* 添加消息之间的间距 */
 	}
 
 	.message_info h3 {
@@ -187,5 +279,11 @@
 		text-align: right;
 		margin-right: 30px;
 		margin-top: -30px;
+	}
+
+	.error-message {
+		color: red;
+		text-align: center;
+		margin-top: 20px;
 	}
 </style>

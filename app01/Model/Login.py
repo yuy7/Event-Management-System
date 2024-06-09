@@ -30,7 +30,6 @@ def user_login():
     # 若用户存在且密码正确，返回成功的响应
     if user and user.Password == password:
         session["userID"] = user.UserID
-        print(user.Role)
         if(user.UserID == 10086):
             return jsonify({
                 "status": "Success",

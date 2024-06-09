@@ -3,10 +3,12 @@ from Dao.Event import Event
 from Dao.UserEvent import UserEvent
 from Dao.UserAddEvent import UserAddEvent
 from Dao.TimeSlot import TimeSlot
+from Dao.UserAddEvent import UserAddEvent
 from Dao.User import User
 from __init__ import db
 from Tool.Mappings import mapping_add_state
 from datetime import datetime
+from Tool.GetUserAllEvent import getUserAllEventByUserID
 
 
 def get_events():
@@ -34,6 +36,7 @@ def get_events():
 
 def getUserEvent():
     userID = session.get("userID")
+    # userID = 251101164
     today_str = datetime.now().strftime('%Y-%m-%d')
     eventList = db.session.query(Event, TimeSlot).join(TimeSlot, Event.time == TimeSlot.timeID).filter(
             Event.reservationUserId == userID, 
@@ -52,7 +55,8 @@ def getUserEvent():
     } for event in eventList])
 
 def getUserAddEvent():
-    userID = session.get("userID")
+    userID = request.args.get("userid")
+    # userID = session.get("userID")
     # Query for approved event IDs
     today_str = datetime.now().strftime('%Y-%m-%d')
     approved_event_ids = db.session.query(UserAddEvent.eventID).join(
@@ -98,8 +102,16 @@ def getUserAddEvent():
 def deleteEvent():
     eventID = request.json.get('eventID')
     # eventID = request.args.get("eventID")
-    print(eventID)
     event = Event.query.filter_by(eventID=eventID).first()
     db.session.delete(event)
     db.session.commit()
     return jsonify({'message': 'Event deleted'}), 200
+
+# 得到用户加入和创建的所有活动
+def getUserAllEvent():
+    # userID = session.get("userID")
+    # userID = 251101164
+    userID = request.args.get("userid")
+
+    event_list = getUserAllEventByUserID(userID)
+    return jsonify(event_list)

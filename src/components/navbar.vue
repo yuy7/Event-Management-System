@@ -47,8 +47,10 @@ export default {
 <style scoped>
 .nav-bar {
   width: 100%;
-  background-color: #333;
-  color: #fff;
+  background-color: #ecf0f3;
+  color: grey;
+  border-top-left-radius: 15px; /* 设置左上角为圆角 */
+  border-top-right-radius: 15px; /* 设置右上角为圆角 */
 }
 
 .navbar {
@@ -81,7 +83,7 @@ export default {
 
 .nav-list a, .nav-list router-link {
   text-decoration: none;
-  color: #fff;
+  color: black;
   font-weight: bold;
 }
 

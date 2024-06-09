@@ -3,8 +3,10 @@ from Dao.Event import Event
 from Dao.Application import Application
 from Dao.UserEvent import UserEvent  
 from Dao.UserAddEvent import UserAddEvent
+from Dao.TimeSlot import TimeSlot
 from Dao.User import User  
 from Dao.Notification import Notification  
+from Tool.GetUserAllEvent import getUserAllEventByUserID
 from __init__ import db
 
 def notify_user(recipient_id, sender_id, event_id, message, type = 0):
@@ -27,6 +29,22 @@ def apply_event():
     event = Event.query.get(event_id)
     if not event:
         return jsonify({"status": "Error", "message": "活动不存在"}), 404
+    
+
+    time_slot = db.session.query(TimeSlot.timeDescription)\
+                          .filter(TimeSlot.timeID == event.time)\
+                          .first()
+    
+    time = time_slot.timeDescription if time_slot else None
+
+    # 判断时间是否冲突
+    event_list = getUserAllEventByUserID(user_id)
+    for tmp_event in event_list:
+        if tmp_event['date'] == event.date and tmp_event['time'] == time:
+            return jsonify({
+                'status': 'Error',
+                'message': '时间冲突,冲突的活动名称为'+tmp_event['eventName']+'，请重新选择时间'
+            }), 409
 
     # 获取活动创建者ID
     reservationUserId = event.reservationUserId

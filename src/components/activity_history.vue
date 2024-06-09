@@ -60,7 +60,7 @@
 				console.log(activity.eventID);
 				const params = new URLSearchParams(window.location.search);
 				const userid = params.get('userid');
-				window.location.href = `/detail?userid=${userid}&eventid=${activity.eventID}`;
+				window.location.href = `/final?userid=${userid}&eventid=${activity.eventID}`;
 			},
 		},
 	}
@@ -70,16 +70,33 @@
 	.activity-table {
 		width: 100%;
 		border-collapse: collapse;
+		background-color: #ffffff;
+		border-spacing: 0;
+		/* 移除边框之间的间距 */
+		background-color: #ffffff;
+		/* 更改卡片背景色为白色 */
+		border-radius: 15px;
+		/* 设置表格为圆角 */
+		overflow: hidden;
+		/* 隐藏溢出的边框 */
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+		transition: 0.3s; /* 添加过渡效果 */
+		border-right: 1px solid grey;
 	}
 
 	.activity-table th,
 	.activity-table td {
-		border: 1px solid #ddd;
+		border-top: 1px solid #ddd;
+		border-bottom: 1px solid #ddd;
+		border-left: none;
+		border-right: none;
 		padding: 8px;
 		text-align: center;
+		padding:10px;
 	}
 
 	.activity-table th {
 		background-color: #f2f2f2;
+		border-bottom: 2px solid #bdc4c6;
 	}
 </style>
