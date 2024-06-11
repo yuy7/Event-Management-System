@@ -53,7 +53,7 @@
 					userid: userid,
 					eventid: eventid,
 				};
-				axios.get('http://localhost:5000/getUserRole?userid=${userid}&eventid=${eventid}')
+				axios.get(`http://localhost:5000/getUserRole?userid=${userid}&eventid=${eventid}`)
 					.then(response => {
 						this.userrole = response.data;
 						console.log(this.userrole);

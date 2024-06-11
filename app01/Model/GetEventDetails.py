@@ -130,6 +130,8 @@ def getUserRole():
     user_id = request.args.get("userid")
     event_id = request.args.get("eventid")
     event = Event.query.filter(Event.eventID==event_id, Event.reservationUserId==user_id).all()
+    print(user_id)
+    print(event_id)
     if len(event) > 0:
         return 'reservationUser'
     else: 
