@@ -221,22 +221,25 @@
 				}
 			},
 			handleEventClick(clickInfo) {
-				if (confirm(`你确定要删除活动'${clickInfo.event.title}'吗`)) {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get("userid"); // 从 URL 中获取用户ID
+				window.location.href =  `/detail?userid=${userid}&eventid=${clickInfo.event.id}`
+				// if (confirm(`你确定要删除活动'${clickInfo.event.title}'吗`)) {
 
-					console.log(clickInfo.event.id);
-					axios.post('http://localhost:5000/deleteEvent', {
-							eventID: clickInfo.event.id
-						})
-						.then(response => {
-							console.log('Response:', response.data);
-							clickInfo.event.remove()
-							alert('活动删除成功');
-						})
-						.catch(error => {
-							console.error('Error approving message:', error);
-							alert('活动删除失败，请重试');
-						});
-				}
+				// 	console.log(clickInfo.event.id);
+				// 	axios.post('http://localhost:5000/deleteEvent', {
+				// 			eventID: clickInfo.event.id
+				// 		})
+				// 		.then(response => {
+				// 			console.log('Response:', response.data);
+				// 			clickInfo.event.remove()
+				// 			alert('活动删除成功');
+				// 		})
+				// 		.catch(error => {
+				// 			console.error('Error approving message:', error);
+				// 			alert('活动删除失败，请重试');
+				// 		});
+				// }
 			},
 			handleEvents(events) {
 				this.currentEvents = events

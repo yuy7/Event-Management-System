@@ -37,14 +37,17 @@
 				activityEvents:[],
 				showModal: false,
 				selectedStartDate: null,
-				selectedEndDate: null
+				selectedEndDate: null,
+				userrole:"",
             };
         },
 		created() {
 			this.fetchActivity();
+			
 		},
 		methods: {
 			fetchActivity() {
+				
 				axios.get('http://localhost:5000/getArrangedEvents')
 					.then(response => {
 						this.activityEvents = response.data;
@@ -52,7 +55,9 @@
 					.catch(error => {
 						console.error('Error fetching acyivity:', error);
 					});
+				
 			},
+			
 		},
     }
 </script>

@@ -4,7 +4,7 @@
 			<!-- Add ref attribute to reference the form in Vue instance -->
 			<form class="form" ref="loginForm" @submit.prevent="submitForm">
 				<h1 class="form_title title">登录</h1>
-				<div class="form__label">手机号：</div>
+				<div class="form__label">账号/手机号/邮箱：</div>
 				<!-- Use v-model to bind input to the Vue instance's data -->
 				<input class="form__input" type="text" v-model="user.phoneNumber" placeholder="请输入手机号">
 				<div class="form__label">密码：</div>
@@ -52,7 +52,7 @@
 					}
 					else
 					{
-						window.location.href = `/manage?userid=${userId}`;
+						window.location.href = `/schedule?userid=${userId}`;
 					}
 					
 				} else {

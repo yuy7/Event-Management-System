@@ -25,8 +25,10 @@ def getLocationList():
     return jsonify({"data": building_info_list})
 
 def getEventTypeList():
-    data = request.get_json()
-    userID = data.get("userid")
+    # data = request.get_json()
+    # userID = data.get("userid")
+    userID = request.args.get("userid")
+    print(userID)
     user = User.query.filter_by(UserID=userID).first()
     roleApply = RoleApply.query.filter_by(userID=userID).first()
     role =  user.Role if roleApply == None else "学生"

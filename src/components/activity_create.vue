@@ -12,7 +12,7 @@
 					<label for="activity-startDate">活动日期:</label>
 					<input type="date" id="activity-startDate" v-model="activity.date" required />
 					<select v-model="activity.time" required>
-						<option disabled value="">请选择时间段</option>
+						<option disabled value="">请选择活动时间</option>
 						<option value="1">8:00-9:35</option>
 						<option value="2">9:55-11:30</option>
 						<option value="3">13:30-15:05</option>
@@ -40,15 +40,16 @@
 				<div class="form-group">
 					<label for="activity-eventtype">活动类型:</label>
 					<select v-model="activity.eventTypeID" required>
-						<option disabled value="">请选择时间段</option>
-						<option value="0">大型考试</option>
+						<option disabled value="">请选择活动类型</option>
+						<!-- <option value="0">大型考试</option>
 						<option value="1">统一考试</option>
 						<option value="2">宣讲</option>
 						<option value="3">授课</option>
 						<option value="4">课程考试</option>
 						<option value="5">开会</option>
 						<option value="6">学生活动</option>
-						<option value="7">其他</option>
+						<option value="7">其他</option> -->
+						<option v-for="types in eventtype" :value="types">{{types}}</option>
 					</select>
 				</div>
 
@@ -81,6 +82,7 @@
 		},
 		mounted() {
 			this.getLocations();
+			this.gettypes();
 		},
 		data() {
 			return {
@@ -99,10 +101,23 @@
 				selectedNumbers: [],
 				buildings: [],
 				locations: [],
+				eventtype:[],
 			};
 		},
 
 		methods: {
+			gettypes(){
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				axios.get('http://localhost:5000/getEventTypeList?userid=' + userid)
+					.then(response => {
+						this.eventtype = response.data.data;
+						console.log(this.eventtype);
+					})
+					.catch(error => {
+						console.error('Error fetching events:', error);
+					});
+			},
 			getLocations() {
 			    fetch('http://localhost:5000/getLocationList', {
 			        headers : { 

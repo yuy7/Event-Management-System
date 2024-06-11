@@ -106,7 +106,7 @@
 				console.log('userid:', userid);
 				axios.get('http://localhost:5000/userinterface', {
 						params: {
-							userID: userid
+							userid: userid
 						}
 					})
 					.then(response => {

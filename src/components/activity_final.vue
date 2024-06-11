@@ -30,6 +30,7 @@
 		},
 		created() {
 			this.fetchresult();
+			this.fetchrole();
 		},
 		methods: {
 			fetchresult() {
@@ -42,6 +43,23 @@
 					})
 					.catch((error) => {
 						console.error("Error fetching result:", error);
+					});
+			},
+			fetchrole(){
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				const eventid = params.get('eventid');
+				const newComment = {
+					userid: userid,
+					eventid: eventid,
+				};
+				axios.get('http://localhost:5000/getUserRole?userid=${userid}&eventid=${eventid}')
+					.then(response => {
+						this.userrole = response.data;
+						console.log(this.userrole);
+					})
+					.catch(error => {
+						console.error('Error fetching role:', error);
 					});
 			},
 			submitFeedback() {

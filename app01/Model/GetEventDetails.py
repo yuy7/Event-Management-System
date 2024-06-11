@@ -124,9 +124,11 @@ def getResult():
     return '2024年5月27日，我们在逸夫楼102举行了年级会，现场气氛活跃，活动顺利开展！'
 
 def getUserRole():
-    data = request.get_json()
-    event_id = data.get("eventid")
-    user_id = data.get("userid")
+    # data = request.get_json()
+    # event_id = data.get("eventid")
+    # user_id = data.get("userid")
+    user_id = request.args.get("userid")
+    event_id = request.args.get("eventid")
     event = Event.query.filter(Event.eventID==event_id, Event.reservationUserId==user_id).all()
     if len(event) > 0:
         return 'reservationUser'
