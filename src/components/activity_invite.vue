@@ -60,6 +60,7 @@
 						inviteType: 1,
 						eventID:eventid,
 						invitedID:selectedUserIDs,
+                        userID: userid
 					})
 					.then(response => {
 						window.location.href = `/detail?userid=${userid}&eventid=${eventid}`;
