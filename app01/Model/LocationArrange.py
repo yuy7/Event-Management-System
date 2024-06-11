@@ -5,16 +5,26 @@ from Dao.Event import Event
 from Dao.Role import Role
 from Dao.Location import Location
 from Dao.User import User
+from Dao.RoleApply import RoleApply
 from Tool.OccupyMatrix import is_occupied, get_building_and_number, hex2matrix, matrix2hex
 from Tool.TimeCount import count_days_distance
 from __init__ import db
 from itertools import chain
 from Tool.Mappings import time_mapping, role_mapping, event_type_mapping
 
-def get_user_role(user_id):
-    role = Role.query.filter_by(roleName=user_id).first()
-    return role_mapping[role.roleName] if role else None
+def get_user_role(userID):
+    user = User.query.filter_by(UserID=userID).first()
+    roleApply = RoleApply.query.filter_by(userID=userID).first()
+    role =  user.Role if roleApply == None else "学生"
+    role_index = role_mapping[role]
+    return role_index
 
+def get_user_role_name(userID):
+    user = User.query.filter_by(UserID=userID).first()
+    roleApply = RoleApply.query.filter_by(userID=userID).first()
+    role =  user.Role if roleApply == None else "学生"
+    role_index = role_mapping[role]
+    return role
 
 def eventArrange(days_distance, event_list):
     # roleNameList = [get_user_role(event.reservationUserId) for event in event_list]
@@ -108,7 +118,7 @@ def locationArrange():
             building, number = get_building_and_number(location_name)
             location_obj = Location.query.filter_by(building=building, number=number).first()
             matrix = hex2matrix(location_obj.occupy)
-            matrix[days_distance][event_obj.time] = 1
+            matrix[days_distance][event_obj.time-1] = 1
             row2 &= Location.query.filter_by(locationId = location_obj.locationId).update({"occupy":matrix2hex(matrix)})
     try:
         db.session.commit()
@@ -129,12 +139,14 @@ def locationArrange():
 
 def getArrangedEvents():
     arranged_events = Event.query.filter(Event.arrangedLocation != None).all()
+    print('arranged:')
+    print(arranged_events)
     return jsonify([{
         'eventID': event.eventID,
         'eventName': event.eventName,
         'time': event.date+' '+time_mapping[event.time], 
         'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first().Username,
-        'reservationUserRole': Role.query.filter_by(roleID=event.reservationUserId).first().roleName,
+        'reservationUserRole': get_user_role_name(event.reservationUserId),
         'arrangedLocation': event.arrangedLocation,
         'eventType': event_type_mapping[event.eventTypeID],
         'numberOfPeople': event.numberOfPeople
@@ -148,7 +160,7 @@ def getUnarrangedEvents():
         'eventName': event.eventName,
         'time': event.date+' '+time_mapping[event.time],  
         'reservationUserName': User.query.filter_by(UserID=event.reservationUserId).first().Username,
-        'reservationUserRole': "学生",
+        'reservationUserRole': get_user_role_name(event.reservationUserId),
         'prefferedLocation': event.preferredLocation,
         'eventType': event_type_mapping[event.eventTypeID],
         'numberOfPeople': event.numberOfPeople

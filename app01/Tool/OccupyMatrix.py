@@ -67,7 +67,7 @@ def is_occupied(days_distance, time, location_name):
     building, number = get_building_and_number(location_name)
     location = Location.query.filter_by(building=building, number=number).first()
     matrix = hex2matrix(location.occupy)
-    return matrix[days_distance][time]
+    return matrix[days_distance][time-1]
 
 # 示例十六进制字符串的转换
 # hex_string = '0300FFFFFFFFFFFFFFFFFFF0300FFFFFFFFFFFFFFFFFF'  # 示例十六进制字符串

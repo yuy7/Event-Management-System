@@ -121,7 +121,7 @@ def uploadImage():
         }), 500
 
 def getResult():
-    return '.....'
+    return '2024年5月27日，我们在逸夫楼102举行了年级会，现场气氛活跃，活动顺利开展！'
 
 def getUserRole():
     data = request.get_json()

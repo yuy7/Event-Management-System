@@ -3,10 +3,13 @@ from Dao.Event import Event
 from Dao.Location import Location
 from Dao.UserAddEvent import UserAddEvent
 from Dao.TimeSlot import TimeSlot
+from Dao.User import User
+from Dao.RoleApply import RoleApply
 from Tool.Mappings import building_index2str
 from __init__ import db
 from datetime import datetime
 from Tool.GetUserAllEvent import getUserAllEventByUserID
+from Tool.Mappings import role_event_type, event_type_mapping
 
 def getLocationList():
     buildings = db.session.query(Location.building).distinct()
@@ -20,6 +23,16 @@ def getLocationList():
         building_info_list.append({"building": building_str, "numbers": number_list})
 
     return jsonify({"data": building_info_list})
+
+def getEventTypeList():
+    data = request.get_json()
+    userID = data.get("userid")
+    user = User.query.filter_by(UserID=userID).first()
+    roleApply = RoleApply.query.filter_by(userID=userID).first()
+    role =  user.Role if roleApply == None else "学生"
+    type_id_list = role_event_type[role]
+    event_type_list = [event_type_mapping[id] for id in type_id_list]
+    return jsonify({"data": event_type_list})
 
 def EventCreate():
     # user_id = session.get("userID")

@@ -46,7 +46,15 @@
 				if (response.data.status === 'Success') {
 					const userId = response.data.UserId;
 					// 通过模板字符串或字符串拼接，将userId附加到URL上
-					window.location.href = `/manage?userid=${userId}`;
+					if (response.data.role === 'root')
+					{
+						window.location.href = `/resources?userid=${userId}`;
+					}
+					else
+					{
+						window.location.href = `/manage?userid=${userId}`;
+					}
+					
 				} else {
 					alert('输入密码错误');
 				}
