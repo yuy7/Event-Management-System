@@ -8,6 +8,7 @@ from Dao.User import User
 
 app = Flask(__name__)
 
+
 def send_email(receivers, random_code):
     """发送邮件
 
@@ -43,6 +44,7 @@ def send_email(receivers, random_code):
         print(f"Error: {e}")
         return False
 
+
 def send_code():
     data = request.get_json()
     code = data.get('code')
@@ -55,8 +57,8 @@ def send_code():
 
     if user:
         user.VerificationCode = random_code
-        # print(user.VerificationCode)
-        # print(random_code)
+        print(user.VerificationCode)
+        print(random_code)
         db.session.commit()
         if send_email([email], random_code):
             return jsonify({'status': 'Email sent successfully',
@@ -64,5 +66,6 @@ def send_code():
         else:
             return jsonify({'error': 'Failed to send email'}), 500
     else:
-        return jsonify({'error': 'Email not found'}), 404
-
+        send_email([email], random_code)
+        return jsonify({'status': 'Email sent successfully',
+                        'code': random_code})
