@@ -148,11 +148,11 @@ const fetchBudgetData = () => {
   const userid = p.get('userid');
   axios.get('http://localhost:5000/budget?userid=' + userid)
     .then(response => {
-      ElMessage({
-        message: '查询成功',
-        type: 'success',
-        plain: true,
-      })
+      // ElMessage({
+      //   message: '查询成功',
+      //   type: 'success',
+      //   plain: true,
+      // })
       budgetData.value = response.data
     })
     .catch(error => {
@@ -188,11 +188,11 @@ const fetchEventData = () => {
   const userid = p.get('userid');
   axios.get('http://localhost:5000/budget_user?userid=' + userid)
     .then(response => {
-      ElMessage({
-        message: '查询成功',
-        type: 'success',
-        plain: true,
-      })
+      // ElMessage({
+      //   message: '查询成功',
+      //   type: 'success',
+      //   plain: true,
+      // })
       eventData.value = response.data.result
     })
     .catch(error => {
@@ -206,11 +206,11 @@ const fetchEventAppData = () => {
   const userid = p.get('userid');
   axios.get('http://localhost:5000/budget_user_app?userid=' + userid)
     .then(response => {
-      ElMessage({
-        message: '查询成功',
-        type: 'success',
-        plain: true,
-      })
+      // ElMessage({
+      //   message: '查询成功',
+      //   type: 'success',
+      //   plain: true,
+      // })
       eventAppData.value = response.data.result
     })
     .catch(error => {

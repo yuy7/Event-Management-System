@@ -89,14 +89,20 @@
 
 	.summary-area,
 	.discussion-area {
-		width: 90%;
-		margin-top: 20px;
-		border: 1px solid #ddd;
-		border-radius: 10px;
-		padding: 20px;
+		line-height: 1.5;
+		border-right: 1px solid grey;
+		background-color: #ffffff; 
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
+		transition: 0.3s; 
+		border-radius: 15px; 
+		margin-top:15px;
+		width:90%;
+		padding-left:25px;
+		padding-right:25px;
+		padding-bottom: 20px;
+		
 	}
-
-	.summary-area h4,
+	.summary-area h3,
 	.discussion-area h3 {
 		text-align: center;
 	}
@@ -106,6 +112,7 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-top: 20px;
+		
 	}
 
 	.feedback-input input {

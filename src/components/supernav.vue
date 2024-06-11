@@ -3,14 +3,16 @@
       <nav class="navbar">
         <div class="nav-links">
           <ul class="nav-list">
-            <li><router-link to="/resources">资源安排</router-link></li>
-			<li><router-link to="/goal">安排结果</router-link></li>
-            <li><router-link to="/activity">活动审批</router-link></li>
-			<li><router-link to="/member">人员审批</router-link></li>
+            <li><a @click="navigateTo('/resources')">资源安排</a></li>
+            <li><a @click="navigateTo('/goal')">安排结果</a></li>
+            <!-- <li><a @click="navigateTo('/activity')">活动审批</a></li> -->
+            <li><a @click="navigateTo('/member')">人员审批</a></li>
           </ul>
         </div>
         <div class="user-profile">
-          <img src="../../src/assets/touxiang.png" alt="User Avatar">
+          <a @click="navigateTo('/person')">
+            <img src="../../src/assets/touxiang.png" alt="User Avatar">
+          </a>
         </div>
       </nav>
     </div>
@@ -18,15 +20,25 @@
 
 <script>
 export default {
-  name: "Navbar"
+  name: "Navbar",
+  methods: {
+    navigateTo(route) {
+      const params = new URLSearchParams(window.location.search);
+      const userid = params.get('userid');
+      const nextRoute = `${route}?userid=${userid}`;
+      window.location.href = nextRoute;
+    }
+  }
 };
 </script>
 
 <style scoped>
 .nav-bar {
   width: 100%;
-  background-color: #333;
-  color: #fff;
+  background-color: #ecf0f3;
+  color: grey;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
 
 .navbar {
@@ -45,25 +57,20 @@ export default {
   justify-content: space-between;
   padding: 0;
   margin: 0;
-  margin-left: 30%; /* 从左边五分之一处开始 */
+  margin-left: 10%;
 }
 
 .nav-list li {
   margin-right: 20px;
 }
 
-/* 使用.router-link-active来给当前激活的路由项添加样式 */
-.router-link-active {
-  color: royalblue;
-}
-
-.nav-list a, .nav-list router-link {
+.nav-list a {
   text-decoration: none;
-  color: #fff;
+  color: black;
   font-weight: bold;
 }
 
-.nav-list a:hover, .nav-list router-link:hover {
+.nav-list a:hover {
   color: royalblue;
 }
 
@@ -72,7 +79,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
   flex: 2;
-  padding-right: 20px; /* 可选的调整，添加右侧间距 */
+  padding-right: 20px;
 }
 
 .user-profile img {

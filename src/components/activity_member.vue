@@ -77,6 +77,17 @@
     .role-table {
         width: 100%;
         border-collapse: collapse;
+		border-spacing: 0;
+		/* 移除边框之间的间距 */
+		background-color: #ffffff;
+		/* 更改卡片背景色为白色 */
+		border-radius: 15px;
+		/* 设置表格为圆角 */
+		overflow: hidden;
+		/* 隐藏溢出的边框 */
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+		transition: 0.3s; /* 添加过渡效果 */
+		border-right: 1px solid grey;
     }
     .role-table th,
     .role-table td {

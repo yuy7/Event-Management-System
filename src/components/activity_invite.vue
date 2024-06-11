@@ -77,6 +77,18 @@
     .invite_people table {
         width: 100%;
         border-collapse: collapse;
+		background-color: #ffffff;
+		border-spacing: 0;
+		/* 移除边框之间的间距 */
+		background-color: #ffffff;
+		/* 更改卡片背景色为白色 */
+		border-radius: 15px;
+		/* 设置表格为圆角 */
+		overflow: hidden;
+		/* 隐藏溢出的边框 */
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加阴影效果 */
+		transition: 0.3s; /* 添加过渡效果 */
+		border-right: 1px solid grey;
     }
     .invite_people th, .invite_people td {
         border: 1px solid #ddd;
@@ -89,7 +101,7 @@
     .send-button {
         display: block;
         margin: 0 auto;
-        width: 30%;
+        width: 10%;
         padding: 10px 30px;
         font-size: 14px;
         background-color: #262626;

@@ -1,63 +1,67 @@
 <template>
 	<navbar></navbar>
-	<div class="upper">
-		<div class="left">
-			<div class="avatar-info">
-				<img id="bigImg" src="../../src/assets/touxiang.png" alt="User Avatar" class="avatar">
+	<div class="container">
+		<div class="allpersonmodal">
+			<div class="upper">
+				<div class="left">
+					<div class="avatar-info">
+						<img id="bigImg" src="../../src/assets/touxiang.png" alt="User Avatar" class="avatar">
+					</div>
+					<div class="info">
+						<h4>用户名：{{ username }}</h4>
+						<h4>IP所属地：{{ userIP }}</h4>
+					</div>
+				</div>
+				<div class="right">
+					<button>编辑资料</button>
+				</div>
 			</div>
-			<div class="info">
-				<h4>用户名：{{ username }}</h4>
-				<h4>IP所属地：{{ userIP }}</h4>
-			</div>
-		</div>
-		<div class="right">
-			<button>编辑资料</button>
-		</div>
-	</div>
-	<hr class="separator">
-	<div class="down">
-		<div class="infom">
-			<div class="identity">
-				<p>电话号码：{{ phoneNumber }}</p>
-				<button @click="showPhoneNumberModal = true">修改</button>
-			</div>
+			<hr class="separator">
+			<div class="down">
+				<div class="infom">
+					<div class="identity">
+						<p>电话号码：{{ phoneNumber }}</p>
+						<button @click="showPhoneNumberModal = true">修改</button>
+					</div>
 
-			<div class="identity">
-				<p>邮箱号码：{{ email }}</p>
-				<button @click="showEmailModal = true">修改</button>
+					<div class="identity">
+						<p>邮箱号码：{{ email }}</p>
+						<button @click="showEmailModal = true">修改</button>
+					</div>
+					<div class="identity">
+						<p>身份：{{ Role }}</p>
+						<label>{{ Rolestate }}</label>
+						<button @click="showRoleModal = true">申请</button>
+					</div>
+				</div>
 			</div>
-			<div class="identity">
-				<p>身份：{{ Role }}</p>
-				<label>{{ Rolestate }}</label>
-				<button @click="showRoleModal = true">申请</button>
+			<div class="mo">
+				<modal v-if="showPhoneNumberModal" title="修改电话号码">
+					<input type="text" v-model="newPhoneNumber">
+					<button @click="updatePhoneNumber">保存</button>
+					<button @click="closePhoneNumber">关闭</button>
+				</modal>
+
+				<modal v-if="showEmailModal" title="修改邮箱">
+					<input type="email" v-model="newEmail">
+					<button @click="updateEmail">保存</button>
+					<button @click="closeEmail">关闭</button>
+				</modal>
+
+				<modal v-if="showRoleModal" title="申请身份信息">
+					<select id="identity" v-model="newRole">
+						<option value="教师">教师</option>
+						<option value="辅导员">辅导员</option>
+						<option value="班长">班长</option>
+						<option value="社团负责人">社团负责人</option>
+						<option value="部门负责人">部门负责人</option>
+						<option value="学生">学生</option>
+					</select>
+					<button @click="updateRole">保存</button>
+					<button @click="closeRole">关闭</button>
+				</modal>
 			</div>
 		</div>
-	</div>
-	<div class="mo">
-		<modal v-if="showPhoneNumberModal" title="修改电话号码">
-			<input type="text" v-model="newPhoneNumber">
-			<button @click="updatePhoneNumber">保存</button>
-			<button @click="closePhoneNumber">关闭</button>
-		</modal>
-		
-		<modal v-if="showEmailModal" title="修改邮箱">
-			<input type="email" v-model="newEmail">
-			<button @click="updateEmail">保存</button>
-			<button @click="closeEmail">关闭</button>
-		</modal>
-		
-		<modal v-if="showRoleModal" title="申请身份信息">
-			<select id="identity" v-model="newRole">
-				<option value="教师">教师</option>
-				<option value="辅导员">辅导员</option>
-				<option value="班长">班长</option>
-				<option value="社团负责人">社团负责人</option>
-				<option value="部门负责人">部门负责人</option>
-				<option value="学生">学生</option>
-			</select>
-			<button @click="updateRole">保存</button>
-			<button @click="closeRole">关闭</button>
-		</modal>
 	</div>
 </template>
 
@@ -84,12 +88,12 @@
 				email: 'example@example.com',
 				newPhoneNumber: '',
 				newEmail: '',
-				Role:" ",
+				Role: " ",
 				newRole: '',
 				showPhoneNumberModal: false,
 				showEmailModal: false,
 				showRoleModal: false,
-				Rolestate:"申请中",
+				Rolestate: "申请中",
 			};
 		},
 		created() {
@@ -101,9 +105,9 @@
 				const userid = params.get('userid');
 				console.log('userid:', userid);
 				axios.get('http://localhost:5000/userinterface', {
-					  params: {
-						userID: userid
-					  }
+						params: {
+							userID: userid
+						}
 					})
 					.then(response => {
 						this.username = response.data.Username;
@@ -111,11 +115,11 @@
 						this.email = response.data.Email;
 						this.Role = response.data.Role;
 						console.log(this.phoneNumber);
-						if(this.Role == "申请中"){
-							this.Rolestate="申请中";
+						if (this.Role == "申请中") {
+							this.Rolestate = "申请中";
 							this.Role == " ";
-						}else{
-							this.Rolestate="申请已通过";
+						} else {
+							this.Rolestate = "申请已通过";
 						}
 					})
 					.catch(error => {
@@ -134,7 +138,7 @@
 						console.error('Error updating phone number:', error);
 					});
 			},
-			closePhoneNumber(){
+			closePhoneNumber() {
 				this.showPhoneNumberModal = false;
 			},
 			updateEmail() {
@@ -149,7 +153,7 @@
 						console.error('Error updating email:', error);
 					});
 			},
-			closeEmail(){
+			closeEmail() {
 				this.showEmailModal = false;
 			},
 			updateRole() {
@@ -166,7 +170,7 @@
 						console.error('Error updating role:', error);
 					});
 			},
-			closeRole(){
+			closeRole() {
 				this.showRoleModal = false;
 			},
 			editProfile() {
@@ -177,6 +181,24 @@
 </script>
 
 <style>
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.allpersonmodal {
+		border-right: 1px solid grey;
+		background-color: #ffffff;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		transition: 0.3s;
+		border-radius: 15px;
+		margin-top: 15px;
+		width: 90%;
+		padding: 5px;
+		padding-bottom: 30px;
+	}
+
 	.upper {
 		display: flex;
 		justify-content: space-between;
@@ -207,7 +229,7 @@
 		cursor: pointer;
 		transition: background-color 0.3s ease;
 		margin-right: 10px;
-		margin-top:10px;
+		margin-top: 10px;
 	}
 
 	.mo button:hover {
@@ -287,6 +309,7 @@
 		font-size: 18px;
 		padding: 15px;
 	}
+
 	.identity {
 		display: flex;
 		align-items: center;
@@ -294,11 +317,11 @@
 	}
 
 	.identity label {
-		padding: 3px 8px; 
+		padding: 3px 8px;
 		border-radius: 5px;
-		background-color: #3333; 
-		color: #000; 
-		margin-right:10px;
+		background-color: #3333;
+		color: #000;
+		margin-right: 10px;
 	}
 
 	.mo select {
@@ -307,6 +330,16 @@
 		border: 1px solid #ccc;
 		border-radius: 5px;
 		margin-right: 15px;
+		width: 90%;
+		padding: 10px;
+		margin-bottom: 20px;
+		margin-top: 20px;
+		font-size: 16px;
+	}
+
+	.mo title {
+		text-align: center;
+		margin-bottom: 20px;
 	}
 
 	.identity button {
