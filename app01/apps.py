@@ -12,7 +12,7 @@ from Model.NotificationGet import getSystemNotifications, getApprovalNotificatio
 from Model.EventSearch import search_events
 from Model.Budgetview import set_budget, get_budget
 from Model.HistoryEvent import getHistoryEvents
-from Model.GetEventDetails import get_event, getResult, submitFeedback, getAllFeedback, getUserRole
+from Model.GetEventDetails import get_event, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage
 from Model.CommentGet import get_comments
 from Model.CommentSave import add_comment
 from Model.UpdateNotification import update_notification
@@ -74,6 +74,7 @@ app.route('/getUserRole', methods=['GET'])(getUserRole)
 app.route('/submitFeedback', methods=['POST'])(submitFeedback)
 app.route('/getAllFeedback', methods=['GET'])(getAllFeedback)
 app.route("/getEventDetails", methods=["POST"])(get_event)
+# app.route("/uploadImage", methods=["POST"])(uploadImage)
 app.route("/getcomments", methods=["GET"])(get_comments)
 app.route("/addcomment", methods=["POST"])(add_comment)
 app.route("/updateNotification", methods=["POST"])(update_notification)

@@ -1,10 +1,13 @@
 from flask import Flask, jsonify, request
+import os
+from werkzeug.utils import secure_filename
 from Dao.Event import Event
 from Dao.EventDetail import EventDetail
 from Dao.EventFeedback import EventFeedback
 from datetime import datetime
 from Dao.UserEvent import UserEvent
 from Dao.User import User
+from Dao.EventImage import EventImage
 from __init__ import db
 from Tool.Mappings import time_mapping
 app = Flask(__name__)
@@ -46,6 +49,11 @@ def get_event():
         user = User.query.filter_by(UserID=participant.userID).first()
         if user:
             participant_usernames.append(user.Username)
+
+    # Fetch images associated with the event
+    # event_images = EventImage.query.filter_by(eventID=event_id).all()
+    # image_paths = [img.image_path for img in event_images]
+
     # 返回活动的相关信息
     event_info = {
         "eventID": event.eventID,
@@ -60,13 +68,57 @@ def get_event():
         "time": time_slot,
         "description": event_detail.description if event_detail else None,
         "notification": event_detail.notification if event_detail else None,
-        "participants": participant_usernames
+        "participants": participant_usernames,
+        # "images": image_paths
     }
 
     return jsonify({
         "status": "Success",
         "event": event_info
     }), 200
+
+def uploadImage():
+    if 'file' not in request.files:
+        return jsonify({
+            "status": "Failure",
+            "message": "No file part"
+        }), 400
+
+    file = request.files['file']
+    event_id = request.form.get("eventID")
+    
+    if not event_id:
+        return jsonify({
+            "status": "Failure",
+            "message": "Event ID is required"
+        }), 400
+
+    if file.filename == '':
+        return jsonify({
+            "status": "Failure",
+            "message": "No selected file"
+        }), 400
+
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER', filename])
+        file.save(file_path)
+        
+        # Saving the file path to database
+        event_image = EventImage(eventID=event_id, image_path=file_path)
+        db.session.add(event_image)
+        db.session.commit()
+
+        return jsonify({
+            "status": "Success",
+            "message": "File uploaded successfully",
+            "file_path": file_path
+        }), 200
+    else:
+        return jsonify({
+            "status": "Failure",
+            "message": "File upload failed"
+        }), 500
 
 def getResult():
     return '.....'

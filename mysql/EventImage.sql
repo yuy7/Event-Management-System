@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS `EventImage`;
+CREATE TABLE `EventImage` (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    eventID INTEGER NOT NULL,
+    image_path TEXT NOT NULL,
+    uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (eventID) REFERENCES events(eventID)
+);
