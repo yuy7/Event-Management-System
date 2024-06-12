@@ -49,6 +49,7 @@
 		<div class="invite-buttons">
 			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
 			<button @click="showInviteClassModal">邀请班级加入活动</button>
+			<button @click="deleteevent" v-if="userrole=='reservationUser'">删除该活动</button>
 		</div>
 		<div class="discussion-area">
 			<h3>讨论区</h3>
@@ -156,6 +157,24 @@
 			this.fetchQrCode(); // 在组件创建时获取二维码URL
 		},
 		methods: {
+			deleteevent(){
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				const userid = params.get("userid"); // 从 URL 中获取用户ID
+				if (confirm(`你确定要删除活动'${this.eventName}'吗`)) {
+					axios.post('http://localhost:5000/deleteEvent', {
+							eventID: eventid
+						})
+						.then(response => {
+							console.log('Response:', response.data);
+							window.location.href = `/manage?userid=${userid}`;
+						})
+						.catch(error => {
+							console.error('Error approving message:', error);
+							alert('活动删除失败，请重试');
+						});
+				}
+			},
 			handleFileChange(event) {
 				this.selectedFile = event.target.files[0];
 			},
