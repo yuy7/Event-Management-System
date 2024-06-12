@@ -12,8 +12,13 @@ from werkzeug.utils import secure_filename
 from __init__ import db
 from Tool.Mappings import time_mapping
 
+current_path = os.getcwd()
+# 检查当前路径是否包含 'app01'
+if 'app01' in current_path:
+    UPLOAD_FOLDER = 'image'
+else:
+    UPLOAD_FOLDER = 'app01/image'
 
-UPLOAD_FOLDER = 'app01\image'
 
 def get_event():
     data = request.get_json()
@@ -198,8 +203,6 @@ def getUserRole():
     user_id = request.args.get("userid")
     event_id = request.args.get("eventid")
     event = Event.query.filter(Event.eventID==event_id, Event.reservationUserId==user_id).all()
-    print(user_id)
-    print(event_id)
     if len(event) > 0:
         return 'reservationUser'
     else: 
