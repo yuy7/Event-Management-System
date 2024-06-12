@@ -3,7 +3,7 @@
 	<div class="events-container">
 		<div class="summary-area">
 			<h3>活动总结</h3>
-			<p>{{ result }}</p>
+			<p v-if="userrole=='participant'">{{ result }}</p>
 		</div>
 		<div class="discussion-area">
 			<h3>反馈区</h3>
@@ -26,6 +26,7 @@
 			return {
 				result: "",
 				feedback: "",
+				userrole:"",
 			};
 		},
 		created() {
