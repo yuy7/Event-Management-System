@@ -138,9 +138,12 @@ def getResultTemplate():
 
 def saveResult():
     # 从请求中获取 result 和 event_id
-    result = request.args.get("result")
-    event_id = request.args.get("eventid")
-
+    # result = request.args.get("result")
+    # event_id = request.args.get("eventid")
+    data = request.get_json()
+    result = data.get("result")
+    event_id = data.get("eventid")
+    # print(event_id)
     # 检查是否提供了必要的信息
     if not result or not event_id:
         return jsonify({'error': 'Missing result or event_id'}), 400
@@ -191,8 +194,9 @@ def getUserRole():
         return 'participant'
 
 def getAllFeedback():
-    data = request.get_json()
-    event_id = data.get("eventid")
+    # data = request.get_json()
+    # event_id = data.get("eventid")
+    event_id = request.args.get("eventid")
     feedback_query = EventFeedback.query.filter_by(eventID=event_id).all()
     # 转换查询结果为列表的字典形式
     feedbackList = [
