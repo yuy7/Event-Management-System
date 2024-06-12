@@ -43,7 +43,7 @@ def getHistoryEvents():
     print(attended_events)
     # 查询用户过去预约过的活动
     reserved_events = Event.query.filter(
-            Event.reservationUserId == userID, 
+            Event.reservationUserId == int(userID), 
             Event.date < today_str).all()
     print(reserved_events)
     # 合并两个列表，并去重（假定一个事件不可能同时在两个列表中）

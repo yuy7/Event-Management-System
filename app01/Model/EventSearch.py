@@ -44,7 +44,7 @@ def getLabel(event_id, user_id, date, time):
         return '已结束'
     elif start_time <= now and end_time >= now:
         return '进行中'
-    elif isAddEvent(event_id, user_id):
+    elif isAddEvent(int(event_id), int(user_id)):
         return '已加入'
     else: 
         return '加入'
