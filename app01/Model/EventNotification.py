@@ -51,7 +51,9 @@ def updateNotification():
     event_id = data.get('eventID')
     notification = data.get('notification')
     user_id = data.get('userID')
-
+    print(event_id)
+    print(notification)
+    print(user_id)
     # Check for missing parameters
     if not event_id or not notification or not user_id:
         return jsonify({"message": "Missing required parameters"}), 400
