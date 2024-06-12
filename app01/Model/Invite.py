@@ -28,7 +28,10 @@ def invite():
         return jsonify({'message': 'Event not found'}), 404
 
     # 检查用户是否有权限邀请
-    is_creator = (event.reservationUserId == user_id)
+    is_creator = (event.reservationUserId == int(user_id))
+    print(event.reservationUserId)
+    print(user_id)
+    print(is_creator)
     is_participant = UserEvent.query.filter_by(userID=user_id, eventID=event_id).first()
     if not (is_creator or is_participant):
         return jsonify({'message': 'User not authorized to invite'}), 403
