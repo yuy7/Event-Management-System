@@ -183,10 +183,13 @@
 					alert('请选择一张图片');
 					return;
 				}
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
 				const formData = new FormData();
 				formData.append('image', this.selectedFile);
+				formData.append('eventid', eventid);  // 添加 eventid 字段
 				try {
-					const response = await axios.post('http://your-backend-url.com/upload', formData, {
+					const response = await axios.post('http://localhost:5000/uploadImage', formData, {
 						headers: {
 							'Content-Type': 'multipart/form-data',
 						},
@@ -201,12 +204,16 @@
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
 				try {
-					const response = await axios.get(`http://your-backend-url.com/getQRCode?eventid=${eventid}`);
-					this.qrCodeUrl = response.data.qrCodeUrl;
+					const response = await axios.get(`http://localhost:5000/getQrCode?eventid=${eventid}`, {
+						responseType: 'blob' // 获取二进制数据
+					});
+					const blob = new Blob([response.data], { type: response.headers['content-type'] });
+					this.qrCodeUrl = URL.createObjectURL(blob);
 				} catch (error) {
 					console.error('获取二维码失败', error);
 				}
 			},
+
 			fetchEvents() {
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
