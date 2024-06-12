@@ -8,9 +8,12 @@ from datetime import datetime
 from Dao.UserEvent import UserEvent
 from Dao.User import User
 from Dao.EventImage import EventImage
+from werkzeug.utils import secure_filename
 from __init__ import db
 from Tool.Mappings import time_mapping
-app = Flask(__name__)
+
+
+UPLOAD_FOLDER = 'app01\image'
 
 def get_event():
     data = request.get_json()
@@ -78,47 +81,43 @@ def get_event():
     }), 200
 
 def uploadImage():
-    if 'file' not in request.files:
-        return jsonify({
-            "status": "Failure",
-            "message": "No file part"
-        }), 400
-
-    file = request.files['file']
-    event_id = request.form.get("eventID")
-    
-    if not event_id:
-        return jsonify({
-            "status": "Failure",
-            "message": "Event ID is required"
-        }), 400
-
-    if file.filename == '':
-        return jsonify({
-            "status": "Failure",
-            "message": "No selected file"
-        }), 400
-
-    if file:
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER', filename])
-        file.save(file_path)
+    try:
+        if 'image' not in request.files:
+            return jsonify({'status': 'Error', 'message': 'No file part'}), 400
         
-        # Saving the file path to database
-        event_image = EventImage(eventID=event_id, image_path=file_path)
-        db.session.add(event_image)
-        db.session.commit()
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({'status': 'Error', 'message': 'No selected file'}), 400
+        
+        eventid = request.form.get('eventid')  # 获取 eventid 字段
+        # 检查数据库中是否已存在相同 eventID 的记录
+        existing_image = EventImage.query.filter_by(eventID=eventid).first()
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        if existing_image:
+            # 更新现有记录
+            existing_image.image_path = filepath
+            existing_image.uploaded_at = datetime.now()
+        else:
+            # 创建新记录
+            new_image = EventImage(eventID=eventid, image_path=filepath, uploaded_at=datetime.now())
+            db.session.add(new_image)
+        
+        # 保存上传的图片到指定文件夹
+        file.save(filepath)
+        
+        db.session.commit()  # 提交数据库事务
+        
+        # 返回上传成功的响应给前端
+        return jsonify({'status': 'Success', 'message': 'Image uploaded successfully', 'image_path': filename, 'eventid': eventid}), 200
+    except Exception as e:
+        print(f"Error uploading image: {e}")
+        db.session.rollback()  # 回滚数据库事务
+        return jsonify({'status': 'Error', 'message': 'Failed to upload image'}), 500
+    
 
-        return jsonify({
-            "status": "Success",
-            "message": "File uploaded successfully",
-            "file_path": file_path
-        }), 200
-    else:
-        return jsonify({
-            "status": "Failure",
-            "message": "File upload failed"
-        }), 500
+def getQrCode():
+    
 
 def getResultTemplate():
     event_id = request.args.get("eventid")
