@@ -33,10 +33,17 @@
 						<th>活动人员</th>
 						<td>{{ eventUser.join(", ") }}</td>
 					</tr>
+					<tr>
+						<th>活动微信群聊二维码</th>
+						<td><img src="../assets/1.png" alt="WeChat QR Code" /></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
-
+		<div class="invite-buttons">
+			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
+			<button @click="showInviteClassModal">邀请班级加入活动</button>
+		</div>
 		<div class="discussion-area">
 			<h3>讨论区</h3>
 			<div v-for="comment in comments" :key="comment.comment_id" class="comment">
@@ -75,26 +82,13 @@
 			<input type="text" v-model="newComment" />
 			<button @click="submitComment">提交评论</button>
 		</div>
-		<div class="notification-area">
+		<div class="notification-area" v-if="userrole=='reservationUser'">
 			<h3>发布活动通知</h3>
-			<button @click="showNotificationInput">发布通知</button>
-
-			<div v-if="isNotificationInputVisible" class="notificationInput">
-				<textarea v-model="newNotification"></textarea>
-				<button @click="submitNotification">提交通知</button>
-			</div>
-		</div>
-		<div class="invite-buttons">
-			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
-			<button @click="showInviteClassModal">邀请班级加入活动</button>
-		</div>
-
-		<div v-if="isInviteMemberModalVisible" class="modal">
-			<div class="modal-content">
-				<span class="close" @click="closeInviteMemberModal">&times;</span>
-				<h3>邀请新成员</h3>
-				<input type="text" v-model="memberID" placeholder="输入成员ID" />
-				<button @click="inviteMember">邀请成员</button>
+			<div>
+				<input type="text" v-model="tempNotification">
+				<button @click="submitNotification" v-if="tempNotification!=''">修改总结</button>
+				<button @click="submitNotification" v-if="tempNotification==''">提交总结</button>
+				<button @click="generateNotification" v-if="tempNotification==''">自动生成活动总结</button>
 			</div>
 		</div>
 		<div v-if="isInviteClassModalVisible" class="modal">
@@ -125,19 +119,20 @@
 				eventUser: [],
 				comments: [],
 				newComment: "",
-				newNotification: "",
+				tempNotification: "",
 				isCommentInputVisible: false,
-				isNotificationInputVisible: false,
 				currentCommentId: null,
 				isInviteClassModalVisible: false,
 				classID: "",
 				isInviteMemberModalVisible: false,
 				memberID: "",
+				userrole: "",
 			};
 		},
 		created() {
 			this.fetchEvents();
 			this.fetchComments();
+			this.fetchrole();
 		},
 		methods: {
 			fetchEvents() {
@@ -156,9 +151,26 @@
 						this.eventUser = event.participants; // 修改为使用参与者用户名
 						this.eventDescription = event.description;
 						this.eventNotification = event.notification;
+						if(this.eventNotification!=null)
+						{
+							this.tempNotification=this.eventNotification;
+						}
 					})
 					.catch((error) => {
 						console.error("Error fetching events:", error);
+					});
+			},
+			fetchrole() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				const eventid = params.get('eventid');
+				axios.get(`http://localhost:5000/getUserRole?userid=${userid}&eventid=${eventid}`)
+					.then(response => {
+						this.userrole = response.data;
+						console.log(this.userrole);
+					})
+					.catch(error => {
+						console.error('Error fetching role:', error);
 					});
 			},
 			fetchComments() {
@@ -173,38 +185,41 @@
 						console.error("Error fetching comments:", error);
 					});
 			},
-			showNotificationInput() {
-				this.isNotificationInputVisible = true;
+			generateNotification() {
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				axios
+					.get(`http://localhost:5000/getNotificationTemplate?eventid=${eventid}`)
+					.then((response) => {
+						this.tempNotification = response.data;
+					})
+					.catch((error) => {
+						console.error("Error fetching tempNotification:", error);
+					});
 			},
 			submitNotification() {
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
 				const userid = params.get("userid"); // 从 URL 中获取用户ID
-				const newNotification = {
+				const tempNotification = {
 					eventID: eventid,
-					notification: this.newNotification,
+					notification: this.tempNotification,
 					userID: userid, // 传递用户ID
 				};
-
 				axios
-					.post("http://localhost:5000/updateNotification", newNotification)
-					.then((response) => {
-						console.log(response.data.message);
+					.post('http://localhost:5000//updateNotification', {
+						eventID: eventid,
+						notification: this.tempNotification,
+						userID: userid,
+					})
+					.then(response => {
 						this.fetchEvents(); // 更新活动详情
 						alert("通知发布成功！"); // 发布成功的提醒
 					})
-					.catch((error) => {
-						if (error.response) {
-							console.error("Error submitting notification:", error.response.data.message);
-							alert(`Error: ${error.response.data.message}`); // 使用返回的错误信息
-						} else {
-							console.error("Error submitting notification:", error.message);
-							alert("Error submitting notification."); // 提交错误提醒
-						}
+					.catch(error => {
+						console.error("Error submitting result:", error);
+						console.log(this.tempresult)
 					});
-
-				this.newNotification = "";
-				this.isNotificationInputVisible = false;
 			},
 
 			invite() {
@@ -365,6 +380,10 @@
 	.eventdetail h3 {
 	    text-align: center;
 	}
+	.eventdetail img {
+		width: 100px;
+		height: 100px;
+	}
 	.eventdetail button {
 		margin-top: 20px;
 		padding: 6px 20px;
@@ -380,6 +399,7 @@
 	.eventdetail button:hover {
 		background-color: #595959;
 	}
+	
 	.discussion-area,
 	.notification-area {
 	    line-height: 1.5;
@@ -490,7 +510,13 @@
 
 	.commentInput button {
 		margin-left: 10px;
-		
+		height: 30px;
+		margin-top: 10px;
+		font-size: 13px;
+		background-color: #262626;
+		color: #fff;
+		border-radius: 7px;
+		transition: background-color 0.3s ease;
 	}
 
 	.commentInput input {
@@ -621,6 +647,7 @@
 	}
 
 	.invite-buttons button {
+		width:200px;
 		flex: 1;
 		/* 按钮平分容器宽度 */
 		padding: 6px 20px;
@@ -644,23 +671,23 @@
 		padding: 10px;
 	}
 
-	.notificationInput {
+	.notification-area {
 		display: flex;
 		flex-direction: column;
+		text-align:center;
 	}
 
-	.notificationInput textarea {
-		width: 100%;
-		height: 100px;
-		margin-top: 10px;
+	.notification-area input {
+		width: 78%;
 		border-radius: 5px;
 		border: 1px solid #333333;
 		padding: 10px;
 	}
 
-	.notificationInput button {
+	.notification-area button {
 		align-self: flex-end;
 		margin-top: 10px;
+		margin-left:10px;
 		padding: 6px 20px;
 		font-size: 14px;
 		background-color: #262626;
@@ -671,7 +698,7 @@
 		transition: background-color 0.3s ease;
 	}
 
-	.notificationInput button:hover {
+	.notification-area button:hover {
 		background-color: #595959;
 	}
 </style>
