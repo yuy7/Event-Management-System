@@ -4,7 +4,13 @@ from flask_cors import CORS
 import os
 from __init__ import db
 
-UPLOAD_FOLDER = 'image'
+current_path = os.getcwd()
+# 检查当前路径是否包含 'app01'
+if 'app01' in current_path:
+    UPLOAD_FOLDER = 'image'
+else:
+    UPLOAD_FOLDER = 'app01/image'
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
