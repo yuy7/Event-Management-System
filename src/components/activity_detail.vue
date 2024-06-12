@@ -185,12 +185,16 @@
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
 				try {
-					const response = await axios.get(`http://localhost:5000/getQRCode?eventid=${eventid}`);
-					this.qrCodeUrl = response.data.qrCodeUrl;
+					const response = await axios.get(`http://localhost:5000/getQrCode?eventid=${eventid}`, {
+						responseType: 'blob' // 获取二进制数据
+					});
+					const blob = new Blob([response.data], { type: response.headers['content-type'] });
+					this.qrCodeUrl = URL.createObjectURL(blob);
 				} catch (error) {
 					console.error('获取二维码失败', error);
 				}
 			},
+
 			fetchEvents() {
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");

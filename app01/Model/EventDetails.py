@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,send_file
 import os
 from werkzeug.utils import secure_filename
 from Dao.Event import Event
@@ -117,7 +117,20 @@ def uploadImage():
     
 
 def getQrCode():
-    
+    try:
+        event_id = request.args.get('eventid')
+        # 查询数据库或者其他方式获取 event_id 对应的二维码图片路径
+        qr_code_path = EventImage.query.filter_by(eventID=event_id).first().image_path
+
+        # 检查二维码图片文件是否存在
+        if not os.path.isfile(qr_code_path):
+            return jsonify({'status': 'Error', 'message': 'QR code image file not found'}), 404
+        relative_path = qr_code_path.split("app01" + os.sep)[-1]
+        # 使用 send_file 函数发送二维码图片文件到前端
+        return send_file(relative_path, mimetype='image/png')  # 根据图片类型设置 mimetype
+    except Exception as e:
+        print(f"Error getting QR code: {e}")
+        return jsonify({'status': 'Error', 'message': 'Failed to get QR code'}), 500
 
 def getResultTemplate():
     event_id = request.args.get("eventid")

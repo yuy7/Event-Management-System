@@ -4,7 +4,7 @@ from flask_cors import CORS
 import os
 from __init__ import db
 
-UPLOAD_FOLDER = 'app01\image'
+UPLOAD_FOLDER = 'image'
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -87,7 +87,7 @@ app.route('/forgetpassword', methods=['POST'])(forget_password)
 from Model.HistoryEvent import getHistoryEvents
 app.route('/history', methods=['GET'])(getHistoryEvents)
 # GetEventDetails
-from Model.EventDetails import get_event, getResultTemplate, saveResult, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage
+from Model.EventDetails import get_event, getResultTemplate, saveResult, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage,getQrCode
 app.route('/getResultTemplate', methods=['GET'])(getResultTemplate)
 app.route('/saveResult', methods=['POST'])(saveResult)
 app.route('/getResult', methods=['GET'])(getResult)
@@ -96,6 +96,7 @@ app.route('/submitFeedback', methods=['POST'])(submitFeedback)
 app.route('/getAllFeedback', methods=['GET'])(getAllFeedback)
 app.route("/getEventDetails", methods=["POST"])(get_event)
 app.route("/uploadImage", methods=["POST"])(uploadImage)
+app.route("/getQrCode", methods=["GET"])(getQrCode)
 # CommentGet
 from Model.CommentGet import get_comments
 app.route("/getcomments", methods=["GET"])(get_comments)
