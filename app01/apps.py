@@ -85,7 +85,7 @@ app.route('/forgetpassword', methods=['POST'])(forget_password)
 from Model.HistoryEvent import getHistoryEvents
 app.route('/history', methods=['GET'])(getHistoryEvents)
 # GetEventDetails
-from Model.GetEventDetails import get_event, getResultTemplate, saveResult, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage
+from Model.EventDetails import get_event, getResultTemplate, saveResult, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage
 app.route('/getResultTemplate', methods=['GET'])(getResultTemplate)
 app.route('/saveResult', methods=['POST'])(saveResult)
 app.route('/getResult', methods=['GET'])(getResult)
@@ -101,8 +101,10 @@ app.route("/getcomments", methods=["GET"])(get_comments)
 from Model.CommentSave import add_comment
 app.route("/addcomment", methods=["POST"])(add_comment)
 # UpdateNotification
-from Model.UpdateNotification import update_notification
-app.route("/updateNotification", methods=["POST"])(update_notification)
+from Model.EventNotification import getNotificationTemplate, saveNotification, getNotification
+app.route("/updateNotification", methods=["POST"])(saveNotification)
+app.route("/getNotificationTemplate", methods=["GET"])(getNotificationTemplate)
+app.route("/getNotification", methods=["GET"])(getNotification)
 app.route("/acceptEventApply", methods=["POST"])(acceptEventApply)
 app.route("/refuseEventApply", methods=["POST"])(refuseEventApply)
 app.route("/acceptInvite", methods=["POST"])(acceptInvite)
