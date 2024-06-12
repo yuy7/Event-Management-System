@@ -120,8 +120,61 @@ def uploadImage():
             "message": "File upload failed"
         }), 500
 
+def getResultTemplate():
+    event_id = request.args.get("eventid")
+    # 从数据库中获取指定ID的活动信息
+    event = Event.query.filter_by(eventID = event_id).first()
+
+    if event is None:
+        return "指定的活动不存在。"
+
+    # 准备模板，并填充活动信息
+    template = (
+        f"{event.date}，我们在{event.arrangedLocation or event.preferredLocation}举行了{event.eventName}，"
+        f"现场气氛活跃，参加人数为{event.numberOfPeople}人，活动顺利开展！"
+    )
+
+    return template
+
+def saveResult():
+    # 从请求中获取 result 和 event_id
+    result = request.args.get("result")
+    event_id = request.args.get("eventid")
+
+    # 检查是否提供了必要的信息
+    if not result or not event_id:
+        return jsonify({'error': 'Missing result or event_id'}), 400
+
+    # 查找 event detail 对象
+    event_detail = db.session.query(EventDetail).filter(EventDetail.eventID == event_id).first()
+
+    # 如果该 event detail 不存在，则创建一个新的
+    if not event_detail:
+        event_detail = EventDetail(eventID=event_id, result=result)
+        db.session.add(event_detail)
+    else:
+        # 更新 result 属性
+        event_detail.result = result
+
+    # 提交更改到数据库
+    db.session.commit()
+
+    return jsonify({'message': 'Result saved successfully'}), 200
+
 def getResult():
-    return '2024年5月27日，我们在逸夫楼102举行了年级会，现场气氛活跃，活动顺利开展！'
+    event_id = request.args.get("eventid")
+
+    # 检查是否提供了必要的 event_id
+    if not event_id:
+        return jsonify({'error': 'Missing event_id'}), 400
+
+    # 查找 event detail 对象
+    event_detail = db.session.query(EventDetail).filter(EventDetail.eventID == event_id).first()
+
+    if not event_detail or not event_detail.result:
+        return ''
+    else:
+        return event_detail.result
 
 def getUserRole():
     # data = request.get_json()

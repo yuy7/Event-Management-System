@@ -27,6 +27,7 @@ CREATE TABLE `event_detail` (
   `eventID` int NOT NULL,
   `description` text,
   `notification` text,
+  `result` text,
   PRIMARY KEY (`detailID`),
   KEY `eventID` (`eventID`),
   CONSTRAINT `event_detail_ibfk_1` FOREIGN KEY (`eventID`) REFERENCES `event` (`eventID`)
@@ -36,12 +37,6 @@ CREATE TABLE `event_detail` (
 --
 -- Dumping data for table `event_detail`
 --
-
-LOCK TABLES `event_detail` WRITE;
-/*!40000 ALTER TABLE `event_detail` DISABLE KEYS */;
-INSERT INTO `event_detail` VALUES (1,1,'123','123');
-/*!40000 ALTER TABLE `event_detail` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

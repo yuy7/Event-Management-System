@@ -85,8 +85,10 @@ app.route('/forgetpassword', methods=['POST'])(forget_password)
 from Model.HistoryEvent import getHistoryEvents
 app.route('/history', methods=['GET'])(getHistoryEvents)
 # GetEventDetails
-from Model.GetEventDetails import get_event, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage
-app.route('/getresult', methods=['GET'])(getResult)
+from Model.GetEventDetails import get_event, getResultTemplate, saveResult, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage
+app.route('/getResultTemplate', methods=['GET'])(getResultTemplate)
+app.route('/saveResult', methods=['POST'])(saveResult)
+app.route('/getResult', methods=['GET'])(getResult)
 app.route('/getUserRole', methods=['GET'])(getUserRole)
 app.route('/submitFeedback', methods=['POST'])(submitFeedback)
 app.route('/getAllFeedback', methods=['GET'])(getAllFeedback)
