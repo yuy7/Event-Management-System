@@ -25,7 +25,8 @@ def saveNotification():
     data = request.get_json()
     notification = data.get("notification")
     event_id = data.get("eventid")
-    # print(event_id)
+    print(event_id)
+    print(notification)
     # 检查是否提供了必要的信息
     if not notification or not event_id:
         return jsonify({'error': 'Missing result or event_id'}), 400

@@ -93,9 +93,9 @@
 			<h3>发布活动通知</h3>
 			<div>
 				<input type="text" v-model="tempNotification">
-				<button @click="submitNotification" v-if="tempNotification!=''">修改总结</button>
-				<button @click="submitNotification" v-if="tempNotification==''">提交总结</button>
-				<button @click="generateNotification" v-if="tempNotification==''">自动生成活动总结</button>
+				<button @click="submitNotification" v-if="eventNotification!=null">修改通知</button>
+				<button @click="submitNotification" v-if="eventNotification==null">提交通知</button>
+				<button @click="generateNotification" v-if="eventNotification==null">自动生成活动通知</button>
 			</div>
 		</div>
 		<div v-if="isAnswerVisible" class="modal">
@@ -134,7 +134,7 @@
 				eventUser: [],
 				comments: [],
 				newComment: "",
-				tempNotification: "",
+				tempNotification:null,
 				isCommentInputVisible: false,
 				currentCommentId: null,
 				isInviteClassModalVisible: false,
@@ -146,6 +146,7 @@
 				ansID: "",
 				selectedFile: null,
 				qrCodeUrl: "", // 添加一个属性用于存储二维码URL
+				eventNotification:null,
 			};
 		},
 		created() {
@@ -325,16 +326,15 @@
 				const userid = params.get("userid");
 				const eventid = params.get("eventid");
 				const newNotification = {
-					userId: userid,
-					eventID: eventid,
+					eventid: eventid,
 					notification: this.tempNotification,
 				};
 				axios
-					.post("http://localhost:5000/addNotification", newNotification)
+					.post("http://localhost:5000/updateNotification", newNotification)
 					.then((response) => {
 						console.log(response.data.message);
-						this.eventNotification = this.tempNotification; // 更新活动通知
-						this.tempNotification = ""; // 清空输入框
+						this.fetchEvents();
+						alert("活动通知修改成功！");
 					})
 					.catch((error) => {
 						console.error("Error submitting notification:", error);
@@ -344,14 +344,12 @@
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
 				axios
-					.post("http://localhost:5000/generateNotification", {
-						eventID: eventid,
-					})
+					.get(`http://localhost:5000/getNotificationTemplate?eventid=${eventid}`)
 					.then((response) => {
-						this.tempNotification = response.data.notification;
+						this.tempNotification = response.data;
 					})
 					.catch((error) => {
-						console.error("Error generating notification:", error);
+						console.error("Error fetching tempNotification:", error);
 					});
 			},
 		},
