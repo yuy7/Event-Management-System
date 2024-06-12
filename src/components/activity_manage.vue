@@ -142,9 +142,12 @@
 				window.location.href = `/detail?userid=${userid}&eventid=${singleEvent.eventID}`;
 			},
 			search() {
+				const params = new URLSearchParams(window.location.search);
+				
+				const userid = params.get('userid');
 				this.selectedType = 'search';
-				console.log('搜索');
-				axios.get('http://localhost:5000/searchEvents?searchQuery=' + this.searchQuery)
+				console.log(this.searchQuery);
+				axios.get(`http://localhost:5000/searchEvents?userid=${userid}&searchQuery=${this.searchQuery}`)
 					.then(response => {
 						this.event_search = response.data;
 					})

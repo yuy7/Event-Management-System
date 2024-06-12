@@ -51,8 +51,9 @@ def getLabel(event_id, user_id, date, time):
 
 def search_events():
     userID = request.args.get("userid")
-    search_query = request.args.get('searchQuery')
-
+    search_query = request.args.get("searchQuery")
+    print(userID)
+    print(search_query)
     # 在数据库中进行模糊查询，查找包含搜索关键词的事件
     events = db.session.query(Event, TimeSlot).join(TimeSlot, Event.time == TimeSlot.timeID).filter(Event.eventName.ilike(f"%{search_query}%")).all()
 
