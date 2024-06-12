@@ -129,15 +129,15 @@
 					case 0:
 					case 1:
 					case 4:
-						return '#a1d7f2';
+						return '#6e93a5';
 					case 2:
 					case 3:
 					case 5:
-						return '#a6e58e';
+						return '#81b26e';
 					case 6:
-						return '#edbbf9';
+						return '#bc94c5';
 					case 7:
-						return '#f0bf71';
+						return '#bd9658';
 					default:
 						return '#000000'; // 默认颜色
 				}
