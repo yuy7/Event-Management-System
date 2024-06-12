@@ -6,8 +6,9 @@
 			<p v-if="userrole=='participant'">{{ result }}</p>
 			<div v-if="userrole=='reservationUser'">
 				<input type="text" v-model="tempresult">
-				<button @click="submitResult">提交总结</button>
-				<button @click="generateResult">自动生成活动总结</button>
+				<button @click="submitResult" v-if="result!=''">修改总结</button>
+				<button @click="submitResult" v-if="result==''">提交总结</button>
+				<button @click="generateResult" v-if="result==''">自动生成活动总结</button>
 			</div>
 		</div>
 		<div class="discussion-area">
@@ -71,6 +72,10 @@
 					.get(`http://localhost:5000/getResult?eventid=${eventid}`)
 					.then((response) => {
 						this.result = response.data;
+						if(this.result!='')
+						{
+							this.tempresult=this.result;
+						}
 					})
 					.catch((error) => {
 						console.error("Error fetching result:", error);
@@ -122,6 +127,7 @@
 					})
 					.then(response => {
 						console.log(response);
+						alert("活动总结保存成功！");
 					})
 					.catch(error => {
 						console.error("Error submitting result:", error);
