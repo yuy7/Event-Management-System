@@ -61,30 +61,41 @@ def getApprovalNotifications():
 
 def acceptEventApply():
     eventApplyID = request.json.get("notificationID")
+    # 修正命名错误：从roleApply到eventApply
     eventApply = Notification.query.filter_by(id=eventApplyID).first()
-    
     if not eventApply:
-        return jsonify({"status": "Error", "message": "Notification not found"}), 404
-
+        return jsonify({
+            "status": "Error",
+            "message": "Event apply not found"
+        }), 404
+    
     try:
+        # 添加：设置UserAddEvent的state为1（代表接受）
         userAddEvent = UserAddEvent.query.filter(
-            UserAddEvent.userID == eventApply.sender_id, 
-            UserAddEvent.eventID == eventApply.event_id
-        ).first()
+                UserAddEvent.userID==eventApply.sender_id, 
+                UserAddEvent.eventID==eventApply.event_id
+            ).first()
         if userAddEvent:
             userAddEvent.state = 1
-        
-        eventApply.read = True
-        
-        # 插入到 UserEvent 表中
-        userEvent = UserEvent(userID=eventApply.sender_id, eventID=eventApply.event_id)
-        db.session.add(userEvent)
+
+        # 添加：设置Notification的read为1（代表已读）
+        notification = Notification.query.filter_by(id=eventApplyID).first()
+        if notification:
+            notification.read = 1
+
+        # 删除的是eventApply，之前代码中的roleApply
+        db.session.delete(eventApply)
 
         db.session.commit()
-        return jsonify({"status": "Success"})
+        return jsonify({
+            "status": "Success"
+        })
     except Exception as e:
         db.session.rollback()
-        return jsonify({"status": "Error", "message": str(e)}), 500
+        return jsonify({
+            "status": "Error",
+            "message": str(e)
+        }), 500
 
 
 def refuseEventApply():
