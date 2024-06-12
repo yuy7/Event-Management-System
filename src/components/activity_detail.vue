@@ -49,7 +49,7 @@
 		<div class="invite-buttons">
 			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
 			<button @click="showInviteClassModal">邀请班级加入活动</button>
-			<button @click="deleteevent" v-if="userrole=='reservationUser'">删除该活动</button>
+			<!-- <button @click="deleteevent" v-if="userrole=='reservationUser'">删除该活动</button> -->
 		</div>
 		<div class="discussion-area">
 			<h3>讨论区</h3>

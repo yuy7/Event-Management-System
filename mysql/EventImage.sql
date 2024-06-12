@@ -4,5 +4,5 @@ CREATE TABLE `EventImage` (
     eventID INTEGER NOT NULL,
     image_path TEXT NOT NULL,
     uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (eventID) REFERENCES events(eventID)
+    FOREIGN KEY (eventID) REFERENCES event(eventID)
 );
