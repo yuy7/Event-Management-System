@@ -302,7 +302,10 @@
 				this.isInviteClassModalVisible = false;
 			},
 			showInviteMemberModal() {
-				this.isInviteMemberModalVisible = true;
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				const userid = params.get("userid"); // 从 URL 中获取用户ID
+				window.location.href = `/invite?userid=${userid}&eventid=${eventid}`
 			},
 			inviteClass() {
 				const params = new URLSearchParams(window.location.search);

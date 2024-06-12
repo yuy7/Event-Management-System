@@ -5,7 +5,6 @@
 			<ul>
 				<li @click="selectMessageType('system')">系统消息</li>
 				<li @click="selectMessageType('approval')">审核消息</li>
-				<li @click="selectMessageType('group')">群聊消息</li>
 				<li @click="selectMessageType('validation')">验证消息</li>
 			</ul>
 		</div>
@@ -56,11 +55,6 @@
 					</div>
 				</div>
 			</div>
-
-			<div v-else-if="selectedMessageType === 'group'">群聊消息内容</div>
-			<div v-if="errorMessage" class="error-message">
-				<p>{{ errorMessage }}</p>
-			</div>
 		</div>
 	</div>
 </template>
@@ -80,7 +74,6 @@
 				message_examine: [],
 				validationMessages: [],
 				selectedMessageType: "system", // 默认选中系统消息
-				errorMessage: "", // 错误消息
 			};
 		},
 		created() {

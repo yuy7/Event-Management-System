@@ -1,21 +1,21 @@
 <template>
-    <div class="nav-bar">
-      <nav class="navbar">
-        <div class="nav-links">
-          <ul class="nav-list">
-            <li><a @click="navigateTo('/resources')">资源安排</a></li>
-            <li><a @click="navigateTo('/goal')">安排结果</a></li>
-            <!-- <li><a @click="navigateTo('/activity')">活动审批</a></li> -->
-            <li><a @click="navigateTo('/member')">人员审批</a></li>
-          </ul>
-        </div>
-        <div class="user-profile">
-          <a @click="navigateTo('/person')">
-            <img src="../../src/assets/touxiang.png" alt="User Avatar">
-          </a>
-        </div>
-      </nav>
-    </div>
+  <div class="nav-bar">
+    <nav class="navbar">
+      <div class="nav-links">
+        <ul class="nav-list">
+          <li><a @click="navigateTo('/resources')">资源安排</a></li>
+          <li><a @click="navigateTo('/goal')">安排结果</a></li>
+          <!-- <li><a @click="navigateTo('/activity')">活动审批</a></li> -->
+          <li><a @click="navigateTo('/member')">人员审批</a></li>
+        </ul>
+      </div>
+      <div class="user-profile">
+        <a @click="navigateTo('/person')">
+          <img src="../../src/assets/touxiang.png" alt="User Avatar">
+        </a>
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -54,14 +54,17 @@ export default {
 .nav-list {
   list-style-type: none;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around; /* 平均分布 */
   padding: 0;
   margin: 0;
-  margin-left: 10%;
+  font-size: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .nav-list li {
-  margin-right: 20px;
+  flex: 1; /* 每个li元素占据相等的空间 */
+  display: flex;
+  justify-content: center; /* 居中对齐 */
 }
 
 .nav-list a {
