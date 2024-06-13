@@ -165,7 +165,7 @@ def force_invite():
     requesting_user = User.query.filter_by(UserID=user_id).first()
     event = Event.query.filter_by(eventID=event_id).first()
 
-    if not requesting_user or requesting_user.Role != '0' or not event or str(event.reservationUserId) != str(user_id):
+    if not requesting_user or requesting_user.Role not in ['教师', '辅导员'] or not event or str(event.reservationUserId) != str(user_id):
         return jsonify({'message': 'User not authorized to force invite'}), 403
 
     # 检查事件是否存在
