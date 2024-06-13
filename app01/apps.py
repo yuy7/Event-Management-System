@@ -51,7 +51,8 @@ app.route("/userinterface/bindPhone", methods=["POST"])(bindPhone)
 app.route("/userinterface/roleApply", methods=["POST"])(roleApply)
 app.route("/userinterface/get_users", methods=["GET"])(get_users)
 # Invite
-from Model.Invite import invite,acceptInvite,refuseInvite,getValidationNotifications
+from Model.Invite import invite,acceptInvite,refuseInvite,getValidationNotifications, get_invite_users
+app.route("/getInviteUserList", methods=["GET"])(get_invite_users)
 app.route("/invite", methods=["POST"])(invite)
 # ApplyEvent
 from Model.ApplyEvent import apply_event, applyEventWithReason
