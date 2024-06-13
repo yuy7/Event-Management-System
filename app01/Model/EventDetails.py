@@ -19,7 +19,7 @@ if 'app01' in current_path:
     UPLOAD_FOLDER = 'image'
 else:
     UPLOAD_FOLDER = 'app01/image'
-
+print(current_path)
 
 def get_event():
     data = request.get_json()
