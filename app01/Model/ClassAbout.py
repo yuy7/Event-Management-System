@@ -63,3 +63,14 @@ def remove_student_from_class():
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': '移除学生时发生错误', 'error': str(e)}), 500
+def add_class():
+    data = request.get_json()
+    class_name = data.get('className')
+    
+    if not class_name:
+        return jsonify({'message': '缺少班级名称'}), 400
+    
+    new_class = Class(ClassName=class_name)
+    db.session.add(new_class)
+    db.session.commit()
+    return jsonify({'message': '班级添加成功'}), 200

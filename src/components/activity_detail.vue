@@ -36,7 +36,7 @@
 					<tr>
 						<th>
 							活动微信群聊二维码
-							<div v-if="userrole!='normalUser'">
+							<div v-if="userrole=='reservationUser'">
 								<input type="file" @change="handleFileChange" />
 								<button @click="uploadImage">上传</button>
 							</div>
