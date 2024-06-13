@@ -18,6 +18,10 @@ import activity_member from './components/activity_member.vue'
 import activity_history from './components/activity_history.vue'
 import activity_final from './components/activity_final.vue'
 const routes = [
+	{
+		path:'/',
+		redirect:'/login'
+	},
   {
     path: '/login',
     name:'login',
