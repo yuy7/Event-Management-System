@@ -801,7 +801,7 @@
 	}
 
 	.notification-area input {
-		width: 78%;
+		width: 75%;
 		border-radius: 5px;
 		border: 1px solid #333333;
 		padding: 10px;

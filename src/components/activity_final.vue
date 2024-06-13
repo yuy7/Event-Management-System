@@ -198,7 +198,7 @@
 	}
 
 	.summary-area input {
-		width: 1120px;
+		width: 900px;
 		flex-grow: 1;
 		margin-right: 20px;
 		padding: 10px;

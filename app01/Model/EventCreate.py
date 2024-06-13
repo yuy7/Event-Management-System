@@ -47,8 +47,9 @@ def EventCreate():
     numberOfPeople = data.get("numberOfPeople")
     preferredLocation = data.get("preferredLocation")
     requireApproval = data.get("requireApproval")
+    preferredClassroom = data.get("preferredClassroom")
     time = data.get("time")
-    
+    preferredLocation = preferredLocation + str(preferredClassroom)
     
     # 判断日期是否合法
     today_str = datetime.now().strftime('%Y-%m-%d')
