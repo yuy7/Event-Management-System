@@ -184,3 +184,70 @@ def refuseInvite():
     except Exception as e:
         db.session.rollback()
         return jsonify({'status': 'Error', 'message': str(e)}), 500
+    
+def force_invite():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({'message': 'No input data provided'}), 400
+
+    event_id = data.get('eventID')
+    invited_ids = data.get('invitedIDs')  # 这里是一个列表，包含所有要邀请的用户ID
+    user_id = data.get('userID')
+
+    if not event_id or not invited_ids or not user_id:
+        return jsonify({'message': 'Missing required fields'}), 400
+
+    # 检查发起请求的用户是否具有权限
+    requesting_user = User.query.filter_by(UserID=user_id).first()
+    event = Event.query.filter_by(eventID=event_id).first()
+
+    if not requesting_user or requesting_user.Role != '0' or not event or str(event.reservationUserId) != str(user_id):
+        return jsonify({'message': 'User not authorized to force invite'}), 403
+
+    # 检查事件是否存在
+    if not event:
+        return jsonify({'message': 'Event not found'}), 404
+
+    try:
+        for invited_id in invited_ids:
+            # 检查用户是否已经在活动中
+            existing_user_event = UserEvent.query.filter_by(userID=invited_id, eventID=event_id).first()
+            if not existing_user_event:
+                # 添加用户到 UserEvent 表中
+                user_event = UserEvent(userID=invited_id, eventID=event_id)
+                db.session.add(user_event)
+
+                # 创建通知记录
+                message = f'You have been forcibly invited to event {event_id}'
+                notification = Notification(
+                    recipient_id=invited_id,
+                    sender_id=user_id,
+                    event_id=event_id,
+                    message=message,
+                    read=False,
+                    timestamp=datetime.now(),
+                    type=4
+                )
+                db.session.add(notification)
+
+        db.session.commit()
+        return jsonify({'message': 'Users forcibly invited successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Error occurred: ' + str(e)}), 500
+
+    
+def get_available_users():
+    event_id = request.args.get('eventid')
+
+    if not event_id:
+        return jsonify({'message': 'Missing eventID'}), 400
+
+    # 获取所有还未加入活动的用户
+    subquery = db.session.query(UserEvent.userID).filter(UserEvent.eventID == event_id).subquery()
+    available_users = User.query.filter(User.UserID.notin_(subquery)).all()
+
+    user_list = [{'UserID': user.UserID, 'Username': user.Username} for user in available_users]
+
+    return jsonify({'users': user_list}), 200

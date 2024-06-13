@@ -49,6 +49,7 @@
 		<div class="invite-buttons">
 			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
 			<button @click="showInviteClassModal">邀请班级加入活动</button>
+       <button @click="showForceInviteModal">强制邀请成员</button>
 			<!-- <button @click="deleteevent" v-if="userrole=='reservationUser'">删除该活动</button> -->
 		</div>
 		<div class="discussion-area">
@@ -116,6 +117,30 @@
 			</div>
 		</div>
 	</div>
+
+<div id="force-invite-modal" v-if="isForceInviteModalVisible" class="modal">
+    <div class="modal-content">
+        <span class="close" @click="closeForceInviteModal">&times;</span>
+        <h3>强制邀请成员</h3>
+         <p class="note">注：只有超级管理员（role为0）且为本活动创建者才可进行强制邀请</p>
+        <div class="user-list">
+            <table>
+                <tbody>
+                    <tr v-for="user in availableUsers" :key="user.UserID" class="user-item">
+                        <td class="checkbox-cell">
+                            <label class="checkbox-label">
+                                <input type="checkbox" :value="user.UserID" v-model="selectedUserIDs" class="checkbox"/>
+                                <span class="username">{{ user.Username }}</span>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button @click="forceInviteUsers">强制邀请</button>
+    </div>
+</div>
+
 </template>
 
 <script>
@@ -148,6 +173,9 @@
 				selectedFile: null,
 				qrCodeUrl: "", // 添加一个属性用于存储二维码URL
 				eventNotification:null,
+        availableUsers: [],
+        selectedUserIDs: [],
+        isForceInviteModalVisible: false,
 			};
 		},
 		created() {
@@ -381,6 +409,51 @@
 						console.error("Error fetching tempNotification:", error);
 					});
 			},
+    showForceInviteModal() {
+            this.isForceInviteModalVisible = true;
+            this.fetchAvailableUsers();
+        },
+    closeForceInviteModal() {
+            this.isForceInviteModalVisible = false;
+            this.selectedUserIDs = [];
+        },
+    fetchAvailableUsers() {
+            const params = new URLSearchParams(window.location.search);
+            const eventid = params.get("eventid");
+            axios
+                .get(`http://localhost:5000/getAvailableUsers?eventid=${eventid}`)
+                .then((response) => {
+                    this.availableUsers = response.data.users;
+                })
+                .catch((error) => {
+                    console.error("Error fetching available users:", error);
+                });
+        },
+    forceInviteUsers() {
+            const params = new URLSearchParams(window.location.search);
+            const eventid = params.get("eventid");
+            const userid = params.get("userid"); // 从 URL 中获取用户ID
+            axios
+                .post("http://localhost:5000/forceInvite", {
+                    eventID: eventid,
+                    invitedIDs: this.selectedUserIDs,
+                    userID: userid,
+                })
+                .then((response) => {
+                    alert(response.data.message);
+                    this.closeForceInviteModal();
+                })
+                .catch((error) => {
+                    console.error("Error forcing invite:", error);
+                    if (error.response && error.response.data.message) {
+                        alert(`Error: ${error.response.data.message}`);
+                    } else {
+                        alert("强制邀请时发生错误。");
+                    }
+                });
+        },
+
+
 		},
 	};
 </script>
@@ -748,4 +821,118 @@
 	.notification-area button:hover {
 		background-color: #595959;
 	}
+
+  #force-invite-modal .modal-content {
+  background-color: #f8f9fa;
+  margin: 10% auto;
+  padding: 30px;
+  border: none;
+  width: 50%;
+  max-width: 600px;
+  max-height: 80vh;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slide-down 0.4s ease-out;
+  overflow-y: auto;
+}
+
+#force-invite-modal .user-list {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+#force-invite-modal table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+#force-invite-modal .user-item {
+  transition: background-color 0.3s;
+}
+
+#force-invite-modal .user-item:hover {
+  background-color: #f0f0f0;
+}
+
+#force-invite-modal .checkbox-cell {
+  padding: 15px;
+}
+
+#force-invite-modal .checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+#force-invite-modal .checkbox {
+  position: relative;
+  margin-right: 15px;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#force-invite-modal .checkbox:checked {
+  background-color: #333;
+  border-color: #333;
+}
+
+#force-invite-modal .checkbox:checked::after {
+  content: '\2714';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+
+#force-invite-modal .username {
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  
+}
+
+#force-invite-modal button {
+  width: auto;
+  padding: 12px 25px;
+  font-size: 16px;
+  margin-top: 25px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#force-invite-modal button:hover {
+  background-color: #555;
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 </style>
