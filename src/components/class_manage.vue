@@ -9,6 +9,7 @@
     </admin-login-modal>
     <div v-if="!showLoginModal" class="class-list-container">
       <h3>班级列表</h3>
+      <button @click="showAddClassModal = true">添加班级</button>
       <ul>
         <li v-for="classItem in classList" :key="classItem.classID" @click="fetchClassStudents(classItem.classID)">
           {{ classItem.className }}
@@ -34,6 +35,16 @@
         </div>
       </div>
     </div>
+    <div v-if="showAddClassModal" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="closeAddClassModal">&times;</span>
+        <h3>添加班级</h3>
+        <div class="add-class">
+          <input v-model="newClassName" placeholder="输入班级名称" />
+          <button @click="addClass">添加</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -55,6 +66,8 @@ export default {
       selectedClassName: '',
       isClassModalVisible: false,
       newStudentID: '',
+      newClassName: '',
+      showAddClassModal: false,
       showLoginModal: true,
     };
   },
@@ -92,6 +105,10 @@ export default {
       this.isClassModalVisible = false;
       this.newStudentID = '';
     },
+    closeAddClassModal() {
+      this.showAddClassModal = false;
+      this.newClassName = '';
+    },
     addStudent() {
       if (!this.newStudentID) {
         alert('请输入学生ID');
@@ -124,6 +141,24 @@ export default {
           console.error('Error removing student from class:', error);
         });
     },
+    addClass() {
+      if (!this.newClassName) {
+        alert('请输入班级名称');
+        return;
+      }
+      axios
+        .post('http://localhost:5000/addClass', {
+          className: this.newClassName,
+        })
+        .then((response) => {
+          alert(response.data.message);
+          this.fetchClassList();
+          this.closeAddClassModal();
+        })
+        .catch((error) => {
+          console.error('Error adding class:', error);
+        });
+    },
     handleLoginSuccess() {
       this.showLoginModal = false;
     },
@@ -146,6 +181,10 @@ export default {
   border: 1px solid #ddd;
   margin-bottom: 5px;
   cursor: pointer;
+}
+
+.class-list-container button {
+  margin-bottom: 10px;
 }
 
 .modal {
@@ -205,6 +244,17 @@ export default {
 }
 
 .add-student input {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.add-class {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.add-class input {
   padding: 5px;
   margin-right: 10px;
 }

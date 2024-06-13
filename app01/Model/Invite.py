@@ -90,7 +90,7 @@ def invite():
     db.session.add(invite_record)
 
     # 创建通知记录
-    message = f'你被{User.query.filter_by(userID=user_id).first().Username}邀请加入 {event_id}'
+    message = f'你被{User.query.filter_by(UserID=user_id).first().Username}邀请加入 {Event.query.filter_by(eventID=event_id).first().eventName}'
     notification = Notification(
         recipient_id=invited_id,
         sender_id=user_id,
