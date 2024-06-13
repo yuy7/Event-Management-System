@@ -248,3 +248,56 @@ def get_available_users():
     user_list = [{'UserID': user.UserID, 'Username': user.Username} for user in available_users]
 
     return jsonify({'users': user_list}), 200
+
+
+from Dao.Class import Class, ClassUser
+def invite_class():
+    # 从请求中获取 JSON 数据
+    data = request.get_json()
+
+    # 提取 eventID、classID 和 userID
+    event_id = data.get('eventID')
+    class_id = data.get('classID')
+    user_id = data.get('userID')
+
+    # 检查是否缺少必需字段
+    if not event_id or not class_id or not user_id:
+        return jsonify({'message': '缺少必需字段'}), 400
+
+    try:
+        # 获取班级中的所有用户
+        class_users = ClassUser.query.filter_by(ClassID=class_id).all()
+        if not class_users:
+            return jsonify({'message': '未找到班级用户'}), 404
+
+        # 遍历班级中的每个用户
+        for class_user in class_users:
+            invited_id = class_user.UserID
+            # 检查用户是否已经在活动中
+            existing_user_event = UserEvent.query.filter_by(userID=invited_id, eventID=event_id).first()
+            if not existing_user_event:
+                # 如果用户不在活动中，添加到 UserEvent 表中
+                user_event = UserEvent(userID=invited_id, eventID=event_id)
+                db.session.add(user_event)
+
+                # 创建通知记录
+                message = f'你被{User.query.filter_by(UserID=user_id).first().Username}邀请加入活动 {event_id}'
+                notification = Notification(
+                    recipient_id=invited_id,
+                    sender_id=user_id,
+                    event_id=event_id,
+                    message=message,
+                    read=False,
+                    timestamp=datetime.now(),
+                    type=1
+                )
+                db.session.add(notification)
+
+        # 提交数据库事务
+        db.session.commit()
+        return jsonify({'message': '班级用户已成功邀请加入活动'}), 200
+
+    except Exception as e:
+        # 如果发生错误，回滚事务
+        db.session.rollback()
+        return jsonify({'message': '发生错误: ' + str(e)}), 500
