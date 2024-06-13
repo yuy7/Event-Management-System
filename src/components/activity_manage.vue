@@ -245,6 +245,8 @@
 	}
 
 	.event-button {
+		width:60px;
+		padding:7px;
 		font-size: 13px;
 		background-color: #333;
 		color: white;
@@ -303,4 +305,5 @@
 		margin: 5px 0;
 		
 	}
+	
 </style>

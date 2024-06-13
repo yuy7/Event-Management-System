@@ -26,6 +26,9 @@ def saveNotification():
     notification = data.get("notification")
     event_id = data.get("eventid")  
     # print(event_id)
+    event_id = data.get("eventid")
+    print(event_id)
+    print(notification)
     # 检查是否提供了必要的信息
     if not notification or not event_id:
         return jsonify({'error': 'Missing result or event_id'}), 400
@@ -51,7 +54,9 @@ def updateNotification():
     event_id = data.get('eventID')
     notification = data.get('notification')
     user_id = data.get('userID')
-
+    print(event_id)
+    print(notification)
+    print(user_id)
     # Check for missing parameters
     if not event_id or not notification or not user_id:
         return jsonify({"message": "Missing required parameters"}), 400

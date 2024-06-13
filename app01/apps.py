@@ -4,6 +4,14 @@ from flask_cors import CORS
 import os
 from __init__ import db
 
+current_path = os.getcwd()
+# 检查当前路径是否包含 'app01'
+if 'app01' in current_path:
+    UPLOAD_FOLDER = 'image'
+else:
+    UPLOAD_FOLDER = 'app01/image'
+
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config.from_object(__name__)
@@ -15,7 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/ems
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = False  # 设置为 True 在生产环境中
-
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db.init_app(app)
 # Login
 from Model.Login import user_login
@@ -85,7 +93,7 @@ app.route('/forgetpassword', methods=['POST'])(forget_password)
 from Model.HistoryEvent import getHistoryEvents
 app.route('/history', methods=['GET'])(getHistoryEvents)
 # GetEventDetails
-from Model.EventDetails import get_event, getResultTemplate, saveResult, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage
+from Model.EventDetails import get_event, getResultTemplate, saveResult, getResult, submitFeedback, getAllFeedback, getUserRole, uploadImage,getQrCode
 app.route('/getResultTemplate', methods=['GET'])(getResultTemplate)
 app.route('/saveResult', methods=['POST'])(saveResult)
 app.route('/getResult', methods=['GET'])(getResult)
@@ -93,7 +101,8 @@ app.route('/getUserRole', methods=['GET'])(getUserRole)
 app.route('/submitFeedback', methods=['POST'])(submitFeedback)
 app.route('/getAllFeedback', methods=['GET'])(getAllFeedback)
 app.route("/getEventDetails", methods=["POST"])(get_event)
-# app.route("/uploadImage", methods=["POST"])(uploadImage)
+app.route("/uploadImage", methods=["POST"])(uploadImage)
+app.route("/getQrCode", methods=["GET"])(getQrCode)
 # CommentGet
 from Model.CommentGet import getComment
 app.route("/getcomments", methods=["GET"])(getComment)

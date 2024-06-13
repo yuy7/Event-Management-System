@@ -1,46 +1,42 @@
 <template>
-    <div class="nav-bar">
-      <nav class="navbar">
-        <div class="nav-links">
-          <ul class="nav-list">
-            <li><a @click="navigateTo('/schedule')">活动日程</a></li>
-            <li><a @click="navigateTo('/create')">活动创建</a></li>
-            <li><a @click="navigateTo('/manage')">活动管理</a></li>
-            <li><a @click="navigateTo('/history')">历史活动</a></li>
-            <li><a @click="navigateTo('/notifications')">消息通知</a></li>
-            <li><a @click="navigateTo('/budget')">预算管理</a></li>
-           <!-- <li><a @click="navigateTo('/chat-room')">谈天说地</a></li> -->
-          </ul>
-        </div>
-        <div class="user-profile">
-			<a @click="navigateTo('/person')">
-				<img src="../../src/assets/touxiang.png" alt="User Avatar" >
-			</a>
-        </div>
-      </nav>
-    </div>
+  <div class="nav-bar">
+    <nav class="navbar">
+      <div class="nav-links">
+        <ul class="nav-list">
+          <li><a @click="navigateTo('/schedule')">活动日程</a></li>
+          <li><a @click="navigateTo('/create')">活动创建</a></li>
+          <li><a @click="navigateTo('/manage')">活动管理</a></li>
+          <li><a @click="navigateTo('/history')">历史活动</a></li>
+          <li><a @click="navigateTo('/notifications')">消息通知</a></li>
+          <li><a @click="navigateTo('/budget')">预算管理</a></li>
+          <!-- <li><a @click="navigateTo('/chat-room')">谈天说地</a></li> -->
+        </ul>
+      </div>
+      <div class="user-profile">
+        <a @click="navigateTo('/person')">
+          <img src="../../src/assets/touxiang.png" alt="User Avatar">
+        </a>
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script>
-// 确保已经在你的项目中安装并配置了Vue Router
 export default {
   name: "Navbar",
-    methods: {
-      navigateTo(route) {
-        // 获取当前用户ID
-        const params = new URLSearchParams(window.location.search);
-        const userid = params.get('userid');
-        
-        // 构建下一个路由的URL
-        const nextRoute = `${route}?userid=${userid}`;
-        
-        // 导航到下一个路由
-        window.location.href = nextRoute;
-      }
+  methods: {
+    navigateTo(route) {
+      // 获取当前用户ID
+      const params = new URLSearchParams(window.location.search);
+      const userid = params.get('userid');
+
+      // 构建下一个路由的URL
+      const nextRoute = `${route}?userid=${userid}`;
+
+      // 导航到下一个路由
+      window.location.href = nextRoute;
+    }
   }
-  
-  
-  
 };
 </script>
 
@@ -66,17 +62,19 @@ export default {
 .nav-list {
   list-style-type: none;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* 平均分布 */
   padding: 0;
   margin: 0;
-  margin-left: 10%; /* 从左边五分之一处开始 */
+  font-size: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .nav-list li {
-  margin-right: 20px;
+  flex: 1; /* 每个li元素占据相等的空间 */
+  display: flex;
+  justify-content: center; /* 居中对齐 */
 }
 
-/* 使用.router-link-active来给当前激活的路由项添加样式 */
 .router-link-active {
   color: royalblue;
 }
@@ -100,8 +98,8 @@ export default {
 }
 
 .user-profile img {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
 }
 </style>

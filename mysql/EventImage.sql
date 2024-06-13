@@ -3,5 +3,10 @@ CREATE TABLE `EventImage` (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     eventID INTEGER NOT NULL,
     image_path TEXT NOT NULL,
+<<<<<<< HEAD
     uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP
+=======
+    uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (eventID) REFERENCES event(eventID)
+>>>>>>> b9bc97ea059b67e4ba60291eb6f541057064f9e9
 );

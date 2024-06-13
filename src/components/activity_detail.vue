@@ -34,8 +34,14 @@
 						<td>{{ eventUser.join(", ") }}</td>
 					</tr>
 					<tr>
-						<th>活动微信群聊二维码</th>
-						<td><img src="../assets/1.png" alt="WeChat QR Code" /></td>
+						<th>
+							活动微信群聊二维码
+							<input type="file" @change="handleFileChange" />
+							<button @click="uploadImage">上传</button>
+						</th>
+						<td>
+							<img :src="qrCodeUrl" alt="WeChat QR Code" v-if="qrCodeUrl" />
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -43,6 +49,7 @@
 		<div class="invite-buttons">
 			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
 			<button @click="showInviteClassModal">邀请班级加入活动</button>
+			<!-- <button @click="deleteevent" v-if="userrole=='reservationUser'">删除该活动</button> -->
 		</div>
 		<div class="discussion-area">
 			<h3>讨论区</h3>
@@ -58,6 +65,7 @@
 					<div class="time">
 						<p>{{ comment.ans_time }}</p>
 					</div>
+					<button @click="showAnswerModal(comment.comment_id)">回复</button>
 				</div>
 				<hr class="detailseparator" />
 				<div v-for="ans in comment.ans" :key="ans.ansUser" class="answer">
@@ -86,9 +94,17 @@
 			<h3>发布活动通知</h3>
 			<div>
 				<input type="text" v-model="tempNotification">
-				<button @click="submitNotification" v-if="tempNotification!=''">修改总结</button>
-				<button @click="submitNotification" v-if="tempNotification==''">提交总结</button>
-				<button @click="generateNotification" v-if="tempNotification==''">自动生成活动总结</button>
+				<button @click="submitNotification" v-if="eventNotification!=null">修改通知</button>
+				<button @click="submitNotification" v-if="eventNotification==null">提交通知</button>
+				<button @click="generateNotification" v-if="eventNotification==null">自动生成活动通知</button>
+			</div>
+		</div>
+		<div v-if="isAnswerVisible" class="modal">
+			<div class="modal-content">
+				<span class="close" @click="closeAnswerModal">&times;</span>
+				<h3>回复</h3>
+				<input type="text" v-model="newCommentans" placeholder="输入回复内容" />
+				<button @click="answercomment">回复</button>
 			</div>
 		</div>
 		<div v-if="isInviteClassModalVisible" class="modal">
@@ -119,22 +135,85 @@
 				eventUser: [],
 				comments: [],
 				newComment: "",
-				tempNotification: "",
+				tempNotification:null,
 				isCommentInputVisible: false,
 				currentCommentId: null,
 				isInviteClassModalVisible: false,
 				classID: "",
-				isInviteMemberModalVisible: false,
 				memberID: "",
 				userrole: "",
+				newCommentans: "",
+				isAnswerVisible: false,
+				ansID: "",
+				selectedFile: null,
+				qrCodeUrl: "", // 添加一个属性用于存储二维码URL
+				eventNotification:null,
 			};
 		},
 		created() {
 			this.fetchEvents();
 			this.fetchComments();
 			this.fetchrole();
+			this.fetchQrCode(); // 在组件创建时获取二维码URL
 		},
 		methods: {
+			deleteevent(){
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				const userid = params.get("userid"); // 从 URL 中获取用户ID
+				if (confirm(`你确定要删除活动'${this.eventName}'吗`)) {
+					axios.post('http://localhost:5000/deleteEvent', {
+							eventID: eventid
+						})
+						.then(response => {
+							console.log('Response:', response.data);
+							window.location.href = `/manage?userid=${userid}`;
+						})
+						.catch(error => {
+							console.error('Error approving message:', error);
+							alert('活动删除失败，请重试');
+						});
+				}
+			},
+			handleFileChange(event) {
+				this.selectedFile = event.target.files[0];
+			},
+			async uploadImage() {
+				if (!this.selectedFile) {
+					alert('请选择一张图片');
+					return;
+				}
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				const formData = new FormData();
+				formData.append('image', this.selectedFile);
+				formData.append('eventid', eventid);  // 添加 eventid 字段
+				try {
+					const response = await axios.post('http://localhost:5000/uploadImage', formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+					});
+					console.log('图片上传成功', response.data);
+					this.fetchQrCode(); // 上传成功后重新获取二维码URL
+				} catch (error) {
+					console.error('图片上传失败', error);
+				}
+			},
+			async fetchQrCode() {
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				try {
+					const response = await axios.get(`http://localhost:5000/getQrCode?eventid=${eventid}`, {
+						responseType: 'blob' // 获取二进制数据
+					});
+					const blob = new Blob([response.data], { type: response.headers['content-type'] });
+					this.qrCodeUrl = URL.createObjectURL(blob);
+				} catch (error) {
+					console.error('获取二维码失败', error);
+				}
+			},
+
 			fetchEvents() {
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
@@ -151,9 +230,8 @@
 						this.eventUser = event.participants; // 修改为使用参与者用户名
 						this.eventDescription = event.description;
 						this.eventNotification = event.notification;
-						if(this.eventNotification!=null)
-						{
-							this.tempNotification=this.eventNotification;
+						if (this.eventNotification != null) {
+							this.tempNotification = this.eventNotification;
 						}
 					})
 					.catch((error) => {
@@ -185,6 +263,112 @@
 						console.error("Error fetching comments:", error);
 					});
 			},
+			answercomment() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get("userid");
+				const eventid = params.get("eventid");
+				const newCommentans = {
+					userId: userid,
+					eventID: eventid,
+					commentid: this.ansID,
+					answer: this.newCommentans,
+					ansTime: new Date().toISOString(),
+				};
+
+				axios
+					.post("http://localhost:5000/addcommentans", newCommentans)
+					.then((response) => {
+						console.log(response.data.message);
+						this.newCommentans = ""; // 清空输入框
+						this.isAnswerVisible = false; // 关闭模态框
+						this.fetchComments(); // 重新获取评论列表
+					})
+					.catch((error) => {
+						console.error("Error submitting comment:", error);
+					});
+			},
+			showCommentInput() {
+				this.isCommentInputVisible = true;
+			},
+			submitComment() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get("userid");
+				const eventid = params.get("eventid");
+				const newComment = {
+					userId: userid,
+					eventID: eventid,
+					commentId: this.comments.length + 1,
+					answer: this.newComment,
+					ansTime: new Date().toISOString(),
+				};
+
+				axios
+					.post("http://localhost:5000/addcomment", newComment)
+					.then((response) => {
+						console.log(response.data.message);
+						this.newComment = ""; // 清空输入框
+						this.isCommentInputVisible = false; // 隐藏评论输入框
+						this.fetchComments(); // 重新获取评论列表
+					})
+					.catch((error) => {
+						console.error("Error submitting comment:", error);
+					});
+			},
+			showAnswerModal(commentId) {
+				this.isAnswerVisible = true;
+				this.ansID = commentId;
+			},
+			closeAnswerModal() {
+				this.isAnswerVisible = false;
+			},
+			showInviteClassModal() {
+				this.isInviteClassModalVisible = true;
+			},
+			closeInviteClassModal() {
+				this.isInviteClassModalVisible = false;
+			},
+			showInviteMemberModal() {
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				const userid = params.get("userid"); // 从 URL 中获取用户ID
+				window.location.href = `/invite?userid=${userid}&eventid=${eventid}`
+			},
+			inviteClass() {
+				const params = new URLSearchParams(window.location.search);
+				const eventid = params.get("eventid");
+				axios
+					.post("http://localhost:5000/inviteClass", {
+						eventID: eventid,
+						classID: this.classID,
+					})
+					.then((response) => {
+						console.log(response.data.message);
+						this.classID = ""; // 清空输入框
+						this.isInviteClassModalVisible = false; // 关闭模态框
+					})
+					.catch((error) => {
+						console.error("Error inviting class:", error);
+					});
+			},
+			submitNotification() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get("userid");
+				const eventid = params.get("eventid");
+				const newNotification = {
+					eventid: eventid,
+					notification: this.tempNotification,
+				};
+				axios
+					.post("http://localhost:5000/updateNotification", newNotification)
+					.then((response) => {
+						console.log(response.data.message);
+						this.fetchEvents();
+						alert("活动通知修改成功！");
+					})
+					.catch((error) => {
+						console.error("Error submitting notification:", error);
+					});
+			},
 			generateNotification() {
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
@@ -197,193 +381,56 @@
 						console.error("Error fetching tempNotification:", error);
 					});
 			},
-			submitNotification() {
-				const params = new URLSearchParams(window.location.search);
-				const eventid = params.get("eventid");
-				const userid = params.get("userid"); // 从 URL 中获取用户ID
-				const tempNotification = {
-					eventID: eventid,
-					notification: this.tempNotification,
-					userID: userid, // 传递用户ID
-				};
-				axios
-					.post('http://localhost:5000//updateNotification', {
-						eventID: eventid,
-						notification: this.tempNotification,
-						userID: userid,
-					})
-					.then(response => {
-						this.fetchEvents(); // 更新活动详情
-						alert("通知发布成功！"); // 发布成功的提醒
-					})
-					.catch(error => {
-						console.error("Error submitting result:", error);
-						console.log(this.tempresult)
-					});
-			},
-
-			invite() {
-				const params = new URLSearchParams(window.location.search);
-				const userid = params.get("userid");
-				const eventid = params.get("eventid");
-				window.location.href = `/invite?userid=${userid}&eventid=${eventid}`;
-			},
-			showCommentInput(commentId) {
-				this.isCommentInputVisible = true;
-			},
-			submitComment() {
-				const params = new URLSearchParams(window.location.search);
-				const userid = params.get("userid");
-				const eventid = params.get("eventid");
-				const newComment = {
-					userId: userid,
-					eventID: eventid,
-					answer: this.newComment,
-					ansTime: new Date().toISOString(),
-				};
-
-				axios
-					.post("http://localhost:5000/addcomment", newComment)
-					.then((response) => {
-						console.log(response.data.message);
-						this.fetchComments();
-					})
-					.catch((error) => {
-						console.error("Error submitting comment:", error);
-					});
-
-				this.newComment = "";
-				this.isCommentInputVisible = false;
-			},
-			showInviteClassModal() {
-				this.isInviteClassModalVisible = true;
-			},
-			closeInviteClassModal() {
-				this.isInviteClassModalVisible = false;
-			},
-			inviteClass() {
-				const params = new URLSearchParams(window.location.search);
-				const eventid = params.get("eventid");
-				axios
-					.post("http://localhost:5000/invite", {
-						inviteType: 2,
-						eventID: eventid,
-						invitedID: this.classID,
-					})
-					.then((response) => {
-						alert(response.data.message);
-						this.closeInviteClassModal();
-					})
-					.catch((error) => {
-						console.error("Error inviting class:", error);
-					});
-			},
-			showInviteMemberModal() {
-				// this.isInviteMemberModalVisible = true;
-				const params = new URLSearchParams(window.location.search);
-				const eventid = params.get("eventid");
-				const userid = params.get("userid"); // 从 URL 中获取用户ID
-				window.location.href =  `/invite?userid=${userid}&eventid=${eventid}`
-			},
-			closeInviteMemberModal() {
-				this.isInviteMemberModalVisible = false;
-			},
-			inviteMember() {
-				const params = new URLSearchParams(window.location.search);
-				const eventid = params.get("eventid");
-				const userid = params.get("userid"); // 从 URL 中获取用户ID
-				window.location.href =  `/invite?userid=${userid}&eventid=${eventid}`
-				// axios
-				// 	.post("http://localhost:5000/invite", {
-				// 		inviteType: 1,
-				// 		eventID: eventid,
-				// 		invitedID: this.memberID,
-				// 		userID: userid, // 传递用户ID
-				// 	})
-				// 	.then((response) => {
-				// 		alert(response.data.message);
-				// 		this.closeInviteMemberModal();
-				// 	})
-				// 	.catch((error) => {
-				// 		if (error.response) {
-				// 			alert(error.response.data.message);
-				// 		} else {
-				// 			console.error("Error inviting member:", error);
-				// 		}
-				// 	});
-			},
-
-			inviteClass() {
-				const params = new URLSearchParams(window.location.search);
-				const eventid = params.get("eventid");
-				const userid = params.get("userid"); // 从 URL 中获取用户ID
-				axios
-					.post("http://localhost:5000/invite", {
-						inviteType: 2,
-						eventID: eventid,
-						invitedID: this.classID,
-						userID: userid, // 传递用户ID
-					})
-					.then((response) => {
-						alert(response.data.message);
-						this.closeInviteClassModal();
-					})
-					.catch((error) => {
-						if (error.response) {
-							alert(error.response.data.message);
-						} else {
-							console.error("Error inviting class:", error);
-						}
-					});
-			},
 		},
 	};
 </script>
 <style>
 	.eventdetail {
-	    line-height: 1.5;
-	    border-right: 1px solid grey;
-	    background-color: #ffffff; 
-	    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
-	    transition: 0.3s; 
-	    border-radius: 15px; 
-	    margin-top:15px;
-	    width:90%;
-	    padding:5px;
-		padding-bottom:30px
+		line-height: 1.5;
+		border-right: 1px solid grey;
+		background-color: #ffffff;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		transition: 0.3s;
+		border-radius: 15px;
+		margin-top: 15px;
+		width: 90%;
+		padding: 5px;
+		padding-bottom: 30px
 	}
-	
+
 	.eventdetail table {
-	    width: 90%;
-	    border-collapse: collapse;
-	    border-top: 1px solid #ddd;
-	    border-bottom: 1px solid #ddd;
-	    border-left: none;
-	    border-right: none;
-	    text-align: center;
-	    margin-left: auto;
-	    margin-right: auto;
+		width: 90%;
+		border-collapse: collapse;
+		border-top: 1px solid #ddd;
+		border-bottom: 1px solid #ddd;
+		border-left: none;
+		border-right: none;
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
 	}
-	
+
 	.eventdetail th,
 	.eventdetail td {
-	    border: 1px solid #ddd;
-	    padding: 8px;
-	    text-align: center;
+		border: 1px solid #ddd;
+		padding: 8px;
+		text-align: center;
 	}
-	
+
 	.eventdetail th {
-	    background-color: #f2f2f2;
-	    color: black;
+		background-color: #f2f2f2;
+		color: black;
 	}
-	
+
 	.eventdetail h3 {
-	    text-align: center;
+		text-align: center;
 	}
+
 	.eventdetail img {
 		width: 100px;
 		height: 100px;
 	}
+
 	.eventdetail button {
 		margin-top: 20px;
 		padding: 6px 20px;
@@ -399,19 +446,19 @@
 	.eventdetail button:hover {
 		background-color: #595959;
 	}
-	
+
 	.discussion-area,
 	.notification-area {
-	    line-height: 1.5;
-	    border-right: 1px solid grey;
-	    background-color: #ffffff; 
-	    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
-	    transition: 0.3s; 
-	    border-radius: 15px; 
-	    margin-top:15px;
-	    width:90%;
-	    padding:5px;
-	    padding-bottom: 30px;
+		line-height: 1.5;
+		border-right: 1px solid grey;
+		background-color: #ffffff;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		transition: 0.3s;
+		border-radius: 15px;
+		margin-top: 15px;
+		width: 90%;
+		padding: 5px;
+		padding-bottom: 30px;
 	}
 
 	.discussion-area {
@@ -547,7 +594,7 @@
 		border: 1px solid #888;
 		width: 40%;
 		/* 调整宽度 */
-		height:auto;
+		height: auto;
 		/* 调整高度 */
 		border-radius: 10px;
 		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -647,7 +694,7 @@
 	}
 
 	.invite-buttons button {
-		width:200px;
+		width: 200px;
 		flex: 1;
 		/* 按钮平分容器宽度 */
 		padding: 6px 20px;
@@ -674,7 +721,7 @@
 	.notification-area {
 		display: flex;
 		flex-direction: column;
-		text-align:center;
+		text-align: center;
 	}
 
 	.notification-area input {
@@ -687,7 +734,7 @@
 	.notification-area button {
 		align-self: flex-end;
 		margin-top: 10px;
-		margin-left:10px;
+		margin-left: 10px;
 		padding: 6px 20px;
 		font-size: 14px;
 		background-color: #262626;
