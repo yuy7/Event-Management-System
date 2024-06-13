@@ -9,7 +9,7 @@ from Tool.Mappings import building_index2str
 from __init__ import db
 from datetime import datetime
 from Tool.GetUserAllEvent import getUserAllEventByUserID
-from Tool.Mappings import role_event_type, event_type_mapping
+from Tool.Mappings import role_event_type, event_type_mapping, event_type_str2index
 
 def getLocationList():
     buildings = db.session.query(Location.building).distinct()
@@ -43,7 +43,7 @@ def EventCreate():
     userID = data.get("userid")
     eventName = data.get("name")
     date = data.get("date")
-    eventTypeID = data.get("eventTypeID")
+    eventTypeID = event_type_str2index[data.get("eventTypeID")]
     numberOfPeople = data.get("numberOfPeople")
     preferredLocation = data.get("preferredLocation")
     requireApproval = data.get("requireApproval")

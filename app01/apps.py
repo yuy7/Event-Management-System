@@ -95,11 +95,12 @@ app.route('/getAllFeedback', methods=['GET'])(getAllFeedback)
 app.route("/getEventDetails", methods=["POST"])(get_event)
 # app.route("/uploadImage", methods=["POST"])(uploadImage)
 # CommentGet
-from Model.CommentGet import get_comments
-app.route("/getcomments", methods=["GET"])(get_comments)
+from Model.CommentGet import getComment
+app.route("/getcomments", methods=["GET"])(getComment)
 # CommentSave
-from Model.CommentSave import add_comment
+from Model.CommentSave import add_comment, answer_comment
 app.route("/addcomment", methods=["POST"])(add_comment)
+app.route("/answercomment", methods=["POST"])(answer_comment)
 # UpdateNotification
 from Model.EventNotification import getNotificationTemplate, saveNotification, getNotification
 app.route("/updateNotification", methods=["POST"])(saveNotification)

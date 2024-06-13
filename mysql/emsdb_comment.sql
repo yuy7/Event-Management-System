@@ -8,6 +8,7 @@ CREATE TABLE `Comment` (
     Answer TEXT NOT NULL,
     AnsTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     EventID INT NOT NULL,                       -- ForeignKey to event.eventID
+    AnswerTo INT,
     FOREIGN KEY (UserID) REFERENCES User(UserID),
     FOREIGN KEY (EventID) REFERENCES event(eventID)
 );

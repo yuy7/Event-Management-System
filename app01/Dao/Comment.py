@@ -9,3 +9,4 @@ class Comment(db.Model):
     AnsTime = db.Column('AnsTime', db.TIMESTAMP, default=db.func.current_timestamp())
     EventID = db.Column('EventID', db.Integer, db.ForeignKey('event.eventID'), nullable=False)
     user = db.relationship('User', backref=db.backref('comments', lazy=True))
+    AnswerTo = db.Column('AnswerTo', db.Integer, nullable=True)

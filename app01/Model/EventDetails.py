@@ -6,6 +6,7 @@ from Dao.EventDetail import EventDetail
 from Dao.EventFeedback import EventFeedback
 from datetime import datetime
 from Dao.UserEvent import UserEvent
+from Dao.UserAddEvent import UserAddEvent
 from Dao.User import User
 from Dao.EventImage import EventImage
 from __init__ import db
@@ -185,11 +186,15 @@ def getUserRole():
     # user_id = data.get("userid")
     user_id = request.args.get("userid")
     event_id = request.args.get("eventid")
-    event = Event.query.filter(Event.eventID==event_id, Event.reservationUserId==user_id).all()
+    reservation_event = Event.query.filter(Event.eventID==event_id, Event.reservationUserId==user_id).all()
+    user_event = UserEvent.query.filter(UserEvent.userID==user_id, UserEvent.eventID==event_id).all()
+    user_add_event = UserAddEvent.query.filter(UserAddEvent.userID==user_id, UserAddEvent.eventID==event_id, UserAddEvent.state==1).all()
     print(user_id)
     print(event_id)
-    if len(event) > 0:
+    if len(reservation_event) > 0:
         return 'reservationUser'
+    elif len(user_event)+len(user_add_event) > 0:
+        return 'normalUser'
     else: 
         return 'participant'
 

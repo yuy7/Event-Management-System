@@ -24,7 +24,7 @@ def saveNotification():
     # 从请求中获取 notification 和 event_id
     data = request.get_json()
     notification = data.get("notification")
-    event_id = data.get("eventid")
+    event_id = data.get("eventid")  
     # print(event_id)
     # 检查是否提供了必要的信息
     if not notification or not event_id:
