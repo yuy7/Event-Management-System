@@ -20,7 +20,8 @@ def format_answer(answer):
 
 def getComment():
     print('----------------')
-    event_id = request.args.get('eventID')
+    event_id = request.args.get('eventid')
+    print(event_id)
     if not event_id:
         return jsonify({"status": "Error", "message": "Missing eventID"}), 400
     
