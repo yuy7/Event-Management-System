@@ -21,10 +21,10 @@
 						<th>活动地点</th>
 						<td>{{ eventLocation }}</td>
 					</tr>
-					<tr>
+					<!-- <tr>
 						<th>活动简介</th>
 						<td>{{ eventDescription }}</td>
-					</tr>
+					</tr> -->
 					<tr>
 						<th>活动通知</th>
 						<td>{{ eventNotification }}</td>
@@ -270,13 +270,13 @@
 				const newCommentans = {
 					userId: userid,
 					eventID: eventid,
-					commentid: this.ansID,
+					answerTo: this.ansID,
 					answer: this.newCommentans,
 					ansTime: new Date().toISOString(),
 				};
 
 				axios
-					.post("http://localhost:5000/addcommentans", newCommentans)
+					.post("http://localhost:5000/answercomment", newCommentans)
 					.then((response) => {
 						console.log(response.data.message);
 						this.newCommentans = ""; // 清空输入框
