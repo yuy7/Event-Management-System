@@ -26,7 +26,7 @@ CREATE TABLE `notifications` (
   `id` int NOT NULL AUTO_INCREMENT,
   `recipient_id` int NOT NULL,
   `sender_id` int NOT NULL,
-  `event_id` int NOT NULL,
+  `event_id` int ,
   `message` varchar(255) NOT NULL,
   `read` tinyint(1) NOT NULL DEFAULT '0',
   `type` tinyint(1) NOT NULL DEFAULT '0',

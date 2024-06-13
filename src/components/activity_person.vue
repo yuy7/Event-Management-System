@@ -127,8 +127,11 @@
 					});
 			},
 			updatePhoneNumber() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
 				axios.post('http://localhost:5000/userinterface/bindPhone', {
 						phone: this.newPhoneNumber,
+						userID: userid
 					})
 					.then(response => {
 						this.phoneNumber = this.newPhoneNumber;
@@ -142,8 +145,11 @@
 				this.showPhoneNumberModal = false;
 			},
 			updateEmail() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
 				axios.post('http://localhost:5000/userinterface/bindEmail', {
-						email: this.newEmail
+						email: this.newEmail,
+						userID: userid
 					})
 					.then(response => {
 						this.email = this.newEmail;
@@ -157,8 +163,11 @@
 				this.showEmailModal = false;
 			},
 			updateRole() {
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
 				axios.post('http://localhost:5000/userinterface/roleApply', {
-						role: this.newRole
+						role: this.newRole,
+						userID: userid
 					})
 					.then(response => {
 						this.Role = " ";

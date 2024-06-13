@@ -35,8 +35,10 @@ def get_users():
 
 # 绑定邮箱，POST方法
 def bindEmail():
-    userID = session.get("userID")
+    # userID = session.get("userID")
     # userID = 251101164
+    data = request.get_json()
+    userID = data.get("userID")
     email = request.json.get("email")
     rows = User.query.filter_by(UserID=userID).update({"Email":email})
     try:
@@ -57,7 +59,8 @@ def bindEmail():
 
 # 绑定手机号，POST方法
 def bindPhone():
-    userID = session.get("userID")
+    data = request.get_json()
+    userID = data.get("userID")
     # userID = 251101164
     phone = request.json.get("phone")
     rows = User.query.filter_by(UserID=userID).update({"PhoneNumber":phone})
@@ -79,8 +82,10 @@ def bindPhone():
 
 # 申请身份，POST方法
 def roleApply():
-    userID = session.get("userID")
+    # userID = session.get("userID")
     # userID = 251101164
+    data = request.get_json()
+    userID = data.get("userID")
     role = request.json.get("role")
     roleID = Role.query.filter_by(roleName=role).first().roleID
     roleApply = RoleApply.query.filter_by(userID=userID).first()
@@ -97,6 +102,7 @@ def roleApply():
         }), 201
     except Exception as e:
         db.session.rollback()
+        print("RoleApply Error:",e)
         return jsonify({
             "status": "Error",
             "message": str(e)

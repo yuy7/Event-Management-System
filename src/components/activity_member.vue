@@ -60,7 +60,7 @@
             },
             rejectRole(roleApplyID) {
                 console.log('Rejecting role with ID:', roleApplyID);
-                axios.post('http://localhost:5000/rejectRoleApply',{roleApplyID:roleApplyID})
+                axios.post('http://localhost:5000/refuseRoleApply',{roleApplyID:roleApplyID})
                     .then(response => {
                         console.log('Role approved:', response.data);
                         this.fetchRoles(); 

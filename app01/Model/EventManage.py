@@ -96,7 +96,6 @@ def getUserAddEvent():
         else 1],  # 如果没有找到记录，默认状态设为1（已批准）
         'time': TimeSlot.query.filter_by(timeID=event.time).first().timeDescription if TimeSlot.query.filter_by(timeID=event.time).first() else "Time not found"  # 从TimeSlot关系中访问timeDescription，确保有结果才访问属性
     } for event in eventList]
-    print(events_json)
     return events_json
 
 def deleteEvent():
