@@ -22,7 +22,7 @@ def user_register():
             "message": "邮箱号已经被注册"
         }), 400
     # 创建新用户并保存到数据库
-    new_user = User(Username=nickname, PhoneNumber=phoneNumber, Password=password, Email=email)
+    new_user = User(Username=nickname, PhoneNumber=phoneNumber, Password=password, Email=email, Role=0)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({
