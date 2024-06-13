@@ -52,7 +52,8 @@ export default {
 				axios.post('http://localhost:5000/forgetpassword',{email: this.email,password:this.newPassword,verificationCode:this.verificationCode})
 				    .then(response => {
 				        console.log('Response:', response.data);
-						alert('密码重置成功');
+						if(response.data.status == 'Password reset successfully')
+							alert('密码重置成功');
 						window.location.href = '/login';
 						window.event.returnValue=false;
 				    })

@@ -225,7 +225,7 @@ def force_invite():
                 user_event = UserEvent(userID=invited_id, eventID=event_id)
                 db.session.add(user_event)
                 # 创建通知记录
-                message = f'你已被{user_id}强制邀请加入活动 {event_id}'
+                message = f'你已被{User.query.filter_by(UserID=user_id).first().Username}强制邀请加入活动 {Event.query.filter_by(eventID=event_id).first().eventName}'
                 notification = Notification(
                     recipient_id=invited_id,
                     sender_id=user_id,
@@ -291,7 +291,7 @@ def invite_class():
                 db.session.add(user_event)
 
                 # 创建通知记录
-                message = f'你被{User.query.filter_by(UserID=user_id).first().Username}邀请加入活动 {event_id}'
+                message = f'你被{User.query.filter_by(UserID=user_id).first().Username}邀请加入活动 {Event.query.filter_by(eventID=event_id).first().eventName}'
                 notification = Notification(
                     recipient_id=invited_id,
                     sender_id=user_id,

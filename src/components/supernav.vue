@@ -5,7 +5,7 @@
         <ul class="nav-list">
           <li><a @click="navigateTo('/resources')">资源安排</a></li>
           <li><a @click="navigateTo('/goal')">安排结果</a></li>
-          <!-- <li><a @click="navigateTo('/activity')">活动审批</a></li> -->
+          <li><a @click="navigateTo('/class')">班级管理</a></li>
           <li><a @click="navigateTo('/member')">人员审批</a></li>
         </ul>
       </div>

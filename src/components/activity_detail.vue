@@ -124,7 +124,6 @@
     <div class="modal-content">
         <span class="close" @click="closeForceInviteModal">&times;</span>
         <h3>强制邀请成员</h3>
-         <p class="note">注：只有教师或辅导员且为本活动创建者才可进行强制邀请</p>
         <div class="user-list">
             <table>
                 <tbody>
