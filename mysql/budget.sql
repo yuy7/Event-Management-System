@@ -11,4 +11,5 @@ CREATE TABLE `budget` (
   KEY `budget_user_FK` (`userID`),
   CONSTRAINT `budget_event_FK` FOREIGN KEY (`eventID`) REFERENCES `event` (`EventID`),
   CONSTRAINT `budget_user_FK` FOREIGN KEY (`userID`) REFERENCES `user` (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+SELECT * FROM emsdb.budget;

@@ -7,5 +7,5 @@ CREATE TABLE `user_event` (
   KEY `event_FK_idx` (`eventID`),
   CONSTRAINT `event_FK` FOREIGN KEY (`eventID`) REFERENCES `event` (`eventID`),
   CONSTRAINT `user_FK` FOREIGN KEY (`userID`) REFERENCES `user` (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-SELECT * FROM emsdb.user_add_event;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+SELECT * FROM emsdb.user_event;
