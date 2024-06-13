@@ -50,7 +50,7 @@
 		</div>
 		<div class="invite-buttons" v-if="userrole!='normalUser'">
 			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
-			<button @click="showInviteClassModal">邀请班级加入活动</button>
+			<button @click="showInviteClassModal" v-if="userrole=='reservationUser'">邀请班级加入活动</button>
 			<button @click="showForceInviteModal" v-if="userrole=='reservationUser'">强制邀请成员</button>
 			<!-- <button @click="deleteevent" v-if="userrole=='reservationUser'">删除该活动</button> -->
 		</div>
@@ -366,10 +366,12 @@
 			inviteClass() {
 				const params = new URLSearchParams(window.location.search);
 				const eventid = params.get("eventid");
+				const userid = params.get("userid");
 				axios
 					.post("http://localhost:5000/inviteClass", {
 						eventID: eventid,
 						classID: this.classID,
+						userID:userid
 					})
 					.then((response) => {
 						console.log(response.data.message);
