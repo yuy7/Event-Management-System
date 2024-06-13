@@ -36,8 +36,10 @@
 					<tr>
 						<th>
 							活动微信群聊二维码
-							<input type="file" @change="handleFileChange" />
-							<button @click="uploadImage">上传</button>
+							<div v-if="userrole!='normalUser'">
+								<input type="file" @change="handleFileChange" />
+								<button @click="uploadImage">上传</button>
+							</div>
 						</th>
 						<td>
 							<img :src="qrCodeUrl" alt="WeChat QR Code" v-if="qrCodeUrl" />
@@ -46,13 +48,13 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="invite-buttons">
+		<div class="invite-buttons" v-if="userrole!='normalUser'">
 			<button @click="showInviteMemberModal">邀请新成员加入活动</button>
 			<button @click="showInviteClassModal">邀请班级加入活动</button>
-       <button @click="showForceInviteModal">强制邀请成员</button>
+			<button @click="showForceInviteModal" v-if="userrole=='reservationUser'">强制邀请成员</button>
 			<!-- <button @click="deleteevent" v-if="userrole=='reservationUser'">删除该活动</button> -->
 		</div>
-		<div class="discussion-area">
+		<div class="discussion-area" v-if="userrole!='normalUser'">
 			<h3>讨论区</h3>
 			<div v-for="comment in comments" :key="comment.comment_id" class="comment">
 				<div class="ask">
@@ -83,7 +85,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="comment-button-container">
+		<div class="comment-button-container" v-if="userrole!='normalUser'">
 			<button @click="showCommentInput">发布评论</button>
 		</div>
 

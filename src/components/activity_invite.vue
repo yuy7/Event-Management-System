@@ -42,7 +42,10 @@
         },
         methods: {
             fetchUsers() {
-                axios.get('http://localhost:5000/userinterface/get_users')
+				const params = new URLSearchParams(window.location.search);
+				const userid = params.get('userid');
+				const eventid = params.get('eventid');
+                axios.get(`http://localhost:5000/getAvailableUsers?eventid=${eventid}`)
                     .then(response => {
                         this.users = response.data.map(user => ({ ...user, checked: false }));
                     })

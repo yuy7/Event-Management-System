@@ -209,9 +209,9 @@ def getUserRole():
     if len(reservation_event) > 0:
         return 'reservationUser'
     elif len(user_event)+len(user_add_event) > 0:
-        return 'normalUser'
-    else: 
         return 'participant'
+    else: 
+        return 'normalUser'
 
 def getAllFeedback():
     # data = request.get_json()
