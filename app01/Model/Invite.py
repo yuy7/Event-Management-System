@@ -6,7 +6,44 @@ from Dao.User import User
 from Dao.Class import Class
 from Dao.InvitedList import InvitedList
 from Dao.UserEvent import UserEvent
+from Dao.UserAddEvent import UserAddEvent
 from Dao.Notification import Notification
+
+def get_invite_users():
+    event_id = request.args.get('eventid')
+    if not event_id:
+        return jsonify({'status': 'Error', 'message': 'Event ID is required'}), 400
+
+    # 获取预定用户的 ID
+    event = Event.query.filter_by(eventID=event_id).first()
+    if not event:
+        return jsonify({'status': 'Error', 'message': 'Event not found'}), 404
+
+    reservation_user_id = event.reservationUserId
+
+    # 获取与事件相关的用户 ID 列表
+    user_event_ids = set(user_event.userID for user_event in UserEvent.query.filter_by(eventID=event_id).all())
+    user_add_event_ids = set(user_add_event.userID for user_add_event in UserAddEvent.query.filter(UserAddEvent.eventID==event_id, UserAddEvent.state==1).all())
+
+    # 来自所有相关表的用户 ID
+    exclude_user_ids = user_event_ids | user_add_event_ids 
+    exclude_user_ids.add(reservation_user_id)
+    exclude_user_ids.add(10086)
+
+    # 获取所有用户
+    users = User.query.all()
+    filtered_users = [
+        {
+            'userID': user.UserID,
+            'userName': user.Username,
+            'email': user.Email,
+            'phone': user.PhoneNumber,
+            'role': user.Role,
+        }
+        for user in users if user.UserID not in exclude_user_ids
+    ]
+
+    return jsonify(filtered_users)
 
 def invite():
     data = request.get_json()
@@ -53,7 +90,7 @@ def invite():
     db.session.add(invite_record)
 
     # 创建通知记录
-    message = f'You have been invited to event {event_id}'
+    message = f'你被{User.query.filter_by(userID=user_id).first().Username}邀请加入 {event_id}'
     notification = Notification(
         recipient_id=invited_id,
         sender_id=user_id,
@@ -165,8 +202,8 @@ def force_invite():
     requesting_user = User.query.filter_by(UserID=user_id).first()
     event = Event.query.filter_by(eventID=event_id).first()
 
-    if not requesting_user or requesting_user.Role != '0' or not event or str(event.reservationUserId) != str(user_id):
-        return jsonify({'message': 'User not authorized to force invite'}), 403
+    # if not requesting_user or requesting_user.Role not in ['教师', '辅导员'] or not event or str(event.reservationUserId) != str(user_id):
+    #     return jsonify({'message': 'User not authorized to force invite'}), 403
 
     # 检查事件是否存在
     if not event:

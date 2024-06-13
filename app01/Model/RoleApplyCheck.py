@@ -11,7 +11,7 @@ def getRoleApply():
     for roleApply,roleName in roleApplyList:
         res.append({
             "roleApplyID": roleApply.roleApplyID,
-            "userID": roleApply.userID,
+            "userID": User.query.filter_by(UserID=roleApply.userID).first().Username,
             "roleName": roleName,
         })
     return jsonify(res)
