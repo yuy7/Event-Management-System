@@ -51,11 +51,12 @@ app.route("/userinterface/bindPhone", methods=["POST"])(bindPhone)
 app.route("/userinterface/roleApply", methods=["POST"])(roleApply)
 app.route("/userinterface/get_users", methods=["GET"])(get_users)
 # Invite
-from Model.Invite import invite,acceptInvite,refuseInvite,getValidationNotifications, get_invite_users, force_invite, get_available_users
+from Model.Invite import invite,acceptInvite,refuseInvite,getValidationNotifications, get_invite_users, force_invite, get_available_users,invite_class
 app.route("/getInviteUserList", methods=["GET"])(get_invite_users)
 app.route("/invite", methods=["POST"])(invite)
 app.route("/forceInvite", methods=["POST"])(force_invite)
 app.route("/getAvailableUsers", methods=["GET"])(get_available_users)
+app.route("/inviteClass", methods=["POST"])(invite_class)
 # ApplyEvent
 from Model.ApplyEvent import apply_event, applyEventWithReason
 app.route("/applyEvent", methods=["POST"])(apply_event)
@@ -123,6 +124,12 @@ app.route("/refuseEventApply", methods=["POST"])(refuseEventApply)
 app.route("/acceptInvite", methods=["POST"])(acceptInvite)
 app.route("/refuseInvite", methods=["POST"])(refuseInvite)
 app.route("/getValidationNotifications", methods=["GET"])(getValidationNotifications)
+#class
+from Model.ClassAbout import get_class_list, get_class_students, add_student_to_class, remove_student_from_class
+app.route("/getClassList", methods=["GET"])(get_class_list)
+app.route("/getClassStudents", methods=["GET"])(get_class_students)
+app.route("/addStudentToClass", methods=["POST"])(add_student_to_class)
+app.route("/removeStudentFromClass", methods=["POST"])(remove_student_from_class)
 
 # @socketio.on("message")
 # def handle_message(msg):

@@ -17,6 +17,7 @@ import activity_notifications from './components/activity_notifications.vue'
 import activity_member from './components/activity_member.vue'
 import activity_history from './components/activity_history.vue'
 import activity_final from './components/activity_final.vue'
+import class_manage from './components/class_manage.vue'
 const routes = [
 	{
 		path:'/',
@@ -106,7 +107,12 @@ const routes = [
     path:'/final',
     name:'final',
     component: activity_final,
-  }
+  },
+  {
+    path:'/class',
+    name:'class_manage',
+    component: class_manage,
+  },
 ]
 
 const router = createRouter({
