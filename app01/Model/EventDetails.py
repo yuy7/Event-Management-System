@@ -19,7 +19,7 @@ if 'app01' in current_path:
     UPLOAD_FOLDER = 'image'
 else:
     UPLOAD_FOLDER = 'app01/image'
-
+print(current_path)
 
 def get_event():
     data = request.get_json()
@@ -127,7 +127,9 @@ def getQrCode():
         event_id = request.args.get('eventid')
         # 查询数据库或者其他方式获取 event_id 对应的二维码图片路径
         qr_code_path = EventImage.query.filter_by(eventID=event_id).first().image_path
-
+        # print(qr_code_path)
+        # # 去除路径中的多余部分 "app01/"
+        # qr_code_path = qr_code_path.replace('app01/image\\', 'c:\\Codes\\ems-1\\Event-Management-System\\app01\\image\\')
         # 检查二维码图片文件是否存在
         if not os.path.isfile(qr_code_path):
             return jsonify({'status': 'Error', 'message': 'QR code image file not found'}), 404
